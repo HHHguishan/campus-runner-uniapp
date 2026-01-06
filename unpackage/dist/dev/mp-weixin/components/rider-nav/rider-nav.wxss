@@ -1,0 +1,51 @@
+
+.rider-nav.data-v-0e2515c0 {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: #fff;
+  padding: 10rpx 0 20rpx;
+  z-index: 999;
+  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.06);
+  border-top: 2rpx solid #f0f0f0;
+}
+.nav-item.data-v-0e2515c0 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 0;
+  transition: all 0.3s;
+}
+.nav-item.active.data-v-0e2515c0 {
+  background: transparent;
+}
+.nav-icon.data-v-0e2515c0 {
+  font-size: 44rpx;
+  margin-bottom: 4rpx;
+}
+.nav-text.data-v-0e2515c0 {
+  font-size: 22rpx;
+  color: #999;
+}
+.nav-item.active .nav-text.data-v-0e2515c0 {
+  color: #07c160;
+  font-weight: bold;
+}
+.nav-item.active .nav-icon.data-v-0e2515c0 {
+  transform: scale(1.1);
+}
+
+/* 切换为用户按钮特殊样式 */
+.switch-user-item.data-v-0e2515c0 {
+  border-left: 2rpx solid #f0f0f0;
+}
+.switch-user-item .nav-icon.data-v-0e2515c0 {
+  color: #ff6b6b;
+}
+.switch-user-item .nav-text.data-v-0e2515c0 {
+  color: #ff6b6b;
+}

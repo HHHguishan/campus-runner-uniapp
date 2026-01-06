@@ -206,18 +206,10 @@ export default {
 
         // 延迟跳转，让用户看到成功提示
         setTimeout(() => {
-          // 判断是否是新用户
-          if (loginResult.data.isNewUser) {
-            // 新用户跳转到完善信息页
-            uni.redirectTo({
-              url: '/pages/profile/profile'
-            });
-          } else {
-            // 老用户跳转到首页
-            uni.switchTab({
-              url: '/pages/index/index'
-            });
-          }
+          // 跳转到首页（使用switchTab因为是TabBar页面）
+          uni.switchTab({
+            url: '/pages/index/index'
+          });
         }, 1500);
 
       } catch (error) {

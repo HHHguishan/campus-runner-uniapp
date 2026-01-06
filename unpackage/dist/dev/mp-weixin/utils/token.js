@@ -13,6 +13,10 @@ function removeToken() {
 function setUserInfo(userInfo) {
   common_vendor.index.setStorageSync(utils_config.USER_INFO_KEY, JSON.stringify(userInfo));
 }
+function getUserInfo() {
+  const userInfoStr = common_vendor.index.getStorageSync(utils_config.USER_INFO_KEY);
+  return userInfoStr ? JSON.parse(userInfoStr) : null;
+}
 function removeUserInfo() {
   common_vendor.index.removeStorageSync(utils_config.USER_INFO_KEY);
 }
@@ -22,6 +26,9 @@ function clearAuth() {
 }
 exports.clearAuth = clearAuth;
 exports.getToken = getToken;
+exports.getUserInfo = getUserInfo;
+exports.removeToken = removeToken;
+exports.removeUserInfo = removeUserInfo;
 exports.setToken = setToken;
 exports.setUserInfo = setUserInfo;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/utils/token.js.map

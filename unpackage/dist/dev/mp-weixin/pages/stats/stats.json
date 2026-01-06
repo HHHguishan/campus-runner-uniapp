@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "业绩",
+  "usingComponents": {
+    "rider-nav": "../../components/rider-nav/rider-nav"
+  }
+}

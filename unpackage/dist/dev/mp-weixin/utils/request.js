@@ -109,6 +109,14 @@ function request(options) {
     });
   });
 }
+function get(url, params = {}, options = {}) {
+  return request({
+    url,
+    method: "GET",
+    data: params,
+    ...options
+  });
+}
 function post(url, data = {}, options = {}) {
   return request({
     url,
@@ -117,5 +125,6 @@ function post(url, data = {}, options = {}) {
     ...options
   });
 }
+exports.get = get;
 exports.post = post;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/utils/request.js.map

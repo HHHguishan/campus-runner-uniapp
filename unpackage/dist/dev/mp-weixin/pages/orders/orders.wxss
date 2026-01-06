@@ -1,0 +1,27 @@
+
+.orders-container.data-v-1acc51a1 {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+.empty-page.data-v-1acc51a1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+.empty-icon.data-v-1acc51a1 {
+  font-size: 150rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.5;
+}
+.empty-title.data-v-1acc51a1 {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+}
+.empty-desc.data-v-1acc51a1 {
+  font-size: 28rpx;
+  color: #999;
+}

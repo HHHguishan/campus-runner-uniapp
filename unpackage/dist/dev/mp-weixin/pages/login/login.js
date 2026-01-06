@@ -106,20 +106,14 @@ const _sfc_main = {
           duration: 1500
         });
         setTimeout(() => {
-          if (loginResult.data.isNewUser) {
-            common_vendor.index.redirectTo({
-              url: "/pages/profile/profile"
-            });
-          } else {
-            common_vendor.index.switchTab({
-              url: "/pages/index/index"
-            });
-          }
+          common_vendor.index.switchTab({
+            url: "/pages/index/index"
+          });
         }, 1500);
       } catch (error) {
         this.isLoading = false;
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/login/login.vue:228", "登录失败:", error);
+        common_vendor.index.__f__("error", "at pages/login/login.vue:220", "登录失败:", error);
       }
     },
     // 查看协议

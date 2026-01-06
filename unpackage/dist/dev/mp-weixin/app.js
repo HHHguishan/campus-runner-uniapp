@@ -1,19 +1,33 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
+const utils_token = require("./utils/token.js");
 if (!Math) {
-  "./pages/login/login.js";
   "./pages/index/index.js";
+  "./pages/orders/orders.js";
+  "./pages/message/message.js";
+  "./pages/mine/mine.js";
+  "./pages/hall/hall.js";
+  "./pages/running/running.js";
+  "./pages/stats/stats.js";
+  "./pages/login/login.js";
+  "./pages/rider/auth.js";
 }
 const _sfc_main = {
   onLaunch: function() {
-    common_vendor.index.__f__("log", "at App.vue:4", "App Launch");
+    common_vendor.index.__f__("log", "at App.vue:6", "App Launch");
+    const token = utils_token.getToken();
+    if (!token) {
+      common_vendor.index.reLaunch({
+        url: "/pages/login/login"
+      });
+    }
   },
   onShow: function() {
-    common_vendor.index.__f__("log", "at App.vue:7", "App Show");
+    common_vendor.index.__f__("log", "at App.vue:18", "App Show");
   },
   onHide: function() {
-    common_vendor.index.__f__("log", "at App.vue:10", "App Hide");
+    common_vendor.index.__f__("log", "at App.vue:21", "App Hide");
   }
 };
 function createApp() {

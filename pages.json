@@ -1,6 +1,48 @@
 {
 	"pages": [
 		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/orders/orders",
+			"style": {
+				"navigationBarTitleText": "订单"
+			}
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "消息"
+			}
+		},
+		{
+			"path": "pages/mine/mine",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/hall/hall",
+			"style": {
+				"navigationBarTitleText": "接单大厅"
+			}
+		},
+		{
+			"path": "pages/running/running",
+			"style": {
+				"navigationBarTitleText": "配送中"
+			}
+		},
+		{
+			"path": "pages/stats/stats",
+			"style": {
+				"navigationBarTitleText": "业绩"
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录",
@@ -8,9 +50,9 @@
 			}
 		},
 		{
-			"path": "pages/index/index",
+			"path": "pages/rider/auth",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "骑手认证"
 			}
 		}
 	],
@@ -19,6 +61,30 @@
 		"navigationBarTitleText": "校园跑腿",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#07c160",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "black",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/orders/orders",
+				"text": "订单"
+			},
+			{
+				"pagePath": "pages/message/message",
+				"text": "消息"
+			},
+			{
+				"pagePath": "pages/mine/mine",
+				"text": "我的"
+			}
+		]
 	},
 	"uniIdRouter": {}
 }
