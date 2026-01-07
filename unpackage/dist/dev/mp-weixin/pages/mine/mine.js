@@ -35,31 +35,31 @@ const _sfc_main = {
     // 加载用户信息
     async loadUserInfo() {
       try {
-        common_vendor.index.__f__("log", "at pages/mine/mine.vue:156", "=== 开始加载用户信息 ===");
+        common_vendor.index.__f__("log", "at pages/mine/mine.vue:165", "=== 开始加载用户信息 ===");
         const result = await api_user.getUserInfo();
-        common_vendor.index.__f__("log", "at pages/mine/mine.vue:160", "API返回结果:", result);
-        common_vendor.index.__f__("log", "at pages/mine/mine.vue:161", "result.data:", result.data);
+        common_vendor.index.__f__("log", "at pages/mine/mine.vue:169", "API返回结果:", result);
+        common_vendor.index.__f__("log", "at pages/mine/mine.vue:170", "result.data:", result.data);
         if (result.data) {
           this.userInfo = result.data;
           utils_token.setUserInfo(result.data);
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:170", "=== 用户信息详情 ===");
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:171", "完整用户对象:", JSON.stringify(result.data, null, 2));
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:172", "isRider值:", result.data.isRider, "类型:", typeof result.data.isRider);
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:173", "riderStatus值:", result.data.riderStatus, "类型:", typeof result.data.riderStatus);
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:179", "=== 用户信息详情 ===");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:180", "完整用户对象:", JSON.stringify(result.data, null, 2));
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:181", "isRider值:", result.data.isRider, "类型:", typeof result.data.isRider);
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:182", "riderStatus值:", result.data.riderStatus, "类型:", typeof result.data.riderStatus);
           const isCertified = result.data.isRider === 1 && result.data.riderStatus === 1;
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:177", "是否已认证:", isCertified);
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:178", "认证状态文本:", this.getRiderStatusText());
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:186", "是否已认证:", isCertified);
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:187", "认证状态文本:", this.getRiderStatusText());
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/mine/mine.vue:181", "=== 获取用户信息失败 ===");
-        common_vendor.index.__f__("error", "at pages/mine/mine.vue:182", "错误信息:", error);
-        common_vendor.index.__f__("error", "at pages/mine/mine.vue:183", "错误详情:", JSON.stringify(error));
+        common_vendor.index.__f__("error", "at pages/mine/mine.vue:190", "=== 获取用户信息失败 ===");
+        common_vendor.index.__f__("error", "at pages/mine/mine.vue:191", "错误信息:", error);
+        common_vendor.index.__f__("error", "at pages/mine/mine.vue:192", "错误详情:", JSON.stringify(error));
         const userInfo = utils_token.getUserInfo();
         if (userInfo) {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:188", "使用本地缓存数据:", userInfo);
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:197", "使用本地缓存数据:", userInfo);
           this.userInfo = userInfo;
         } else {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:192", "未登录，跳转到登录页");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:201", "未登录，跳转到登录页");
           common_vendor.index.reLaunch({
             url: "/pages/login/login"
           });
@@ -69,10 +69,10 @@ const _sfc_main = {
     // 切换为骑手模式
     switchToRiderMode() {
       const isRiderCertified = this.userInfo.isRider === 1 && this.userInfo.riderStatus === 1;
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:205", "当前用户信息:", this.userInfo);
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:206", "isRider:", this.userInfo.isRider);
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:207", "riderStatus:", this.userInfo.riderStatus);
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:208", "是否已认证:", isRiderCertified);
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:214", "当前用户信息:", this.userInfo);
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:215", "isRider:", this.userInfo.isRider);
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:216", "riderStatus:", this.userInfo.riderStatus);
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:217", "是否已认证:", isRiderCertified);
       if (!isRiderCertified) {
         common_vendor.index.showModal({
           title: "提示",
@@ -124,6 +124,12 @@ const _sfc_main = {
           });
         }
       });
+    },
+    // 编辑个人资料
+    editProfile() {
+      common_vendor.index.navigateTo({
+        url: "/pages/profile/edit"
+      });
     }
   }
 };
@@ -132,7 +138,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     a: $data.userInfo.avatar || "https://via.placeholder.com/120",
     b: common_vendor.t($data.userInfo.nickname || "未登录"),
     c: common_vendor.t($data.userInfo.mobile || ""),
-    d: common_vendor.o((...args) => $options.loadUserInfo && $options.loadUserInfo(...args)),
+    d: common_vendor.o((...args) => $options.editProfile && $options.editProfile(...args)),
     e: common_vendor.t($data.userInfo.balance || 0),
     f: common_vendor.t($data.userInfo.creditScore || 100),
     g: common_vendor.t($options.getRiderStatusText()),
@@ -143,7 +149,8 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     l: common_vendor.o(($event) => $options.navigateTo("/pages/rider/auth")),
     m: common_vendor.o(($event) => $options.navigateTo("/pages/evaluation/evaluation")),
     n: common_vendor.o(($event) => $options.navigateTo("/pages/settings/settings")),
-    o: common_vendor.o((...args) => $options.handleLogout && $options.handleLogout(...args))
+    o: common_vendor.o(($event) => $options.navigateTo("/pages/debug/api")),
+    p: common_vendor.o((...args) => $options.handleLogout && $options.handleLogout(...args))
   };
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-7c2ebfa5"]]);

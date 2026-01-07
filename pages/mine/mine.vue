@@ -2,7 +2,7 @@
   <view class="mine-container">
     <!-- 顶部用户信息卡片 -->
     <view class="user-card">
-      <view class="user-info">
+      <view class="user-info" @tap="editProfile">
         <image
           class="avatar"
           :src="userInfo.avatar || 'https://via.placeholder.com/120'"
@@ -12,8 +12,9 @@
           <text class="nickname">{{ userInfo.nickname || '未登录' }}</text>
           <text class="mobile">{{ userInfo.mobile || '' }}</text>
         </view>
-        <view class="refresh-btn" @tap="loadUserInfo">
-          <text>🔄</text>
+        <view class="edit-btn">
+          <text>编辑</text>
+          <text class="arrow">›</text>
         </view>
       </view>
 
@@ -95,6 +96,14 @@
           <view class="item-left">
             <text class="item-icon">⚙️</text>
             <text class="item-label">设置</text>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+
+        <view class="function-item" @tap="navigateTo('/pages/debug/api')">
+          <view class="item-left">
+            <text class="item-icon">🔧</text>
+            <text class="item-label">API调试</text>
           </view>
           <text class="item-arrow">›</text>
         </view>
@@ -267,6 +276,13 @@ export default {
           });
         }
       });
+    },
+
+    // 编辑个人资料
+    editProfile() {
+      uni.navigateTo({
+        url: '/pages/profile/edit'
+      });
     }
   }
 };
@@ -305,10 +321,17 @@ export default {
   flex: 1;
 }
 
-.refresh-btn {
-  padding: 10rpx;
+.edit-btn {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+
+.edit-btn .arrow {
   font-size: 32rpx;
-  cursor: pointer;
+  margin-left: 8rpx;
+  font-weight: bold;
 }
 
 .nickname {

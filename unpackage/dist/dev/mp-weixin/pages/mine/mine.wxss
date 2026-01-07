@@ -27,10 +27,16 @@
 .info.data-v-7c2ebfa5 {
   flex: 1;
 }
-.refresh-btn.data-v-7c2ebfa5 {
-  padding: 10rpx;
+.edit-btn.data-v-7c2ebfa5 {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+.edit-btn .arrow.data-v-7c2ebfa5 {
   font-size: 32rpx;
-  cursor: pointer;
+  margin-left: 8rpx;
+  font-weight: bold;
 }
 .nickname.data-v-7c2ebfa5 {
   font-size: 36rpx;

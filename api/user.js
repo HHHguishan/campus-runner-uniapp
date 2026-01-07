@@ -2,7 +2,7 @@
  * 用户相关API
  */
 
-import { get, post } from '../utils/request.js'
+import { get, post, put } from '../utils/request.js'
 import { setUserInfo } from '../utils/token.js'
 
 /**
@@ -11,6 +11,14 @@ import { setUserInfo } from '../utils/token.js'
  */
 export function getUserInfo() {
   return get('/user/info')
+}
+
+/**
+ * 获取用户信息（别名）
+ * @returns {Promise}
+ */
+export function fetchUserInfo() {
+  return getUserInfo()
 }
 
 /**

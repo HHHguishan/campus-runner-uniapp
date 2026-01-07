@@ -54,6 +54,24 @@
 			"style": {
 				"navigationBarTitleText": "骑手认证"
 			}
+		},
+		{
+			"path": "pages/notice/notice",
+			"style": {
+				"navigationBarTitleText": "系统公告"
+			}
+		},
+		{
+			"path": "pages/profile/edit",
+			"style": {
+				"navigationBarTitleText": "编辑资料"
+			}
+		},
+		{
+			"path": "pages/debug/api",
+			"style": {
+				"navigationBarTitleText": "API调试"
+			}
 		}
 	],
 	"globalStyle": {

@@ -8,7 +8,10 @@
     "pages/running/running",
     "pages/stats/stats",
     "pages/login/login",
-    "pages/rider/auth"
+    "pages/rider/auth",
+    "pages/notice/notice",
+    "pages/profile/edit",
+    "pages/debug/api"
   ],
   "window": {
     "navigationBarTextStyle": "black",

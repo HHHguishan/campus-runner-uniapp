@@ -125,6 +125,70 @@ function post(url, data = {}, options = {}) {
     ...options
   });
 }
+function put(url, data = {}, options = {}) {
+  return request({
+    url,
+    method: "PUT",
+    data,
+    ...options
+  });
+}
+function uploadFile(url, filePath, formData = {}) {
+  return new Promise((resolve, reject) => {
+    const token = utils_token.getToken();
+    const header = {};
+    if (token) {
+      header["Authorization"] = `Bearer ${token}`;
+    }
+    if (!url.startsWith("http")) {
+      url = utils_config.API_BASE_URL + url;
+    }
+    common_vendor.index.__f__("log", "at utils/request.js:253", "📤 文件上传:", {
+      url,
+      filePath,
+      formData
+    });
+    common_vendor.index.uploadFile({
+      url,
+      filePath,
+      name: "file",
+      header,
+      formData,
+      success: (response) => {
+        common_vendor.index.__f__("log", "at utils/request.js:267", "📥 上传响应:", response);
+        try {
+          const data = JSON.parse(response.data);
+          if (data.code === 200) {
+            resolve(data);
+          } else {
+            common_vendor.index.showToast({
+              title: data.message || "上传失败",
+              icon: "none"
+            });
+            reject(new Error(data.message || "上传失败"));
+          }
+        } catch (error) {
+          common_vendor.index.__f__("error", "at utils/request.js:282", "解析响应失败:", error);
+          common_vendor.index.showToast({
+            title: "上传失败",
+            icon: "none"
+          });
+          reject(error);
+        }
+      },
+      fail: (error) => {
+        common_vendor.index.__f__("error", "at utils/request.js:291", "❌ 上传失败:", error);
+        common_vendor.index.showToast({
+          title: "网络连接失败",
+          icon: "none"
+        });
+        reject(error);
+      }
+    });
+  });
+}
 exports.get = get;
 exports.post = post;
+exports.put = put;
+exports.uploadFile = uploadFile;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/utils/request.js.map

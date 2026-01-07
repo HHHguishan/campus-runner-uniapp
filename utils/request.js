@@ -228,5 +228,76 @@ export function del(url, params = {}, options = {}) {
 	})
 }
 
+/**
+ * 文件上传
+ * @param {String} url - 上传接口地址
+ * @param {String} filePath - 本地文件路径
+ * @param {Object} formData - 额外的表单数据
+ * @returns {Promise} 上传结果
+ */
+export function uploadFile(url, filePath, formData = {}) {
+	return new Promise((resolve, reject) => {
+		// 1. 添加Token到请求头
+		const token = getToken()
+		const header = {}
+		if (token) {
+			header['Authorization'] = `Bearer ${token}`
+		}
+
+		// 2. 添加基础URL
+		if (!url.startsWith('http')) {
+			url = API_BASE_URL + url
+		}
+
+		// 3. 打印上传日志
+		console.log('📤 文件上传:', {
+			url,
+			filePath,
+			formData
+		})
+
+		// 4. 发起上传请求
+		uni.uploadFile({
+			url,
+			filePath,
+			name: 'file',
+			header,
+			formData,
+			success: (response) => {
+				console.log('📥 上传响应:', response)
+
+				try {
+					const data = JSON.parse(response.data)
+
+					if (data.code === 200) {
+						resolve(data)
+					} else {
+						uni.showToast({
+							title: data.message || '上传失败',
+							icon: 'none'
+						})
+						reject(new Error(data.message || '上传失败'))
+					}
+				} catch (error) {
+					console.error('解析响应失败:', error)
+					uni.showToast({
+						title: '上传失败',
+						icon: 'none'
+					})
+					reject(error)
+				}
+			},
+			fail: (error) => {
+				console.error('❌ 上传失败:', error)
+				uni.showToast({
+					title: '网络连接失败',
+					icon: 'none'
+				})
+				reject(error)
+			}
+		})
+	})
+}
+
 // 导出默认方法
 export default request
