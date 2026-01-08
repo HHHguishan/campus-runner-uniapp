@@ -100,6 +100,27 @@
 				"navigationBarTitleText": "账户充值",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/order/create",
+			"style": {
+				"navigationBarTitleText": "发布订单",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/order/payment",
+			"style": {
+				"navigationBarTitleText": "确认支付",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/order/detail",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

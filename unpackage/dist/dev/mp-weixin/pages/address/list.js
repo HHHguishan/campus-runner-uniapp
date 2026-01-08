@@ -9,13 +9,16 @@ const _sfc_main = {
       refreshing: false,
       showDeleteModal: false,
       deleteId: null,
-      fromOrder: false
+      fromOrder: false,
       // 是否来自订单页面
+      addressField: ""
+      // 地址字段：pickup-取件地址, delivery-送达地址
     };
   },
   onLoad(options) {
     if (options.from === "order") {
       this.fromOrder = true;
+      this.addressField = options.field || "";
     }
     this.loadAddressList();
   },
@@ -32,7 +35,7 @@ const _sfc_main = {
         const res = await api_address.getAddressList();
         if (res.code === 200) {
           this.addressList = res.data || [];
-          common_vendor.index.__f__("log", "at pages/address/list.vue:136", "✅ 地址列表加载成功:", this.addressList);
+          common_vendor.index.__f__("log", "at pages/address/list.vue:141", "✅ 地址列表加载成功:", this.addressList);
         } else {
           common_vendor.index.showToast({
             title: res.message || "加载失败",
@@ -40,7 +43,7 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/address/list.vue:144", "❌ 加载地址列表失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/list.vue:149", "❌ 加载地址列表失败:", error);
         common_vendor.index.showToast({
           title: "加载失败，请稍后重试",
           icon: "none"
@@ -86,7 +89,14 @@ const _sfc_main = {
         const pages = getCurrentPages();
         const prevPage = pages[pages.length - 2];
         if (prevPage) {
-          prevPage.$vm.selectedAddress = item;
+          if (this.addressField === "pickup") {
+            prevPage.$vm.formData.pickupAddress = item;
+          } else if (this.addressField === "delivery") {
+            prevPage.$vm.formData.deliveryAddress = item;
+          }
+          if (prevPage.$vm.calculatePrice) {
+            prevPage.$vm.calculatePrice();
+          }
           common_vendor.index.navigateBack();
         }
       } else {
@@ -124,7 +134,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/address/list.vue:243", "❌ 删除地址失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/list.vue:259", "❌ 删除地址失败:", error);
         common_vendor.index.showToast({
           title: "删除失败，请稍后重试",
           icon: "none"
@@ -162,7 +172,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/address/list.vue:286", "❌ 设置默认地址失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/list.vue:302", "❌ 设置默认地址失败:", error);
         common_vendor.index.showToast({
           title: "设置失败，请稍后重试",
           icon: "none"
@@ -186,18 +196,16 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       }, item.isDefault === 1 ? {} : {}, {
         b: common_vendor.t(item.contactName),
         c: common_vendor.t(item.contactPhone),
-        d: common_vendor.t(item.province),
-        e: common_vendor.t(item.city),
-        f: common_vendor.t(item.district),
-        g: common_vendor.t(item.detailAddress),
-        h: common_vendor.o(($event) => $options.editAddress(item), item.id),
-        i: common_vendor.o(($event) => $options.deleteAddress(item.id), item.id),
-        j: item.isDefault !== 1
+        d: common_vendor.t(item.addressName),
+        e: common_vendor.t(item.detail),
+        f: common_vendor.o(($event) => $options.editAddress(item), item.id),
+        g: common_vendor.o(($event) => $options.deleteAddress(item.id), item.id),
+        h: item.isDefault !== 1
       }, item.isDefault !== 1 ? {
-        k: common_vendor.o(($event) => $options.setDefault(item.id), item.id)
+        i: common_vendor.o(($event) => $options.setDefault(item.id), item.id)
       } : {}, {
-        l: item.id,
-        m: common_vendor.o(($event) => $options.selectAddress(item), item.id)
+        j: item.id,
+        k: common_vendor.o(($event) => $options.selectAddress(item), item.id)
       });
     }),
     c: $data.addressList.length === 0 && !$data.loading

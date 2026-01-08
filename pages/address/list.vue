@@ -38,8 +38,11 @@
                 <text class="contact-name">{{ item.contactName }}</text>
                 <text class="contact-phone">{{ item.contactPhone }}</text>
               </view>
+              <view class="address-name">
+                <text>{{ item.addressName }}</text>
+              </view>
               <view class="address-detail">
-                <text>{{ item.province }}{{ item.city }}{{ item.district }}{{ item.detailAddress }}</text>
+                <text>{{ item.detail }}</text>
               </view>
             </view>
 
@@ -105,7 +108,8 @@ export default {
       refreshing: false,
       showDeleteModal: false,
       deleteId: null,
-      fromOrder: false // 是否来自订单页面
+      fromOrder: false, // 是否来自订单页面
+      addressField: '' // 地址字段：pickup-取件地址, delivery-送达地址
     }
   },
 
@@ -113,6 +117,7 @@ export default {
     // 判断是否从订单页进入
     if (options.from === 'order') {
       this.fromOrder = true
+      this.addressField = options.field || '' // pickup 或 delivery
     }
     this.loadAddressList()
   },
@@ -195,7 +200,18 @@ export default {
         const prevPage = pages[pages.length - 2]
 
         if (prevPage) {
-          prevPage.$vm.selectedAddress = item
+          // 根据field字段判断是取件地址还是送达地址
+          if (this.addressField === 'pickup') {
+            prevPage.$vm.formData.pickupAddress = item
+          } else if (this.addressField === 'delivery') {
+            prevPage.$vm.formData.deliveryAddress = item
+          }
+
+          // 触发订单页重新计算价格
+          if (prevPage.$vm.calculatePrice) {
+            prevPage.$vm.calculatePrice()
+          }
+
           uni.navigateBack()
         }
       } else {
@@ -402,6 +418,13 @@ export default {
 .contact-phone {
   font-size: 14px;
   color: #666;
+}
+
+.address-name {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+  margin: 8px 0;
 }
 
 .address-detail {

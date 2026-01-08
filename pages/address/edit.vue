@@ -13,6 +13,17 @@
 
     <!-- 表单内容 -->
     <view class="form-content">
+      <!-- 地址名称 -->
+      <view class="form-item">
+        <view class="form-label required">地址名称</view>
+        <input
+          class="form-input"
+          v-model="formData.addressName"
+          placeholder="请输入地址名称，如：北门菜鸟、学校宿舍"
+          maxlength="20"
+        />
+      </view>
+
       <!-- 联系人 -->
       <view class="form-item">
         <view class="form-label required">联系人</view>
@@ -36,23 +47,13 @@
         />
       </view>
 
-      <!-- 省市区选择 -->
+      <!-- 详细门牌号 -->
       <view class="form-item">
-        <view class="form-label required">所在地区</view>
-        <view class="form-picker" @click="showRegionPicker = true">
-          <text class="picker-text" v-if="regionText">{{ regionText }}</text>
-          <text class="picker-placeholder" v-else>请选择省/市/区</text>
-          <text class="picker-arrow">›</text>
-        </view>
-      </view>
-
-      <!-- 详细地址 -->
-      <view class="form-item">
-        <view class="form-label required">详细地址</view>
+        <view class="form-label required">详细门牌号</view>
         <textarea
           class="form-textarea"
-          v-model="formData.detailAddress"
-          placeholder="请输入详细地址，如街道、楼栋、门牌号等"
+          v-model="formData.detail"
+          placeholder="请输入详细门牌号，如：5号楼302室"
           maxlength="200"
           :show-confirm-bar="false"
         />
@@ -72,15 +73,10 @@
       </view>
     </view>
 
-    <!-- 省市区选择器 -->
-    <picker
-      mode="region"
-      :value="regionValue"
-      @change="onRegionChange"
-      v-if="showRegionPicker"
-    >
-      <view></view>
-    </picker>
+    <!-- 底部保存按钮 -->
+    <view class="bottom-save-bar">
+      <button class="btn-save" @click="saveAddress">保存地址</button>
+    </view>
   </view>
 </template>
 
@@ -92,19 +88,15 @@ export default {
     return {
       isEdit: false, // 是否是编辑模式
       addressId: null, // 地址ID（编辑模式）
-      showRegionPicker: false,
-      regionValue: [], // 省市区数组
-      regionText: '', // 省市区文本
+      regionText: '', // 地区文本（仅显示用）
       formData: {
         contactName: '',
         contactPhone: '',
-        province: '',
-        city: '',
-        district: '',
-        detailAddress: '',
+        addressName: '', // 地址名称，如：北门菜鸟、学校宿舍
+        detail: '', // 详细门牌号
         isDefault: 0,
-        latitude: null,
-        longitude: null
+        lat: null, // 纬度
+        lng: null // 经度
       }
     }
   },
@@ -135,19 +127,11 @@ export default {
           this.formData = {
             contactName: data.contactName || '',
             contactPhone: data.contactPhone || '',
-            province: data.province || '',
-            city: data.city || '',
-            district: data.district || '',
-            detailAddress: data.detailAddress || '',
+            addressName: data.addressName || '',
+            detail: data.detail || '',
             isDefault: data.isDefault || 0,
-            latitude: data.latitude,
-            longitude: data.longitude
-          }
-
-          // 设置省市区
-          if (data.province && data.city && data.district) {
-            this.regionValue = [data.province, data.city, data.district]
-            this.regionText = `${data.province} ${data.city} ${data.district}`
+            lat: data.lat,
+            lng: data.lng
           }
 
           console.log('✅ 地址详情加载成功:', this.formData)
@@ -168,19 +152,6 @@ export default {
     },
 
     /**
-     * 省市区选择改变
-     */
-    onRegionChange(e) {
-      const value = e.detail.value
-      this.regionValue = value
-      this.regionText = value.join(' ')
-      this.formData.province = value[0]
-      this.formData.city = value[1]
-      this.formData.district = value[2]
-      this.showRegionPicker = false
-    },
-
-    /**
      * 默认地址开关改变
      */
     onDefaultChange(e) {
@@ -191,6 +162,14 @@ export default {
      * 表单验证
      */
     validateForm() {
+      if (!this.formData.addressName.trim()) {
+        uni.showToast({
+          title: '请输入地址名称',
+          icon: 'none'
+        })
+        return false
+      }
+
       if (!this.formData.contactName.trim()) {
         uni.showToast({
           title: '请输入联系人姓名',
@@ -217,17 +196,9 @@ export default {
         return false
       }
 
-      if (!this.formData.province || !this.formData.city || !this.formData.district) {
+      if (!this.formData.detail.trim()) {
         uni.showToast({
-          title: '请选择所在地区',
-          icon: 'none'
-        })
-        return false
-      }
-
-      if (!this.formData.detailAddress.trim()) {
-        uni.showToast({
-          title: '请输入详细地址',
+          title: '请输入详细门牌号',
           icon: 'none'
         })
         return false
@@ -391,29 +362,6 @@ export default {
   padding: 5px 0;
 }
 
-/* 选择器 */
-.form-picker {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 40px;
-}
-
-.picker-text {
-  font-size: 15px;
-  color: #333;
-}
-
-.picker-placeholder {
-  font-size: 15px;
-  color: #999;
-}
-
-.picker-arrow {
-  font-size: 20px;
-  color: #999;
-}
-
 /* 开关 */
 .form-switch {
   display: flex;
@@ -434,5 +382,35 @@ export default {
 .switch-text {
   font-size: 15px;
   color: #333;
+}
+
+/* 底部保存按钮 */
+.bottom-save-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 15px;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 99;
+}
+
+.btn-save {
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 24px;
+  border: none;
+  text-align: center;
+}
+
+.btn-save::after {
+  border: none;
 }
 </style>

@@ -1,0 +1,277 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.order-create-container.data-v-8837ac90 {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 导航栏 */
+.nav-bar.data-v-8837ac90 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.nav-back.data-v-8837ac90 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+}
+.nav-title.data-v-8837ac90 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+}
+.nav-placeholder.data-v-8837ac90 {
+  width: 40px;
+}
+
+/* 表单内容 */
+.form-content.data-v-8837ac90 {
+  flex: 1;
+  margin-top: 54px;
+  margin-bottom: 70px;
+  padding: 15px;
+}
+.form-section.data-v-8837ac90 {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+.section-title.data-v-8837ac90 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+.section-title.required.data-v-8837ac90::before {
+  content: "*";
+  color: #ff4d4f;
+  margin-right: 4px;
+}
+
+/* 服务类型 */
+.service-type-grid.data-v-8837ac90 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.service-type-item.data-v-8837ac90 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 5px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.service-type-item.active.data-v-8837ac90 {
+  background-color: #f0f4ff;
+  border-color: #667eea;
+}
+.service-icon.data-v-8837ac90 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+.service-name.data-v-8837ac90 {
+  font-size: 12px;
+  color: #666;
+}
+.service-type-item.active .service-name.data-v-8837ac90 {
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* 输入框 */
+.form-input-wrapper.data-v-8837ac90 {
+  position: relative;
+}
+.form-input.data-v-8837ac90 {
+  width: 100%;
+  height: 44px;
+  padding: 0 15px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333;
+}
+.form-textarea.data-v-8837ac90 {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px 15px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.6;
+}
+.char-count.data-v-8837ac90 {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 12px;
+  color: #999;
+}
+
+/* 地址选择 */
+.address-selector.data-v-8837ac90 {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  padding: 12px 15px;
+  cursor: pointer;
+}
+.address-content.data-v-8837ac90 {
+  flex: 1;
+}
+.address-header.data-v-8837ac90 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.contact-name.data-v-8837ac90 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 12px;
+}
+.contact-phone.data-v-8837ac90 {
+  font-size: 13px;
+  color: #666;
+}
+.address-detail.data-v-8837ac90 {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+.address-placeholder.data-v-8837ac90 {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.placeholder-text.data-v-8837ac90 {
+  font-size: 14px;
+  color: #999;
+}
+.placeholder-arrow.data-v-8837ac90 {
+  font-size: 20px;
+  color: #999;
+}
+
+/* 价格 */
+.price-section.data-v-8837ac90 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.price-section .section-title.data-v-8837ac90 {
+  color: #fff;
+}
+.price-display.data-v-8837ac90 {
+  display: flex;
+  align-items: baseline;
+  margin: 15px 0;
+}
+.price-symbol.data-v-8837ac90 {
+  font-size: 24px;
+  color: #fff;
+  margin-right: 4px;
+}
+.price-value.data-v-8837ac90 {
+  font-size: 40px;
+  font-weight: bold;
+  color: #fff;
+}
+.price-breakdown.data-v-8837ac90 {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.breakdown-item.data-v-8837ac90 {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 底部按钮 */
+.bottom-bar.data-v-8837ac90 {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+.bar-left.data-v-8837ac90 {
+  flex: 1;
+}
+.bar-label.data-v-8837ac90 {
+  font-size: 14px;
+  color: #666;
+}
+.bar-price.data-v-8837ac90 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ff4d4f;
+  margin-left: 8px;
+}
+.btn-submit.data-v-8837ac90 {
+  width: 120px;
+  height: 44px;
+  line-height: 44px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 22px;
+  border: none;
+}
+.btn-submit[disabled].data-v-8837ac90 {
+  opacity: 0.5;
+}

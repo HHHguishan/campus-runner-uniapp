@@ -8,21 +8,20 @@ const _sfc_main = {
       // 是否是编辑模式
       addressId: null,
       // 地址ID（编辑模式）
-      showRegionPicker: false,
-      regionValue: [],
-      // 省市区数组
       regionText: "",
-      // 省市区文本
+      // 地区文本（仅显示用）
       formData: {
         contactName: "",
         contactPhone: "",
-        province: "",
-        city: "",
-        district: "",
-        detailAddress: "",
+        addressName: "",
+        // 地址名称，如：北门菜鸟、学校宿舍
+        detail: "",
+        // 详细门牌号
         isDefault: 0,
-        latitude: null,
-        longitude: null
+        lat: null,
+        // 纬度
+        lng: null
+        // 经度
       }
     };
   },
@@ -47,19 +46,13 @@ const _sfc_main = {
           this.formData = {
             contactName: data.contactName || "",
             contactPhone: data.contactPhone || "",
-            province: data.province || "",
-            city: data.city || "",
-            district: data.district || "",
-            detailAddress: data.detailAddress || "",
+            addressName: data.addressName || "",
+            detail: data.detail || "",
             isDefault: data.isDefault || 0,
-            latitude: data.latitude,
-            longitude: data.longitude
+            lat: data.lat,
+            lng: data.lng
           };
-          if (data.province && data.city && data.district) {
-            this.regionValue = [data.province, data.city, data.district];
-            this.regionText = `${data.province} ${data.city} ${data.district}`;
-          }
-          common_vendor.index.__f__("log", "at pages/address/edit.vue:153", "✅ 地址详情加载成功:", this.formData);
+          common_vendor.index.__f__("log", "at pages/address/edit.vue:137", "✅ 地址详情加载成功:", this.formData);
         } else {
           common_vendor.index.showToast({
             title: "加载失败",
@@ -68,24 +61,12 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/address/edit.vue:162", "❌ 加载地址详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/edit.vue:146", "❌ 加载地址详情失败:", error);
         common_vendor.index.showToast({
           title: "加载失败，请稍后重试",
           icon: "none"
         });
       }
-    },
-    /**
-     * 省市区选择改变
-     */
-    onRegionChange(e) {
-      const value = e.detail.value;
-      this.regionValue = value;
-      this.regionText = value.join(" ");
-      this.formData.province = value[0];
-      this.formData.city = value[1];
-      this.formData.district = value[2];
-      this.showRegionPicker = false;
     },
     /**
      * 默认地址开关改变
@@ -97,6 +78,13 @@ const _sfc_main = {
      * 表单验证
      */
     validateForm() {
+      if (!this.formData.addressName.trim()) {
+        common_vendor.index.showToast({
+          title: "请输入地址名称",
+          icon: "none"
+        });
+        return false;
+      }
       if (!this.formData.contactName.trim()) {
         common_vendor.index.showToast({
           title: "请输入联系人姓名",
@@ -119,16 +107,9 @@ const _sfc_main = {
         });
         return false;
       }
-      if (!this.formData.province || !this.formData.city || !this.formData.district) {
+      if (!this.formData.detail.trim()) {
         common_vendor.index.showToast({
-          title: "请选择所在地区",
-          icon: "none"
-        });
-        return false;
-      }
-      if (!this.formData.detailAddress.trim()) {
-        common_vendor.index.showToast({
-          title: "请输入详细地址",
+          title: "请输入详细门牌号",
           icon: "none"
         });
         return false;
@@ -169,7 +150,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/address/edit.vue:284", "❌ 保存地址失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/edit.vue:255", "❌ 保存地址失败:", error);
         common_vendor.index.showToast({
           title: "保存失败，请稍后重试",
           icon: "none"
@@ -185,28 +166,22 @@ const _sfc_main = {
   }
 };
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return common_vendor.e({
+  return {
     a: common_vendor.o((...args) => $options.goBack && $options.goBack(...args)),
     b: common_vendor.t($data.isEdit ? "编辑地址" : "添加地址"),
     c: common_vendor.o((...args) => $options.saveAddress && $options.saveAddress(...args)),
-    d: $data.formData.contactName,
-    e: common_vendor.o(($event) => $data.formData.contactName = $event.detail.value),
-    f: $data.formData.contactPhone,
-    g: common_vendor.o(($event) => $data.formData.contactPhone = $event.detail.value),
-    h: $data.regionText
-  }, $data.regionText ? {
-    i: common_vendor.t($data.regionText)
-  } : {}, {
-    j: common_vendor.o(($event) => $data.showRegionPicker = true),
-    k: $data.formData.detailAddress,
-    l: common_vendor.o(($event) => $data.formData.detailAddress = $event.detail.value),
-    m: $data.formData.isDefault === 1,
-    n: common_vendor.o((...args) => $options.onDefaultChange && $options.onDefaultChange(...args)),
-    o: $data.showRegionPicker
-  }, $data.showRegionPicker ? {
-    p: $data.regionValue,
-    q: common_vendor.o((...args) => $options.onRegionChange && $options.onRegionChange(...args))
-  } : {});
+    d: $data.formData.addressName,
+    e: common_vendor.o(($event) => $data.formData.addressName = $event.detail.value),
+    f: $data.formData.contactName,
+    g: common_vendor.o(($event) => $data.formData.contactName = $event.detail.value),
+    h: $data.formData.contactPhone,
+    i: common_vendor.o(($event) => $data.formData.contactPhone = $event.detail.value),
+    j: $data.formData.detail,
+    k: common_vendor.o(($event) => $data.formData.detail = $event.detail.value),
+    l: $data.formData.isDefault === 1,
+    m: common_vendor.o((...args) => $options.onDefaultChange && $options.onDefaultChange(...args)),
+    n: common_vendor.o((...args) => $options.saveAddress && $options.saveAddress(...args))
+  };
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-dcb1f0d8"]]);
 wx.createPage(MiniProgramPage);

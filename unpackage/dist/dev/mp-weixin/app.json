@@ -15,7 +15,10 @@
     "pages/address/list",
     "pages/address/edit",
     "pages/wallet/wallet",
-    "pages/wallet/recharge"
+    "pages/wallet/recharge",
+    "pages/order/create",
+    "pages/order/payment",
+    "pages/order/detail"
   ],
   "window": {
     "navigationBarTextStyle": "black",

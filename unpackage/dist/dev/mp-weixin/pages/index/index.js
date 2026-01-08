@@ -296,9 +296,19 @@ const _sfc_main = {
     },
     // 跳转到发布订单页面
     navigateToPublish(type) {
-      common_vendor.index.showToast({
-        title: "发布订单功能开发中...",
-        icon: "none"
+      const typeMap = {
+        "buy": 1,
+        // 帮买
+        "send": 2,
+        // 帮送
+        "fetch": 3,
+        // 帮取
+        "all": 4
+        // 全能
+      };
+      const serviceType = typeMap[type] || 1;
+      common_vendor.index.navigateTo({
+        url: `/pages/order/create?serviceType=${serviceType}`
       });
     },
     // 跳转到订单列表

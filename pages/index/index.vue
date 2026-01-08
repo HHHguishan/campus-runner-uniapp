@@ -520,14 +520,19 @@ export default {
 
     // 跳转到发布订单页面
     navigateToPublish(type) {
-      uni.showToast({
-        title: '发布订单功能开发中...',
-        icon: 'none'
+      // 将类型转换为服务类型ID
+      const typeMap = {
+        'buy': 1,    // 帮买
+        'send': 2,   // 帮送
+        'fetch': 3,  // 帮取
+        'all': 4     // 全能
+      };
+
+      const serviceType = typeMap[type] || 1;
+
+      uni.navigateTo({
+        url: `/pages/order/create?serviceType=${serviceType}`
       });
-      // TODO: 跳转到发布订单页面
-      // uni.navigateTo({
-      //   url: `/pages/publish/publish?type=${type}`
-      // });
     },
 
     // 跳转到订单列表

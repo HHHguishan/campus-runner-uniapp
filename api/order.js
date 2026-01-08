@@ -62,3 +62,15 @@ export function getOrderStatistics() {
 export function submitEvaluation(data) {
   return post('/evaluation/submit', data)
 }
+
+/**
+ * 订单支付
+ * @param {Object} data - 支付数据
+ * @param {Number} data.orderId - 订单ID
+ * @param {Number} data.payType - 支付方式(1-余额支付)
+ * @param {String} data.payPassword - 支付密码
+ * @returns {Promise}
+ */
+export function payOrder(data) {
+  return post('/pay/doPay', data)
+}

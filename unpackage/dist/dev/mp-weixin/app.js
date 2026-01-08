@@ -19,6 +19,9 @@ if (!Math) {
   "./pages/address/edit.js";
   "./pages/wallet/wallet.js";
   "./pages/wallet/recharge.js";
+  "./pages/order/create.js";
+  "./pages/order/payment.js";
+  "./pages/order/detail.js";
 }
 const _sfc_main = {
   onLaunch: function() {

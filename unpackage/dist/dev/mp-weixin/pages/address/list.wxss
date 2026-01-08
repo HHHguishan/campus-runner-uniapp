@@ -114,6 +114,12 @@
   font-size: 14px;
   color: #666;
 }
+.address-name.data-v-90a3874e {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+  margin: 8px 0;
+}
 .address-detail.data-v-90a3874e {
   font-size: 14px;
   color: #666;
