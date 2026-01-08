@@ -8,8 +8,8 @@ const _sfc_main = {
       orderId: null,
       totalAmount: "0.00",
       orderInfo: null,
-      payType: 1,
-      // 1-余额支付
+      payType: "BALANCE",
+      // BALANCE-余额支付, ALIPAY-支付宝
       balance: 0,
       // 余额
       paying: false
@@ -17,15 +17,26 @@ const _sfc_main = {
     };
   },
   onLoad(options) {
+    common_vendor.index.__f__("log", "at pages/order/payment.vue:119", "📝 支付页面参数:", options);
     if (options.orderId) {
       this.orderId = options.orderId;
+      common_vendor.index.__f__("log", "at pages/order/payment.vue:123", "✅ 订单ID:", this.orderId);
+    } else {
+      common_vendor.index.__f__("error", "at pages/order/payment.vue:125", "❌ 缺少订单ID参数");
+      common_vendor.index.showToast({
+        title: "参数错误",
+        icon: "none"
+      });
+      setTimeout(() => {
+        common_vendor.index.navigateBack();
+      }, 1500);
+      return;
     }
     if (options.totalAmount) {
       this.totalAmount = Number(options.totalAmount).toFixed(2);
+      common_vendor.index.__f__("log", "at pages/order/payment.vue:138", "✅ 支付金额:", this.totalAmount);
     }
-    if (this.orderId) {
-      this.loadOrderDetail();
-    }
+    this.loadOrderDetail();
     this.loadBalance();
   },
   methods: {
@@ -33,16 +44,27 @@ const _sfc_main = {
      * 加载订单详情
      */
     async loadOrderDetail() {
+      if (!this.orderId) {
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:154", "❌ 订单ID为空，无法加载订单详情");
+        return;
+      }
       try {
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:159", "📥 加载订单详情, orderId:", this.orderId);
         const res = await api_order.getOrderDetail(this.orderId);
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:161", "📥 订单详情响应:", JSON.stringify(res, null, 2));
         if (res.code === 200 && res.data) {
           this.orderInfo = res.data;
-          if (res.data.totalAmount) {
-            this.totalAmount = Number(res.data.totalAmount).toFixed(2);
+          if (res.data.totalFee) {
+            this.totalAmount = Number(res.data.totalFee).toFixed(2);
+            common_vendor.index.__f__("log", "at pages/order/payment.vue:168", "✅ 更新支付金额:", this.totalAmount);
           }
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:150", "❌ 加载订单详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:172", "❌ 加载订单详情失败:", error);
+        common_vendor.index.showToast({
+          title: "加载订单详情失败",
+          icon: "none"
+        });
       }
     },
     /**
@@ -50,19 +72,33 @@ const _sfc_main = {
      */
     async loadBalance() {
       try {
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:185", "📥 加载钱包余额...");
         const res = await api_wallet.getWalletBalance();
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:187", "📥 余额响应:", JSON.stringify(res, null, 2));
         if (res.code === 200) {
-          this.balance = Number(res.data || 0).toFixed(2);
+          const balanceValue = res.data !== null ? res.data : 0;
+          this.balance = Number(balanceValue).toFixed(2);
+          common_vendor.index.__f__("log", "at pages/order/payment.vue:193", "✅ 当前余额:", this.balance);
+        } else {
+          common_vendor.index.__f__("error", "at pages/order/payment.vue:195", "❌ 获取余额失败:", res.message);
+          common_vendor.index.showToast({
+            title: res.message || "获取余额失败",
+            icon: "none"
+          });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:164", "❌ 加载余额失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:202", "❌ 加载余额失败:", error);
+        common_vendor.index.showToast({
+          title: "加载余额失败",
+          icon: "none"
+        });
       }
     },
     /**
      * 选择支付方式
      */
     selectPayType(type) {
-      this.payType = type;
+      this.payType = type === 1 ? "BALANCE" : "ALIPAY";
     },
     /**
      * 获取服务类型名称
@@ -145,7 +181,7 @@ const _sfc_main = {
       } catch (error) {
         common_vendor.index.hideLoading();
         this.paying = false;
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:263", "❌ 支付失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:306", "❌ 支付失败:", error);
         common_vendor.index.showToast({
           title: "支付失败，请稍后重试",
           icon: "none"
@@ -167,13 +203,13 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     c: $data.orderInfo
   }, $data.orderInfo ? {
     d: common_vendor.t($data.orderInfo.orderNo || "-"),
-    e: common_vendor.t($options.getServiceTypeName($data.orderInfo.serviceType)),
-    f: common_vendor.t($data.orderInfo.goodsInfo || "-")
+    e: common_vendor.t($options.getServiceTypeName($data.orderInfo.type)),
+    f: common_vendor.t($data.orderInfo.goodsDesc || "-")
   } : {}, {
     g: common_vendor.t($data.balance),
-    h: $data.payType === 1
-  }, $data.payType === 1 ? {} : {}, {
-    i: $data.payType === 1 ? 1 : "",
+    h: $data.payType === "BALANCE"
+  }, $data.payType === "BALANCE" ? {} : {}, {
+    i: $data.payType === "BALANCE" ? 1 : "",
     j: common_vendor.o(($event) => $options.selectPayType(1)),
     k: common_vendor.t($data.totalAmount),
     l: common_vendor.t($data.paying ? "支付中..." : "确认支付"),

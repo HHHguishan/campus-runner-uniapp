@@ -50,6 +50,10 @@
           <view class="address-content" v-if="formData.pickupAddress">
             <view class="address-header">
               <text class="contact-name">{{ formData.pickupAddress.addressName }}</text>
+              <text class="contact-phone">{{ formData.pickupAddress.contactPhone }}</text>
+            </view>
+            <view class="contact-info" v-if="formData.pickupAddress.contactName">
+              <text class="contact-person">联系人: {{ formData.pickupAddress.contactName }}</text>
             </view>
             <view class="address-detail">
               {{ formData.pickupAddress.detail }}
@@ -69,6 +73,10 @@
           <view class="address-content" v-if="formData.deliveryAddress">
             <view class="address-header">
               <text class="contact-name">{{ formData.deliveryAddress.addressName }}</text>
+              <text class="contact-phone">{{ formData.deliveryAddress.contactPhone }}</text>
+            </view>
+            <view class="contact-info" v-if="formData.deliveryAddress.contactName">
+              <text class="contact-person">联系人: {{ formData.deliveryAddress.contactName }}</text>
             </view>
             <view class="address-detail">
               {{ formData.deliveryAddress.detail }}
@@ -198,12 +206,12 @@ export default {
     // 是否可以提交
     canSubmit() {
       return (
-        this.formData.serviceType &&
-        this.formData.goodsInfo.trim() &&
+        this.formData.type &&
+        this.formData.goodsDesc.trim() &&
         this.formData.pickupAddress &&
         this.formData.deliveryAddress &&
-        this.formData.deliveryPhone &&
-        this.formData.deliveryName
+        this.formData.contactPhone &&
+        this.formData.contactName
       )
     }
   },
@@ -211,7 +219,7 @@ export default {
   async onLoad(options) {
     // 如果从首页选择服务类型进入
     if (options.serviceType) {
-      this.formData.serviceType = Number(options.serviceType)
+      this.formData.type = Number(options.serviceType)
     }
 
     // 加载系统配置
@@ -222,6 +230,21 @@ export default {
 
     // 计算价格
     this.calculatePrice()
+  },
+
+  onShow() {
+    // 从地址选择页返回时，检查地址是否已选择
+    console.log('✅ 订单页面 onShow 触发')
+    console.log('当前表单数据:', JSON.stringify(this.formData, null, 2))
+
+    // 强制更新视图
+    this.$forceUpdate()
+
+    // 重新计算价格（如果地址已选择）
+    if (this.formData.pickupAddress || this.formData.deliveryAddress) {
+      console.log('地址已选择，重新计算价格')
+      this.calculatePrice()
+    }
   },
 
   methods: {
@@ -281,6 +304,7 @@ export default {
      * 选择取件地址
      */
     selectPickupAddress() {
+      console.log('跳转到选择取件地址页面')
       uni.navigateTo({
         url: '/pages/address/list?from=order&field=pickup'
       })
@@ -290,6 +314,7 @@ export default {
      * 选择送达地址
      */
     selectDeliveryAddress() {
+      console.log('跳转到选择送达地址页面')
       uni.navigateTo({
         url: '/pages/address/list?from=order&field=delivery'
       })
@@ -383,14 +408,34 @@ export default {
           distance: this.formData.distance || undefined // 距离（可选）
         }
 
-        console.log('提交订单数据:', orderData)
+        console.log('📤 提交订单数据:', orderData)
 
         const res = await createOrder(orderData)
+
+        console.log('📥 创建订单响应:', JSON.stringify(res, null, 2))
 
         uni.hideLoading()
 
         if (res.code === 200) {
           const orderInfo = res.data
+          console.log('✅ 订单信息:', orderInfo)
+
+          // 后端返回的字段名：id 和 totalFee
+          const orderId = orderInfo.id
+          const totalAmount = orderInfo.totalFee || '0.00'
+
+          console.log('订单ID:', orderId)
+          console.log('订单金额:', totalAmount)
+
+          if (!orderId) {
+            console.error('❌ 订单ID不存在，无法跳转支付页面')
+            uni.showToast({
+              title: '订单创建失败，缺少订单ID',
+              icon: 'none',
+              duration: 2000
+            })
+            return
+          }
 
           uni.showToast({
             title: '订单创建成功',
@@ -401,7 +446,7 @@ export default {
           // 跳转到支付页面
           setTimeout(() => {
             uni.navigateTo({
-              url: `/pages/order/payment?orderId=${orderInfo.orderId}&totalAmount=${orderInfo.totalAmount}`
+              url: `/pages/order/payment?orderId=${orderId}&totalAmount=${totalAmount}`
             })
           }, 1500)
         } else {
@@ -606,6 +651,15 @@ export default {
 }
 
 .contact-phone {
+  font-size: 13px;
+  color: #666;
+}
+
+.contact-info {
+  margin-bottom: 6px;
+}
+
+.contact-person {
   font-size: 13px;
   color: #666;
 }

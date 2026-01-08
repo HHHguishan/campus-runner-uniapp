@@ -30,11 +30,11 @@
           </view>
           <view class="info-item">
             <text class="info-label">服务类型</text>
-            <text class="info-value">{{ getServiceTypeName(orderInfo.serviceType) }}</text>
+            <text class="info-value">{{ getServiceTypeName(orderInfo.type) }}</text>
           </view>
           <view class="info-item">
             <text class="info-label">物品信息</text>
-            <text class="info-value">{{ orderInfo.goodsInfo || '-' }}</text>
+            <text class="info-value">{{ orderInfo.goodsDesc || '-' }}</text>
           </view>
         </view>
       </view>
@@ -54,8 +54,8 @@
                 <text class="method-desc">当前余额：¥{{ balance }}</text>
               </view>
             </view>
-            <view class="method-check" :class="{ active: payType === 1 }">
-              <text class="check-icon" v-if="payType === 1">✓</text>
+            <view class="method-check" :class="{ active: payType === 'BALANCE' }">
+              <text class="check-icon" v-if="payType === 'BALANCE'">✓</text>
             </view>
           </view>
 
@@ -109,24 +109,37 @@ export default {
       orderId: null,
       totalAmount: '0.00',
       orderInfo: null,
-      payType: 1, // 1-余额支付
+      payType: 'BALANCE', // BALANCE-余额支付, ALIPAY-支付宝
       balance: 0, // 余额
       paying: false // 支付中
     }
   },
 
   onLoad(options) {
+    console.log('📝 支付页面参数:', options)
+
     if (options.orderId) {
       this.orderId = options.orderId
+      console.log('✅ 订单ID:', this.orderId)
+    } else {
+      console.error('❌ 缺少订单ID参数')
+      uni.showToast({
+        title: '参数错误',
+        icon: 'none'
+      })
+      setTimeout(() => {
+        uni.navigateBack()
+      }, 1500)
+      return
     }
+
     if (options.totalAmount) {
       this.totalAmount = Number(options.totalAmount).toFixed(2)
+      console.log('✅ 支付金额:', this.totalAmount)
     }
 
     // 加载订单详情
-    if (this.orderId) {
-      this.loadOrderDetail()
-    }
+    this.loadOrderDetail()
 
     // 加载余额
     this.loadBalance()
@@ -137,17 +150,30 @@ export default {
      * 加载订单详情
      */
     async loadOrderDetail() {
+      if (!this.orderId) {
+        console.error('❌ 订单ID为空，无法加载订单详情')
+        return
+      }
+
       try {
+        console.log('📥 加载订单详情, orderId:', this.orderId)
         const res = await getOrderDetail(this.orderId)
+        console.log('📥 订单详情响应:', JSON.stringify(res, null, 2))
+
         if (res.code === 200 && res.data) {
           this.orderInfo = res.data
-          // 如果接口返回了金额，使用接口返回的金额
-          if (res.data.totalAmount) {
-            this.totalAmount = Number(res.data.totalAmount).toFixed(2)
+          // 后端返回的是 totalFee，不是 totalAmount
+          if (res.data.totalFee) {
+            this.totalAmount = Number(res.data.totalFee).toFixed(2)
+            console.log('✅ 更新支付金额:', this.totalAmount)
           }
         }
       } catch (error) {
         console.error('❌ 加载订单详情失败:', error)
+        uni.showToast({
+          title: '加载订单详情失败',
+          icon: 'none'
+        })
       }
     },
 
@@ -156,12 +182,28 @@ export default {
      */
     async loadBalance() {
       try {
+        console.log('📥 加载钱包余额...')
         const res = await getWalletBalance()
+        console.log('📥 余额响应:', JSON.stringify(res, null, 2))
+
         if (res.code === 200) {
-          this.balance = Number(res.data || 0).toFixed(2)
+          // 后端直接返回 BigDecimal，所以 res.data 就是余额值
+          const balanceValue = res.data !== null ? res.data : 0
+          this.balance = Number(balanceValue).toFixed(2)
+          console.log('✅ 当前余额:', this.balance)
+        } else {
+          console.error('❌ 获取余额失败:', res.message)
+          uni.showToast({
+            title: res.message || '获取余额失败',
+            icon: 'none'
+          })
         }
       } catch (error) {
         console.error('❌ 加载余额失败:', error)
+        uni.showToast({
+          title: '加载余额失败',
+          icon: 'none'
+        })
       }
     },
 
@@ -169,7 +211,8 @@ export default {
      * 选择支付方式
      */
     selectPayType(type) {
-      this.payType = type
+      // type: 1-余额支付, 2-支付宝支付
+      this.payType = type === 1 ? 'BALANCE' : 'ALIPAY'
     },
 
     /**

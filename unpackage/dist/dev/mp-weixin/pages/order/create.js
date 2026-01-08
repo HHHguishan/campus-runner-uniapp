@@ -50,16 +50,25 @@ const _sfc_main = {
   computed: {
     // 是否可以提交
     canSubmit() {
-      return this.formData.serviceType && this.formData.goodsInfo.trim() && this.formData.pickupAddress && this.formData.deliveryAddress && this.formData.deliveryPhone && this.formData.deliveryName;
+      return this.formData.type && this.formData.goodsDesc.trim() && this.formData.pickupAddress && this.formData.deliveryAddress && this.formData.contactPhone && this.formData.contactName;
     }
   },
   async onLoad(options) {
     if (options.serviceType) {
-      this.formData.serviceType = Number(options.serviceType);
+      this.formData.type = Number(options.serviceType);
     }
     await this.loadConfig();
     await this.loadUserInfo();
     this.calculatePrice();
+  },
+  onShow() {
+    common_vendor.index.__f__("log", "at pages/order/create.vue:237", "✅ 订单页面 onShow 触发");
+    common_vendor.index.__f__("log", "at pages/order/create.vue:238", "当前表单数据:", JSON.stringify(this.formData, null, 2));
+    this.$forceUpdate();
+    if (this.formData.pickupAddress || this.formData.deliveryAddress) {
+      common_vendor.index.__f__("log", "at pages/order/create.vue:245", "地址已选择，重新计算价格");
+      this.calculatePrice();
+    }
   },
   methods: {
     /**
@@ -76,10 +85,10 @@ const _sfc_main = {
             weatherRate: Number(data.weather_rate || 1),
             platformRate: Number(data.platform_rate || 0.1)
           };
-          common_vendor.index.__f__("log", "at pages/order/create.vue:243", "✅ 系统配置加载成功:", this.config);
+          common_vendor.index.__f__("log", "at pages/order/create.vue:266", "✅ 系统配置加载成功:", this.config);
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/order/create.vue:246", "❌ 加载配置失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/create.vue:269", "❌ 加载配置失败:", error);
       }
     },
     /**
@@ -97,7 +106,7 @@ const _sfc_main = {
           }
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/order/create.vue:268", "❌ 加载用户信息失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/create.vue:291", "❌ 加载用户信息失败:", error);
       }
     },
     /**
@@ -111,6 +120,7 @@ const _sfc_main = {
      * 选择取件地址
      */
     selectPickupAddress() {
+      common_vendor.index.__f__("log", "at pages/order/create.vue:307", "跳转到选择取件地址页面");
       common_vendor.index.navigateTo({
         url: "/pages/address/list?from=order&field=pickup"
       });
@@ -119,6 +129,7 @@ const _sfc_main = {
      * 选择送达地址
      */
     selectDeliveryAddress() {
+      common_vendor.index.__f__("log", "at pages/order/create.vue:317", "跳转到选择送达地址页面");
       common_vendor.index.navigateTo({
         url: "/pages/address/list?from=order&field=delivery"
       });
@@ -206,11 +217,26 @@ const _sfc_main = {
           distance: this.formData.distance || void 0
           // 距离（可选）
         };
-        common_vendor.index.__f__("log", "at pages/order/create.vue:386", "提交订单数据:", orderData);
+        common_vendor.index.__f__("log", "at pages/order/create.vue:411", "📤 提交订单数据:", orderData);
         const res = await api_order.createOrder(orderData);
+        common_vendor.index.__f__("log", "at pages/order/create.vue:415", "📥 创建订单响应:", JSON.stringify(res, null, 2));
         common_vendor.index.hideLoading();
         if (res.code === 200) {
           const orderInfo = res.data;
+          common_vendor.index.__f__("log", "at pages/order/create.vue:421", "✅ 订单信息:", orderInfo);
+          const orderId = orderInfo.id;
+          const totalAmount = orderInfo.totalFee || "0.00";
+          common_vendor.index.__f__("log", "at pages/order/create.vue:427", "订单ID:", orderId);
+          common_vendor.index.__f__("log", "at pages/order/create.vue:428", "订单金额:", totalAmount);
+          if (!orderId) {
+            common_vendor.index.__f__("error", "at pages/order/create.vue:431", "❌ 订单ID不存在，无法跳转支付页面");
+            common_vendor.index.showToast({
+              title: "订单创建失败，缺少订单ID",
+              icon: "none",
+              duration: 2e3
+            });
+            return;
+          }
           common_vendor.index.showToast({
             title: "订单创建成功",
             icon: "success",
@@ -218,7 +244,7 @@ const _sfc_main = {
           });
           setTimeout(() => {
             common_vendor.index.navigateTo({
-              url: `/pages/order/payment?orderId=${orderInfo.orderId}&totalAmount=${orderInfo.totalAmount}`
+              url: `/pages/order/payment?orderId=${orderId}&totalAmount=${totalAmount}`
             });
           }, 1500);
         } else {
@@ -229,7 +255,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/order/create.vue:415", "❌ 创建订单失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/create.vue:460", "❌ 创建订单失败:", error);
         common_vendor.index.showToast({
           title: "创建失败，请稍后重试",
           icon: "none"
@@ -260,38 +286,48 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     d: common_vendor.o(($event) => $data.formData.goodsDesc = $event.detail.value),
     e: common_vendor.t($data.formData.goodsDesc.length),
     f: $data.formData.pickupAddress
-  }, $data.formData.pickupAddress ? {
+  }, $data.formData.pickupAddress ? common_vendor.e({
     g: common_vendor.t($data.formData.pickupAddress.addressName),
-    h: common_vendor.t($data.formData.pickupAddress.detail)
+    h: common_vendor.t($data.formData.pickupAddress.contactPhone),
+    i: $data.formData.pickupAddress.contactName
+  }, $data.formData.pickupAddress.contactName ? {
+    j: common_vendor.t($data.formData.pickupAddress.contactName)
   } : {}, {
-    i: common_vendor.o((...args) => $options.selectPickupAddress && $options.selectPickupAddress(...args)),
-    j: $data.formData.deliveryAddress
-  }, $data.formData.deliveryAddress ? {
-    k: common_vendor.t($data.formData.deliveryAddress.addressName),
-    l: common_vendor.t($data.formData.deliveryAddress.detail)
+    k: common_vendor.t($data.formData.pickupAddress.detail)
+  }) : {}, {
+    l: common_vendor.o((...args) => $options.selectPickupAddress && $options.selectPickupAddress(...args)),
+    m: $data.formData.deliveryAddress
+  }, $data.formData.deliveryAddress ? common_vendor.e({
+    n: common_vendor.t($data.formData.deliveryAddress.addressName),
+    o: common_vendor.t($data.formData.deliveryAddress.contactPhone),
+    p: $data.formData.deliveryAddress.contactName
+  }, $data.formData.deliveryAddress.contactName ? {
+    q: common_vendor.t($data.formData.deliveryAddress.contactName)
   } : {}, {
-    m: common_vendor.o((...args) => $options.selectDeliveryAddress && $options.selectDeliveryAddress(...args)),
-    n: $data.formData.contactPhone,
-    o: common_vendor.o(($event) => $data.formData.contactPhone = $event.detail.value),
-    p: $data.formData.contactName,
-    q: common_vendor.o(($event) => $data.formData.contactName = $event.detail.value),
-    r: $data.formData.tags,
-    s: common_vendor.o(($event) => $data.formData.tags = $event.detail.value),
-    t: common_vendor.t($data.estimatedPrice),
-    v: $data.priceBreakdown
+    r: common_vendor.t($data.formData.deliveryAddress.detail)
+  }) : {}, {
+    s: common_vendor.o((...args) => $options.selectDeliveryAddress && $options.selectDeliveryAddress(...args)),
+    t: $data.formData.contactPhone,
+    v: common_vendor.o(($event) => $data.formData.contactPhone = $event.detail.value),
+    w: $data.formData.contactName,
+    x: common_vendor.o(($event) => $data.formData.contactName = $event.detail.value),
+    y: $data.formData.tags,
+    z: common_vendor.o(($event) => $data.formData.tags = $event.detail.value),
+    A: common_vendor.t($data.estimatedPrice),
+    B: $data.priceBreakdown
   }, $data.priceBreakdown ? common_vendor.e({
-    w: common_vendor.t($data.priceBreakdown.basePrice),
-    x: $data.priceBreakdown.distanceFee
+    C: common_vendor.t($data.priceBreakdown.basePrice),
+    D: $data.priceBreakdown.distanceFee
   }, $data.priceBreakdown.distanceFee ? {
-    y: common_vendor.t($data.priceBreakdown.distanceFee)
+    E: common_vendor.t($data.priceBreakdown.distanceFee)
   } : {}, {
-    z: $data.priceBreakdown.weatherFee
+    F: $data.priceBreakdown.weatherFee
   }, $data.priceBreakdown.weatherFee ? {
-    A: common_vendor.t($data.priceBreakdown.weatherRate)
+    G: common_vendor.t($data.priceBreakdown.weatherRate)
   } : {}) : {}, {
-    B: common_vendor.t($data.estimatedPrice),
-    C: common_vendor.o((...args) => $options.submitOrder && $options.submitOrder(...args)),
-    D: !$options.canSubmit
+    H: common_vendor.t($data.estimatedPrice),
+    I: common_vendor.o((...args) => $options.submitOrder && $options.submitOrder(...args)),
+    J: !$options.canSubmit
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-8837ac90"]]);

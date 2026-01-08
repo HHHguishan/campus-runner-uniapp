@@ -183,6 +183,13 @@
   font-size: 13px;
   color: #666;
 }
+.contact-info.data-v-8837ac90 {
+  margin-bottom: 6px;
+}
+.contact-person.data-v-8837ac90 {
+  font-size: 13px;
+  color: #666;
+}
 .address-detail.data-v-8837ac90 {
   font-size: 13px;
   color: #666;

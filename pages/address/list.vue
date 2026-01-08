@@ -194,16 +194,24 @@ export default {
      * 选择地址（从订单页进入时）
      */
     selectAddress(item) {
+      console.log('选择地址:', item)
+      console.log('是否来自订单页:', this.fromOrder)
+      console.log('地址字段:', this.addressField)
+
       if (this.fromOrder) {
         // 返回订单页并传递地址信息
         const pages = getCurrentPages()
         const prevPage = pages[pages.length - 2]
 
+        console.log('上一页存在:', !!prevPage)
+
         if (prevPage) {
           // 根据field字段判断是取件地址还是送达地址
           if (this.addressField === 'pickup') {
+            console.log('设置取件地址:', item)
             prevPage.$vm.formData.pickupAddress = item
           } else if (this.addressField === 'delivery') {
+            console.log('设置送达地址:', item)
             prevPage.$vm.formData.deliveryAddress = item
           }
 
@@ -212,7 +220,10 @@ export default {
             prevPage.$vm.calculatePrice()
           }
 
+          console.log('返回订单页')
           uni.navigateBack()
+        } else {
+          console.error('❌ 找不到上一页')
         }
       } else {
         // 正常编辑

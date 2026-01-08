@@ -10,13 +10,18 @@ function requestInterceptor(config) {
       "Authorization": `Bearer ${token}`
     };
   }
+  const currentMode = common_vendor.index.getStorageSync("currentMode") || 1;
+  config.header = {
+    ...config.header,
+    "currentMode": currentMode
+  };
   if (!config.url.startsWith("http")) {
     config.url = utils_config.API_BASE_URL + config.url;
   }
   if (!config.timeout) {
     config.timeout = utils_config.REQUEST_TIMEOUT;
   }
-  common_vendor.index.__f__("log", "at utils/request.js:36", "🚀 请求发送:", {
+  common_vendor.index.__f__("log", "at utils/request.js:43", "🚀 请求发送:", {
     url: config.url,
     method: config.method,
     data: config.data,
@@ -27,7 +32,7 @@ function requestInterceptor(config) {
 function responseInterceptor(response) {
   var _a;
   const { statusCode, data } = response;
-  common_vendor.index.__f__("log", "at utils/request.js:55", "📥 响应接收:", {
+  common_vendor.index.__f__("log", "at utils/request.js:62", "📥 响应接收:", {
     url: (_a = response.config) == null ? void 0 : _a.url,
     statusCode,
     data
@@ -99,7 +104,7 @@ function request(options) {
         responseInterceptor(response).then(resolve).catch(reject);
       },
       fail: (error) => {
-        common_vendor.index.__f__("error", "at utils/request.js:154", "❌ 请求失败:", error);
+        common_vendor.index.__f__("error", "at utils/request.js:161", "❌ 请求失败:", error);
         common_vendor.index.showToast({
           title: "网络连接失败",
           icon: "none"
@@ -151,7 +156,7 @@ function uploadFile(url, filePath, formData = {}) {
     if (!url.startsWith("http")) {
       url = utils_config.API_BASE_URL + url;
     }
-    common_vendor.index.__f__("log", "at utils/request.js:253", "📤 文件上传:", {
+    common_vendor.index.__f__("log", "at utils/request.js:260", "📤 文件上传:", {
       url,
       filePath,
       formData
@@ -163,7 +168,7 @@ function uploadFile(url, filePath, formData = {}) {
       header,
       formData,
       success: (response) => {
-        common_vendor.index.__f__("log", "at utils/request.js:267", "📥 上传响应:", response);
+        common_vendor.index.__f__("log", "at utils/request.js:274", "📥 上传响应:", response);
         try {
           const data = JSON.parse(response.data);
           if (data.code === 200) {
@@ -176,7 +181,7 @@ function uploadFile(url, filePath, formData = {}) {
             reject(new Error(data.message || "上传失败"));
           }
         } catch (error) {
-          common_vendor.index.__f__("error", "at utils/request.js:282", "解析响应失败:", error);
+          common_vendor.index.__f__("error", "at utils/request.js:289", "解析响应失败:", error);
           common_vendor.index.showToast({
             title: "上传失败",
             icon: "none"
@@ -185,7 +190,7 @@ function uploadFile(url, filePath, formData = {}) {
         }
       },
       fail: (error) => {
-        common_vendor.index.__f__("error", "at utils/request.js:291", "❌ 上传失败:", error);
+        common_vendor.index.__f__("error", "at utils/request.js:298", "❌ 上传失败:", error);
         common_vendor.index.showToast({
           title: "网络连接失败",
           icon: "none"

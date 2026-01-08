@@ -22,17 +22,24 @@ function requestInterceptor(config) {
 		}
 	}
 
-	// 2. 添加基础URL（如果config.url不是完整URL）
+	// 2. 添加当前身份模式到请求头（1-用户模式, 2-骑手模式）
+	const currentMode = uni.getStorageSync('currentMode') || 1
+	config.header = {
+		...config.header,
+		'currentMode': currentMode
+	}
+
+	// 3. 添加基础URL（如果config.url不是完整URL）
 	if (!config.url.startsWith('http')) {
 		config.url = API_BASE_URL + config.url
 	}
 
-	// 3. 设置默认超时时间
+	// 4. 设置默认超时时间
 	if (!config.timeout) {
 		config.timeout = REQUEST_TIMEOUT
 	}
 
-	// 4. 打印请求日志（开发调试用）
+	// 5. 打印请求日志（开发调试用）
 	console.log('🚀 请求发送:', {
 		url: config.url,
 		method: config.method,

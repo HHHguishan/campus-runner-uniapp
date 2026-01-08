@@ -85,19 +85,28 @@ const _sfc_main = {
      * 选择地址（从订单页进入时）
      */
     selectAddress(item) {
+      common_vendor.index.__f__("log", "at pages/address/list.vue:197", "选择地址:", item);
+      common_vendor.index.__f__("log", "at pages/address/list.vue:198", "是否来自订单页:", this.fromOrder);
+      common_vendor.index.__f__("log", "at pages/address/list.vue:199", "地址字段:", this.addressField);
       if (this.fromOrder) {
         const pages = getCurrentPages();
         const prevPage = pages[pages.length - 2];
+        common_vendor.index.__f__("log", "at pages/address/list.vue:206", "上一页存在:", !!prevPage);
         if (prevPage) {
           if (this.addressField === "pickup") {
+            common_vendor.index.__f__("log", "at pages/address/list.vue:211", "设置取件地址:", item);
             prevPage.$vm.formData.pickupAddress = item;
           } else if (this.addressField === "delivery") {
+            common_vendor.index.__f__("log", "at pages/address/list.vue:214", "设置送达地址:", item);
             prevPage.$vm.formData.deliveryAddress = item;
           }
           if (prevPage.$vm.calculatePrice) {
             prevPage.$vm.calculatePrice();
           }
+          common_vendor.index.__f__("log", "at pages/address/list.vue:223", "返回订单页");
           common_vendor.index.navigateBack();
+        } else {
+          common_vendor.index.__f__("error", "at pages/address/list.vue:226", "❌ 找不到上一页");
         }
       } else {
         this.editAddress(item);
@@ -134,7 +143,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/address/list.vue:259", "❌ 删除地址失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/list.vue:270", "❌ 删除地址失败:", error);
         common_vendor.index.showToast({
           title: "删除失败，请稍后重试",
           icon: "none"
@@ -172,7 +181,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/address/list.vue:302", "❌ 设置默认地址失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/list.vue:313", "❌ 设置默认地址失败:", error);
         common_vendor.index.showToast({
           title: "设置失败，请稍后重试",
           icon: "none"
