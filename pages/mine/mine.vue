@@ -57,7 +57,7 @@
     <view class="function-section">
       <view class="function-title">常用功能</view>
       <view class="function-list">
-        <view class="function-item" @tap="navigateTo('/pages/address/address')">
+        <view class="function-item" @tap="goToAddressList">
           <view class="item-left">
             <text class="item-icon">📍</text>
             <text class="item-label">我的地址簿</text>
@@ -65,7 +65,7 @@
           <text class="item-arrow">›</text>
         </view>
 
-        <view class="function-item" @tap="navigateTo('/pages/wallet/wallet')">
+        <view class="function-item" @tap="goToWallet">
           <view class="item-left">
             <text class="item-icon">💰</text>
             <text class="item-label">我的钱包</text>
@@ -273,6 +273,53 @@ export default {
           uni.showToast({
             title: '页面开发中...',
             icon: 'none'
+          });
+        }
+      });
+    },
+
+    // 跳转到地址列表
+    goToAddressList() {
+      console.log('🚀 准备跳转到地址列表页');
+
+      uni.navigateTo({
+        url: '/pages/address/list',
+        success: () => {
+          console.log('✅ 地址列表页跳转成功');
+        },
+        fail: (err) => {
+          console.error('❌ 地址列表页跳转失败:', err);
+          console.error('错误详情:', JSON.stringify(err));
+
+          // 更详细的错误提示
+          uni.showModal({
+            title: '跳转失败',
+            content: '地址管理页面未找到，请重新编译项目。\n\n步骤：\n1. 删除unpackage文件夹\n2. 重新运行项目',
+            confirmText: '我知道了',
+            showCancel: false
+          });
+        }
+      });
+    },
+
+    // 跳转到钱包页面
+    goToWallet() {
+      console.log('🚀 准备跳转到钱包页面');
+
+      uni.navigateTo({
+        url: '/pages/wallet/wallet',
+        success: () => {
+          console.log('✅ 钱包页面跳转成功');
+        },
+        fail: (err) => {
+          console.error('❌ 钱包页面跳转失败:', err);
+          console.error('错误详情:', JSON.stringify(err));
+
+          uni.showModal({
+            title: '跳转失败',
+            content: '钱包页面未找到，请重新编译项目。\n\n步骤：\n1. 删除unpackage文件夹\n2. 重新运行项目',
+            confirmText: '我知道了',
+            showCancel: false
           });
         }
       });

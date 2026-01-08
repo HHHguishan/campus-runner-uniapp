@@ -1,0 +1,260 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.wallet-container.data-v-4c380209 {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 导航栏 */
+.nav-bar.data-v-4c380209 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.nav-back.data-v-4c380209 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+}
+.nav-title.data-v-4c380209 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+.nav-placeholder.data-v-4c380209 {
+  width: 40px;
+}
+
+/* 钱包卡片 */
+.wallet-card.data-v-4c380209 {
+  margin: 54px 15px 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 30px 20px;
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+.card-header.data-v-4c380209 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.card-title.data-v-4c380209 {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.card-unit.data-v-4c380209 {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.card-balance.data-v-4c380209 {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 30px;
+}
+.balance-integer.data-v-4c380209 {
+  font-size: 48px;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1;
+}
+.balance-decimal.data-v-4c380209 {
+  font-size: 24px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-left: 4px;
+}
+.card-actions.data-v-4c380209 {
+  display: flex;
+  gap: 10px;
+}
+.card-actions button.data-v-4c380209 {
+  flex: 1;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  font-size: 15px;
+  border: none;
+}
+.btn-recharge.data-v-4c380209 {
+  background-color: #fff;
+  color: #667eea;
+  font-weight: 600;
+}
+.btn-withdraw.data-v-4c380209 {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.btn-icon.data-v-4c380209 {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+/* 快捷充值 */
+.quick-recharge-section.data-v-4c380209 {
+  margin: 15px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+.section-title.data-v-4c380209 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+.amount-grid.data-v-4c380209 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.amount-item.data-v-4c380209 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 10px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.amount-item.data-v-4c380209:active {
+  transform: scale(0.95);
+}
+.amount-value.data-v-4c380209 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+}
+.amount-unit.data-v-4c380209 {
+  font-size: 12px;
+  color: #666;
+}
+
+/* 交易记录 */
+.transactions-section.data-v-4c380209 {
+  margin: 15px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  max-height: 400px;
+  overflow: hidden;
+}
+.section-header.data-v-4c380209 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.section-more.data-v-4c380209 {
+  font-size: 13px;
+  color: #667eea;
+  cursor: pointer;
+}
+.transactions-list.data-v-4c380209 {
+  max-height: 320px;
+}
+.transaction-item.data-v-4c380209 {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+.transaction-item.data-v-4c380209:last-child {
+  border-bottom: none;
+}
+.transaction-icon.data-v-4c380209 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7fa;
+  border-radius: 50%;
+  font-size: 18px;
+  margin-right: 12px;
+}
+.transaction-info.data-v-4c380209 {
+  flex: 1;
+}
+.transaction-title.data-v-4c380209 {
+  font-size: 15px;
+  color: #333;
+  display: block;
+  margin-bottom: 4px;
+}
+.transaction-time.data-v-4c380209 {
+  font-size: 12px;
+  color: #999;
+  display: block;
+}
+.transaction-amount.data-v-4c380209 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.amount-income.data-v-4c380209 {
+  color: #07c160;
+}
+.amount-expense.data-v-4c380209 {
+  color: #ff4d4f;
+}
+
+/* 空状态 */
+.empty-state.data-v-4c380209,
+.loading-state.data-v-4c380209 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.empty-icon.data-v-4c380209 {
+  font-size: 50px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+.empty-text.data-v-4c380209 {
+  font-size: 14px;
+  color: #999;
+}

@@ -125,6 +125,46 @@ const _sfc_main = {
         }
       });
     },
+    // 跳转到地址列表
+    goToAddressList() {
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:283", "🚀 准备跳转到地址列表页");
+      common_vendor.index.navigateTo({
+        url: "/pages/address/list",
+        success: () => {
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:288", "✅ 地址列表页跳转成功");
+        },
+        fail: (err) => {
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:291", "❌ 地址列表页跳转失败:", err);
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:292", "错误详情:", JSON.stringify(err));
+          common_vendor.index.showModal({
+            title: "跳转失败",
+            content: "地址管理页面未找到，请重新编译项目。\n\n步骤：\n1. 删除unpackage文件夹\n2. 重新运行项目",
+            confirmText: "我知道了",
+            showCancel: false
+          });
+        }
+      });
+    },
+    // 跳转到钱包页面
+    goToWallet() {
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:307", "🚀 准备跳转到钱包页面");
+      common_vendor.index.navigateTo({
+        url: "/pages/wallet/wallet",
+        success: () => {
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:312", "✅ 钱包页面跳转成功");
+        },
+        fail: (err) => {
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:315", "❌ 钱包页面跳转失败:", err);
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:316", "错误详情:", JSON.stringify(err));
+          common_vendor.index.showModal({
+            title: "跳转失败",
+            content: "钱包页面未找到，请重新编译项目。\n\n步骤：\n1. 删除unpackage文件夹\n2. 重新运行项目",
+            confirmText: "我知道了",
+            showCancel: false
+          });
+        }
+      });
+    },
     // 编辑个人资料
     editProfile() {
       common_vendor.index.navigateTo({
@@ -143,8 +183,8 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     f: common_vendor.t($data.userInfo.creditScore || 100),
     g: common_vendor.t($options.getRiderStatusText()),
     h: common_vendor.o((...args) => $options.switchToRiderMode && $options.switchToRiderMode(...args)),
-    i: common_vendor.o(($event) => $options.navigateTo("/pages/address/address")),
-    j: common_vendor.o(($event) => $options.navigateTo("/pages/wallet/wallet")),
+    i: common_vendor.o((...args) => $options.goToAddressList && $options.goToAddressList(...args)),
+    j: common_vendor.o((...args) => $options.goToWallet && $options.goToWallet(...args)),
     k: common_vendor.t($options.getRiderStatusText()),
     l: common_vendor.o(($event) => $options.navigateTo("/pages/rider/auth")),
     m: common_vendor.o(($event) => $options.navigateTo("/pages/evaluation/evaluation")),

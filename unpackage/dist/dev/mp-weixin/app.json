@@ -11,7 +11,11 @@
     "pages/rider/auth",
     "pages/notice/notice",
     "pages/profile/edit",
-    "pages/debug/api"
+    "pages/debug/api",
+    "pages/address/list",
+    "pages/address/edit",
+    "pages/wallet/wallet",
+    "pages/wallet/recharge"
   ],
   "window": {
     "navigationBarTextStyle": "black",

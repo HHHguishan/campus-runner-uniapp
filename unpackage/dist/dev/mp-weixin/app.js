@@ -15,6 +15,10 @@ if (!Math) {
   "./pages/notice/notice.js";
   "./pages/profile/edit.js";
   "./pages/debug/api.js";
+  "./pages/address/list.js";
+  "./pages/address/edit.js";
+  "./pages/wallet/wallet.js";
+  "./pages/wallet/recharge.js";
 }
 const _sfc_main = {
   onLaunch: function() {

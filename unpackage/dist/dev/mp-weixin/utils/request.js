@@ -133,6 +133,14 @@ function put(url, data = {}, options = {}) {
     ...options
   });
 }
+function del(url, params = {}, options = {}) {
+  return request({
+    url,
+    method: "DELETE",
+    data: params,
+    ...options
+  });
+}
 function uploadFile(url, filePath, formData = {}) {
   return new Promise((resolve, reject) => {
     const token = utils_token.getToken();
@@ -187,6 +195,7 @@ function uploadFile(url, filePath, formData = {}) {
     });
   });
 }
+exports.del = del;
 exports.get = get;
 exports.post = post;
 exports.put = put;
