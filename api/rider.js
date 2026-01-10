@@ -2,7 +2,7 @@
  * 骑手相关API
  */
 
-import { get, post } from '../utils/request.js'
+import { get, post, put } from '../utils/request.js'
 
 /**
  * 获取骑手认证状态
@@ -55,7 +55,7 @@ export function finishOrder(data) {
 }
 
 /**
- * 获取骑手订单列表
+ * 获取骑手订单列表（查询自己接的单）
  * @param {Object} params - 查询参数
  * @param {Number} params.status - 订单状态
  * @param {Number} params.page - 页码
@@ -64,6 +64,17 @@ export function finishOrder(data) {
  */
 export function getRiderOrders(params) {
   return get('/order/list', params)
+}
+
+/**
+ * 获取接单池订单（查询待接单的订单）
+ * @param {Object} params - 查询参数
+ * @param {Number} params.page - 页码
+ * @param {Number} params.size - 每页大小
+ * @returns {Promise}
+ */
+export function getOrderPool(params) {
+  return get('/order/pool', params)
 }
 
 /**

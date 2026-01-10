@@ -20,7 +20,10 @@
     "pages/order/payment",
     "pages/order/detail",
     "pages/evaluation/create",
-    "pages/evaluation/detail"
+    "pages/evaluation/detail",
+    "pages/admin/order-list",
+    "pages/admin/order-detail",
+    "pages/upload-finish/upload-finish"
   ],
   "window": {
     "navigationBarTextStyle": "black",

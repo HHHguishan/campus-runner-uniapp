@@ -1,0 +1,175 @@
+
+.upload-container.data-v-05303c01 {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 40rpx;
+}
+
+/* 顶部标题栏 */
+.header.data-v-05303c01 {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 30rpx 20rpx;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+.header-back.data-v-05303c01 {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back-icon.data-v-05303c01 {
+  font-size: 40rpx;
+  color: #333;
+  font-weight: bold;
+}
+.header-title.data-v-05303c01 {
+  flex: 1;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-right: 60rpx;
+}
+
+/* 订单信息 */
+.order-info.data-v-05303c01 {
+  margin: 20rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+}
+.info-title.data-v-05303c01 {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+.info-item.data-v-05303c01 {
+  display: flex;
+  font-size: 26rpx;
+  line-height: 40rpx;
+}
+.info-item .label.data-v-05303c01 {
+  color: #666;
+  flex-shrink: 0;
+}
+.info-item .value.data-v-05303c01 {
+  color: #333;
+  flex: 1;
+}
+
+/* 上传区域 */
+.upload-section.data-v-05303c01 {
+  margin: 20rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+}
+.section-title.data-v-05303c01 {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+.upload-area.data-v-05303c01 {
+  width: 100%;
+  height: 400rpx;
+  border: 2rpx dashed #ddd;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+}
+.upload-content.data-v-05303c01 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.upload-icon.data-v-05303c01 {
+  font-size: 100rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.5;
+}
+.upload-text.data-v-05303c01 {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+.upload-tip.data-v-05303c01 {
+  font-size: 24rpx;
+  color: #999;
+}
+.preview-image.data-v-05303c01 {
+  width: 100%;
+  height: 100%;
+  border-radius: 12rpx;
+}
+.action-btns.data-v-05303c01 {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+.btn.data-v-05303c01 {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  border: none;
+}
+.btn.data-v-05303c01::after {
+  border: none;
+}
+.reupload-btn.data-v-05303c01 {
+  background: #f5f5f5;
+  color: #333;
+}
+
+/* 提交按钮 */
+.submit-section.data-v-05303c01 {
+  padding: 20rpx;
+}
+.submit-btn.data-v-05303c01 {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #07c160;
+  color: #fff;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  border: none;
+}
+.submit-btn.data-v-05303c01::after {
+  border: none;
+}
+.submit-btn[disabled].data-v-05303c01 {
+  background: #ccc;
+}
+
+/* 提示信息 */
+.tips-section.data-v-05303c01 {
+  margin: 20rpx;
+  background: #fff8e1;
+  border-radius: 12rpx;
+  padding: 24rpx;
+}
+.tips-title.data-v-05303c01 {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #ff9800;
+  margin-bottom: 16rpx;
+}
+.tips-item.data-v-05303c01 {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 36rpx;
+  margin-bottom: 8rpx;
+}
+.tips-item.data-v-05303c01:last-child {
+  margin-bottom: 0;
+}

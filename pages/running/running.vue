@@ -235,16 +235,17 @@ export default {
       }
     },
 
-    // 完成订单（带图片上传）
+    // 完成订单（跳转到上传图片页面）
     finishOrder() {
-      uni.showModal({
-        title: '完成配送',
-        content: '请上传配送完成凭证图片',
-        success: (res) => {
-          if (res.confirm) {
-            this.handleFinish();
-          }
-        }
+      if (!this.currentOrder) return;
+
+      // 将订单信息编码后传递给上传页面
+      const orderInfo = encodeURIComponent(JSON.stringify({
+        deliveryAddr: this.currentOrder.deliveryAddr
+      }));
+
+      uni.navigateTo({
+        url: `/pages/upload-finish/upload-finish?orderId=${this.currentOrder.id}&orderInfo=${orderInfo}`
       });
     },
 

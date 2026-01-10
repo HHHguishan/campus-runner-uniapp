@@ -3,7 +3,8 @@
     "allow": [
       "Bash(mkdir:*)",
       "Bash(find:*)",
-      "Bash(if not exist pagesaddress mkdir pagesaddress)"
+      "Bash(if not exist pagesaddress mkdir pagesaddress)",
+      "Bash(if not exist \"pages\\upload-finish\" mkdir \"pages\\upload-finish\")"
     ],
     "deny": [],
     "ask": []

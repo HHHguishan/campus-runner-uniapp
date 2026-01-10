@@ -135,6 +135,28 @@
 				"navigationBarTitleText": "评价详情",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/admin/order-list",
+			"style": {
+				"navigationBarTitleText": "订单管理",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/admin/order-detail",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/upload-finish/upload-finish",
+			"style": {
+				"navigationBarTitleText": "上传完成凭证",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

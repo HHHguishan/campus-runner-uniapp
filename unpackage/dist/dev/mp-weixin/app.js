@@ -24,6 +24,9 @@ if (!Math) {
   "./pages/order/detail.js";
   "./pages/evaluation/create.js";
   "./pages/evaluation/detail.js";
+  "./pages/admin/order-list.js";
+  "./pages/admin/order-detail.js";
+  "./pages/upload-finish/upload-finish.js";
 }
 const _sfc_main = {
   onLaunch: function() {

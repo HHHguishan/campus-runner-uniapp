@@ -38,14 +38,14 @@ const _sfc_main = {
         });
         if (result.data && result.data.records) {
           this.orderList = result.data.records.map((order) => ({
-            id: order.id,
-            type: order.type,
-            typeText: this.getTypeText(order.type),
-            pickupAddr: order.pickupAddr,
-            deliveryAddr: order.deliveryAddr,
-            distance: order.distance,
-            runnerFee: order.runnerFee,
-            goodsDesc: order.goodsDesc,
+            id: order.orderId || order.id,
+            type: order.serviceType || order.type,
+            typeText: this.getTypeText(order.serviceType || order.type),
+            pickupAddr: order.pickupAddr || order.addressInfo && order.addressInfo.pickupAddress || "",
+            deliveryAddr: order.deliveryAddr || order.addressInfo && order.addressInfo.deliveryAddress || "",
+            distance: order.distance || 0,
+            runnerFee: order.runnerFee || order.totalAmount,
+            goodsDesc: order.goodsDesc || order.goodsInfo,
             createTime: this.formatTime(order.createTime)
           }));
         }

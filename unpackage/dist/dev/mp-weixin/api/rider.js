@@ -10,7 +10,7 @@ function grabOrder(orderId) {
   return utils_request.post("/order/grab", { orderId });
 }
 function finishOrder(data) {
-  return put("/order/finish", data);
+  return utils_request.put("/order/finish", data);
 }
 function getRiderOrders(params) {
   return utils_request.get("/order/list", params);

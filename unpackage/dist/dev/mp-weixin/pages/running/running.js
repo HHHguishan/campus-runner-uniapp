@@ -110,16 +110,15 @@ const _sfc_main = {
         common_vendor.index.__f__("error", "at pages/running/running.vue:234", "完成配送失败:", error);
       }
     },
-    // 完成订单（带图片上传）
+    // 完成订单（跳转到上传图片页面）
     finishOrder() {
-      common_vendor.index.showModal({
-        title: "完成配送",
-        content: "请上传配送完成凭证图片",
-        success: (res) => {
-          if (res.confirm) {
-            this.handleFinish();
-          }
-        }
+      if (!this.currentOrder)
+        return;
+      const orderInfo = encodeURIComponent(JSON.stringify({
+        deliveryAddr: this.currentOrder.deliveryAddr
+      }));
+      common_vendor.index.navigateTo({
+        url: `/pages/upload-finish/upload-finish?orderId=${this.currentOrder.id}&orderInfo=${orderInfo}`
       });
     },
     // 前往接单大厅

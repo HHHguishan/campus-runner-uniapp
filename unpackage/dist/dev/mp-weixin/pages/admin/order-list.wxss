@@ -1,0 +1,301 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.admin-order-list.data-v-87421435 {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 20px;
+}
+
+/* 导航栏 */
+.nav-bar.data-v-87421435 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.nav-back.data-v-87421435 {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #333;
+}
+.nav-title.data-v-87421435 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+}
+.nav-placeholder.data-v-87421435 {
+  width: 40px;
+}
+
+/* 筛选条件区域 */
+.filter-section.data-v-87421435 {
+  margin-top: 54px;
+  background-color: #fff;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+.filter-row.data-v-87421435 {
+  display: flex;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+.filter-row.data-v-87421435:last-child {
+  margin-bottom: 0;
+}
+.filter-item.data-v-87421435 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.filter-item.full-width.data-v-87421435 {
+  flex: none;
+  width: 100%;
+}
+.filter-label.data-v-87421435 {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+.picker-value.data-v-87421435 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background-color: #f5f7fa;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+}
+.arrow.data-v-87421435 {
+  font-size: 12px;
+  color: #999;
+}
+.date-picker-group.data-v-87421435 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.date-picker.data-v-87421435 {
+  flex: 1;
+  padding: 10px 12px;
+  background-color: #f5f7fa;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+}
+.date-separator.data-v-87421435 {
+  font-size: 14px;
+  color: #999;
+}
+.search-row.data-v-87421435 {
+  flex-direction: column;
+  gap: 10px;
+}
+.search-box.data-v-87421435 {
+  display: flex;
+  gap: 10px;
+}
+.search-input.data-v-87421435 {
+  flex: 1;
+  padding: 10px 12px;
+  background-color: #f5f7fa;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.search-btn.data-v-87421435 {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+}
+.reset-btn.data-v-87421435 {
+  padding: 10px 20px;
+  background-color: #f5f7fa;
+  color: #666;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* 订单列表区域 */
+.order-list-section.data-v-87421435 {
+  padding: 15px;
+}
+.section-header.data-v-87421435 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.section-title.data-v-87421435 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+.section-count.data-v-87421435 {
+  font-size: 13px;
+  color: #999;
+}
+.order-item.data-v-87421435 {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.order-header.data-v-87421435 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f5f5f5;
+  margin-bottom: 12px;
+}
+.order-no.data-v-87421435 {
+  font-size: 13px;
+  color: #666;
+}
+.order-status-badge.data-v-87421435 {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.status-0.data-v-87421435 {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+.status-1.data-v-87421435 {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+.status-2.data-v-87421435 {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+.status-3.data-v-87421435 {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+.status-4.data-v-87421435 {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+.status-5.data-v-87421435 {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+.order-content.data-v-87421435 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.content-row.data-v-87421435 {
+  display: flex;
+  font-size: 14px;
+}
+.label.data-v-87421435 {
+  color: #666;
+  min-width: 80px;
+}
+.value.data-v-87421435 {
+  flex: 1;
+  color: #333;
+  font-weight: 500;
+}
+.order-footer.data-v-87421435 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #f5f5f5;
+}
+.order-amount.data-v-87421435 {
+  display: flex;
+  align-items: baseline;
+}
+.amount-label.data-v-87421435 {
+  font-size: 13px;
+  color: #666;
+}
+.amount-value.data-v-87421435 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff4d4f;
+  margin-left: 4px;
+}
+.order-action.data-v-87421435 {
+  font-size: 14px;
+  color: #667eea;
+}
+.action-text.data-v-87421435 {
+  color: #667eea;
+}
+
+/* 空状态 */
+.empty-state.data-v-87421435 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 0;
+}
+.empty-icon.data-v-87421435 {
+  font-size: 64px;
+  margin-bottom: 12px;
+}
+.empty-text.data-v-87421435 {
+  font-size: 14px;
+  color: #999;
+}
+
+/* 加载更多 */
+.load-more.data-v-87421435,
+.no-more.data-v-87421435 {
+  padding: 20px 0;
+  text-align: center;
+}
+.load-more-text.data-v-87421435,
+.no-more-text.data-v-87421435 {
+  font-size: 13px;
+  color: #999;
+}

@@ -107,6 +107,14 @@
           </view>
           <text class="item-arrow">›</text>
         </view>
+
+        <view class="function-item" @tap="goToAdminOrderList">
+          <view class="item-left">
+            <text class="item-icon">👑</text>
+            <text class="item-label">管理员入口</text>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
       </view>
     </view>
 
@@ -329,6 +337,23 @@ export default {
     editProfile() {
       uni.navigateTo({
         url: '/pages/profile/edit'
+      });
+    },
+
+    // 跳转到管理员订单列表
+    goToAdminOrderList() {
+      uni.navigateTo({
+        url: '/pages/admin/order-list',
+        success: () => {
+          console.log('✅ 管理员订单列表页跳转成功');
+        },
+        fail: (err) => {
+          console.error('❌ 管理员订单列表页跳转失败', err);
+          uni.showToast({
+            title: '页面跳转失败',
+            icon: 'none'
+          });
+        }
       });
     }
   }
