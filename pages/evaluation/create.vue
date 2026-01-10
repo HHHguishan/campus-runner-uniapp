@@ -228,12 +228,21 @@ export default {
       try {
         uni.showLoading({ title: '提交中...' })
 
-        const data = {
-          orderId: this.orderId,
-          rating: this.rating,
-          tags: this.selectedTags.join(','),
-          content: this.comment.trim()
+        // 将标签拼接到评价内容中
+        let feedback = this.comment.trim()
+        if (this.selectedTags.length > 0) {
+          feedback = `[${this.selectedTags.join(', ')}] ${feedback}`
         }
+
+        const data = {
+          orderId: Number(this.orderId),
+          rating: this.rating,
+          feedback: feedback,
+          evaluationImgs: [],
+          anonymous: false
+        }
+
+        console.log('提交评价数据:', data)
 
         const res = await submitEvaluation(data)
 
@@ -245,9 +254,11 @@ export default {
             icon: 'success'
           })
 
-          // 延迟返回上一页
+          // 延迟跳转到评价详情页
           setTimeout(() => {
-            uni.navigateBack()
+            uni.redirectTo({
+              url: `/pages/evaluation/detail?orderId=${this.orderId}`
+            })
           }, 1500)
         } else {
           uni.showToast({

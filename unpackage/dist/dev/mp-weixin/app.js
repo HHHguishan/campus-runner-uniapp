@@ -27,6 +27,9 @@ if (!Math) {
   "./pages/admin/order-list.js";
   "./pages/admin/order-detail.js";
   "./pages/upload-finish/upload-finish.js";
+  "./pages/rider/completed.js";
+  "./pages/rider/reply.js";
+  "./pages/rider/evaluations.js";
 }
 const _sfc_main = {
   onLaunch: function() {

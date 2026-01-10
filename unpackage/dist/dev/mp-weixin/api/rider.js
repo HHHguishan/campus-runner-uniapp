@@ -24,12 +24,20 @@ function getRiderOrderStats() {
 function getRiderEvaluationStats() {
   return utils_request.get("/evaluation/statistics?type=received");
 }
+function submitRiderReply(data) {
+  return utils_request.post("/evaluation/reply", data);
+}
+function getRiderEvaluations(params) {
+  return utils_request.get("/evaluation/list", params);
+}
 exports.finishOrder = finishOrder;
 exports.getRiderDashboard = getRiderDashboard;
 exports.getRiderEvaluationStats = getRiderEvaluationStats;
+exports.getRiderEvaluations = getRiderEvaluations;
 exports.getRiderOrderStats = getRiderOrderStats;
 exports.getRiderOrders = getRiderOrders;
 exports.getRunnerStatus = getRunnerStatus;
 exports.grabOrder = grabOrder;
+exports.submitRiderReply = submitRiderReply;
 exports.submitStudentCardApply = submitStudentCardApply;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/rider.js.map

@@ -126,12 +126,18 @@ const _sfc_main = {
       }
       try {
         common_vendor.index.showLoading({ title: "提交中..." });
+        let feedback = this.comment.trim();
+        if (this.selectedTags.length > 0) {
+          feedback = `[${this.selectedTags.join(", ")}] ${feedback}`;
+        }
         const data = {
-          orderId: this.orderId,
+          orderId: Number(this.orderId),
           rating: this.rating,
-          tags: this.selectedTags.join(","),
-          content: this.comment.trim()
+          feedback,
+          evaluationImgs: [],
+          anonymous: false
         };
+        common_vendor.index.__f__("log", "at pages/evaluation/create.vue:245", "提交评价数据:", data);
         const res = await api_order.submitEvaluation(data);
         common_vendor.index.hideLoading();
         if (res.code === 200) {
@@ -140,7 +146,9 @@ const _sfc_main = {
             icon: "success"
           });
           setTimeout(() => {
-            common_vendor.index.navigateBack();
+            common_vendor.index.redirectTo({
+              url: `/pages/evaluation/detail?orderId=${this.orderId}`
+            });
           }, 1500);
         } else {
           common_vendor.index.showToast({
@@ -150,7 +158,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/evaluation/create.vue:260", "❌ 提交评价失败:", error);
+        common_vendor.index.__f__("error", "at pages/evaluation/create.vue:271", "❌ 提交评价失败:", error);
         common_vendor.index.showToast({
           title: "提交失败，请稍后重试",
           icon: "none"

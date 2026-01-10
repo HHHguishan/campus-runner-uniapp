@@ -2,11 +2,15 @@
   <view class="rider-nav">
     <view class="nav-item" :class="{ active: currentPage === 'hall' }" @tap="switchPage('hall')">
       <text class="nav-icon">🏠</text>
-      <text class="nav-text">接单大厅</text>
+      <text class="nav-text">接单</text>
     </view>
     <view class="nav-item" :class="{ active: currentPage === 'running' }" @tap="switchPage('running')">
       <text class="nav-icon">📦</text>
-      <text class="nav-text">配送中</text>
+      <text class="nav-text">配送</text>
+    </view>
+    <view class="nav-item" :class="{ active: currentPage === 'completed' }" @tap="switchPage('completed')">
+      <text class="nav-icon">✅</text>
+      <text class="nav-text">已完成</text>
     </view>
     <view class="nav-item" :class="{ active: currentPage === 'stats' }" @tap="switchPage('stats')">
       <text class="nav-icon">📊</text>
@@ -14,7 +18,7 @@
     </view>
     <view class="nav-item switch-user-item" @tap="switchToUser">
       <text class="nav-icon">👤</text>
-      <text class="nav-text">用户模式</text>
+      <text class="nav-text">用户</text>
     </view>
   </view>
 </template>
@@ -35,8 +39,14 @@ export default {
     switchPage(page) {
       if (page === this.currentPage) return;
 
+      // 处理特殊页面的路径
+      let url = `/pages/${page}/${page}`;
+      if (page === 'completed') {
+        url = '/pages/rider/completed';
+      }
+
       uni.redirectTo({
-        url: `/pages/${page}/${page}`
+        url: url
       });
     },
 
@@ -49,6 +59,9 @@ export default {
           success: async (res) => {
             if (res.confirm) {
               uni.showLoading({ title: '切换中...', mask: true });
+
+              // 设置为用户模式
+              uni.setStorageSync('currentMode', 1); // 1 = 用户模式
 
               const result = await switchMode({ targetMode: 1 }); // 1-用户模式
 

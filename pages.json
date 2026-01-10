@@ -157,6 +157,27 @@
 				"navigationBarTitleText": "上传完成凭证",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/rider/completed",
+			"style": {
+				"navigationBarTitleText": "已完成订单",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/rider/reply",
+			"style": {
+				"navigationBarTitleText": "回复评价",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/rider/evaluations",
+			"style": {
+				"navigationBarTitleText": "评价列表",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

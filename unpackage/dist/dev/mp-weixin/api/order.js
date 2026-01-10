@@ -16,7 +16,7 @@ function submitEvaluation(data) {
   return utils_request.post("/evaluation/submit", data);
 }
 function getEvaluationDetail(orderId) {
-  return utils_request.get(`/evaluation/${orderId}`);
+  return utils_request.get(`/evaluation/detail/${orderId}`);
 }
 function payOrder(data) {
   return utils_request.post("/pay/doPay", data);

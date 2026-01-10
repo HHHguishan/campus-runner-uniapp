@@ -1,0 +1,234 @@
+
+.evaluations-container.data-v-dd3c76e6 {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 120rpx;
+  box-sizing: border-box;
+}
+
+/* 筛选栏 */
+.filter-bar.data-v-dd3c76e6 {
+  display: flex;
+  background: #fff;
+  padding: 20rpx;
+  gap: 10rpx;
+  overflow-x: auto;
+  white-space: nowrap;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.filter-item.data-v-dd3c76e6 {
+  flex-shrink: 0;
+  padding: 12rpx 24rpx;
+  background: #f5f5f5;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+  color: #666;
+  transition: all 0.3s;
+}
+.filter-item.active.data-v-dd3c76e6 {
+  background: #07c160;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 评价列表 */
+.evaluations-scroll.data-v-dd3c76e6 {
+  height: calc(100vh - 200rpx);
+  padding: 20rpx;
+}
+.evaluation-list.data-v-dd3c76e6 {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+.evaluation-card.data-v-dd3c76e6 {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 用户信息 */
+.user-section.data-v-dd3c76e6 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.user-avatar.data-v-dd3c76e6 {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-right: 20rpx;
+}
+.user-info.data-v-dd3c76e6 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.user-name.data-v-dd3c76e6 {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+.eval-time.data-v-dd3c76e6 {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 评分 */
+.rating-section.data-v-dd3c76e6 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+.rating-stars.data-v-dd3c76e6 {
+  display: flex;
+  gap: 4rpx;
+  margin-right: 16rpx;
+}
+.star-icon.data-v-dd3c76e6 {
+  font-size: 32rpx;
+  color: #ffd700;
+}
+.rating-score.data-v-dd3c76e6 {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #ff9800;
+}
+
+/* 评价标签 */
+.tags-section.data-v-dd3c76e6 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+.tag-item.data-v-dd3c76e6 {
+  padding: 8rpx 20rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #fff;
+}
+
+/* 评价内容 */
+.content-section.data-v-dd3c76e6 {
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+.content-text.data-v-dd3c76e6 {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.8;
+}
+
+/* 订单信息 */
+.order-section.data-v-dd3c76e6 {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+.order-info.data-v-dd3c76e6 {
+  display: flex;
+  font-size: 26rpx;
+}
+.order-label.data-v-dd3c76e6 {
+  color: #999;
+  flex-shrink: 0;
+}
+.order-value.data-v-dd3c76e6 {
+  color: #333;
+  flex: 1;
+}
+
+/* 骑手回复 */
+.reply-section.data-v-dd3c76e6 {
+  padding: 20rpx;
+  background: #f0f7ff;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+.reply-header.data-v-dd3c76e6 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+.reply-title.data-v-dd3c76e6 {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #1890ff;
+}
+.reply-time.data-v-dd3c76e6 {
+  font-size: 22rpx;
+  color: #999;
+}
+.reply-content.data-v-dd3c76e6 {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 操作区域 */
+.action-section.data-v-dd3c76e6 {
+  text-align: right;
+}
+.btn-reply.data-v-dd3c76e6 {
+  padding: 12rpx 32rpx;
+  background: #07c160;
+  color: #fff;
+  font-size: 26rpx;
+  border-radius: 40rpx;
+  border: none;
+}
+.btn-reply.data-v-dd3c76e6::after {
+  border: none;
+}
+
+/* 加载更多 */
+.load-more.data-v-dd3c76e6 {
+  padding: 30rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state.data-v-dd3c76e6 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+}
+.empty-icon.data-v-dd3c76e6 {
+  font-size: 150rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.5;
+}
+.empty-title.data-v-dd3c76e6 {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+.empty-desc.data-v-dd3c76e6 {
+  font-size: 26rpx;
+  color: #999;
+}

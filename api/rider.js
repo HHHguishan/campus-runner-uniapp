@@ -116,3 +116,27 @@ export function getRiderOrderStats() {
 export function getRiderEvaluationStats() {
   return get('/evaluation/statistics?type=received')
 }
+
+/**
+ * 骑手回复评价
+ * @param {Object} data - 回复数据
+ * @param {Number} data.orderId - 订单ID
+ * @param {String} data.riderReply - 回复内容
+ * @returns {Promise}
+ */
+export function submitRiderReply(data) {
+  return post('/evaluation/reply', data)
+}
+
+/**
+ * 获取骑手收到的评价列表
+ * @param {Object} params - 查询参数
+ * @param {String} params.type - 查询类型(received-收到的评价)
+ * @param {Number} params.page - 页码
+ * @param {Number} params.size - 每页大小
+ * @param {Number} params.rating - 评分筛选(可选)
+ * @returns {Promise}
+ */
+export function getRiderEvaluations(params) {
+  return get('/evaluation/list', params)
+}

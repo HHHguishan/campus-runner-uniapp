@@ -70,43 +70,6 @@
         <text class="btn-arrow">›</text>
       </view>
     </view>
-
-    <!-- 最近订单 -->
-    <view class="recent-orders" v-if="recentOrders.length > 0">
-      <view class="section-header">
-        <text class="section-title">最近订单</text>
-        <text class="section-more" @tap="goToOrders">查看全部 ›</text>
-      </view>
-
-      <view class="order-list">
-        <view
-          class="order-item"
-          v-for="order in recentOrders"
-          :key="order.id"
-          @tap="goToOrderDetail(order.id)"
-        >
-          <view class="order-header">
-            <text class="order-type">{{ order.typeText }}</text>
-            <text class="order-status" :class="'status-' + order.status">
-              {{ order.statusText }}
-            </text>
-          </view>
-          <view class="order-content">
-            <text class="order-address">{{ order.address }}</text>
-            <text class="order-time">{{ order.time }}</text>
-          </view>
-          <view class="order-footer">
-            <text class="order-price">¥{{ order.price }}</text>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- 暂无订单提示 -->
-    <view class="empty-tips" v-else>
-      <text class="empty-icon">📦</text>
-      <text class="empty-text">暂无订单，快去发布第一个订单吧~</text>
-    </view>
     </scroll-view>
 
     <!-- 配置按钮 -->

@@ -99,12 +99,12 @@
             </template>
 
             <!-- 已完成 - 未评价 -->
-            <template v-if="order.status === 3 && !order.hasEvaluated">
+            <template v-if="order.status === 3 && (order.rating === null || order.rating === undefined)">
               <button class="btn-action btn-primary" @click.stop="evaluateOrder(order.id)">去评价</button>
             </template>
 
             <!-- 已完成 - 已评价 -->
-            <template v-if="order.status === 3 && order.hasEvaluated">
+            <template v-if="order.status === 3 && (order.rating !== null && order.rating !== undefined)">
               <button class="btn-action btn-default" @click.stop="viewEvaluation(order.id)">查看评价</button>
             </template>
 

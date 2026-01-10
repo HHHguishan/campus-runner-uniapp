@@ -27,11 +27,11 @@
         <!-- 用户信息 -->
         <view class="user-section">
           <view class="user-avatar">
-            <text>{{ userInfo.userName ? userInfo.userName.substring(0, 1) : '用' }}</text>
+            <text>{{ userInfo.nickname ? userInfo.nickname.substring(0, 1) : '用' }}</text>
           </view>
           <view class="user-info">
-            <text class="user-name">{{ userInfo.userName || '用户' }}</text>
-            <text class="evaluate-time">{{ formatTime(evaluationInfo.createTime) }}</text>
+            <text class="user-name">{{ userInfo.nickname || '用户' }}</text>
+            <text class="evaluate-time">{{ formatTime(evaluationInfo.evaluationTime) }}</text>
           </view>
         </view>
 
@@ -49,11 +49,11 @@
           <text class="rating-text">{{ getRatingText(evaluationInfo.rating) }}</text>
         </view>
 
-        <!-- 评价标签 -->
-        <view class="tags-display" v-if="evaluationInfo.tags">
+        <!-- 评价标签（从feedback中提取） -->
+        <view class="tags-display" v-if="getTags().length > 0">
           <view
             class="tag-item"
-            v-for="(tag, index) in evaluationInfo.tags.split(',')"
+            v-for="(tag, index) in getTags()"
             :key="index"
           >
             {{ tag }}
@@ -62,24 +62,24 @@
 
         <!-- 评价内容 -->
         <view class="comment-display">
-          <text class="comment-text">{{ evaluationInfo.content || '' }}</text>
+          <text class="comment-text">{{ getFeedbackText() }}</text>
         </view>
 
         <!-- 订单信息 -->
-        <view class="order-info" v-if="orderInfo">
+        <view class="order-info" v-if="evaluationInfo.orderInfo">
           <view class="info-title">订单信息</view>
           <view class="info-list">
             <view class="info-item">
               <text class="info-label">订单号</text>
-              <text class="info-value">{{ orderInfo.orderNo || '-' }}</text>
+              <text class="info-value">{{ evaluationInfo.orderNo || '-' }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">服务类型</text>
-              <text class="info-value">{{ getServiceTypeName(orderInfo.serviceType) }}</text>
+              <text class="info-value">{{ getServiceTypeName(evaluationInfo.orderInfo.type) }}</text>
             </view>
             <view class="info-item">
               <text class="info-label">完成时间</text>
-              <text class="info-value">{{ formatTime(orderInfo.completeTime) }}</text>
+              <text class="info-value">{{ formatTime(evaluationInfo.orderInfo.finishTime) }}</text>
             </view>
           </view>
         </view>
@@ -130,14 +130,16 @@ export default {
         // 处理评价数据
         if (evalRes.code === 200 && evalRes.data) {
           this.evaluationInfo = evalRes.data
-          this.userInfo = evalRes.data.user || {}
+          this.userInfo = evalRes.data.userInfo || {}
           console.log('✅ 评价详情加载成功:', this.evaluationInfo)
+          console.log('📝 评价内容:', this.getFeedbackText())
+          console.log('🏷️ 评价标签:', this.getTags())
         } else {
           // 评价可能不存在
           this.evaluationInfo = null
         }
 
-        // 处理订单数据
+        // 处理订单数据（可选，如果需要显示更多订单信息）
         if (orderRes.code === 200 && orderRes.data) {
           this.orderInfo = orderRes.data
         }
@@ -191,6 +193,38 @@ export default {
       const hours = String(date.getHours()).padStart(2, '0')
       const minutes = String(date.getMinutes()).padStart(2, '0')
       return `${year}-${month}-${day} ${hours}:${minutes}`
+    },
+
+    /**
+     * 从评价内容中提取标签
+     * 评价格式: [标签1, 标签2] 评价内容
+     */
+    getTags() {
+      if (!this.evaluationInfo || !this.evaluationInfo.feedback) return []
+
+      const feedback = this.evaluationInfo.feedback
+      const tagMatch = feedback.match(/\[(.*?)\]/)
+
+      if (tagMatch && tagMatch[1]) {
+        // 提取标签并分割
+        return tagMatch[1].split(',').map(tag => tag.trim()).filter(tag => tag)
+      }
+
+      return []
+    },
+
+    /**
+     * 获取纯文本评价内容（去除标签）
+     */
+    getFeedbackText() {
+      if (!this.evaluationInfo || !this.evaluationInfo.feedback) return ''
+
+      let feedback = this.evaluationInfo.feedback
+
+      // 移除标签部分 [标签1, 标签2]
+      feedback = feedback.replace(/\[.*?\]\s*/, '')
+
+      return feedback.trim()
     },
 
     /**

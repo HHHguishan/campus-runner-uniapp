@@ -240,10 +240,14 @@ export default {
         return;
       }
 
-      // 已认证，直接跳转到接单大厅
+      // 已认证，设置骑手模式并跳转到接单大厅
+      uni.setStorageSync('currentMode', 2) // 2 = 骑手模式
+
       uni.redirectTo({
         url: '/pages/hall/hall'
       });
+
+      console.log('✅ 已切换到骑手模式，currentMode = 2');
     },
 
     // 退出登录

@@ -69,7 +69,7 @@ export function submitEvaluation(data) {
  * @returns {Promise}
  */
 export function getEvaluationDetail(orderId) {
-  return get(`/evaluation/${orderId}`)
+  return get(`/evaluation/detail/${orderId}`)
 }
 
 /**

@@ -23,7 +23,10 @@
     "pages/evaluation/detail",
     "pages/admin/order-list",
     "pages/admin/order-detail",
-    "pages/upload-finish/upload-finish"
+    "pages/upload-finish/upload-finish",
+    "pages/rider/completed",
+    "pages/rider/reply",
+    "pages/rider/evaluations"
   ],
   "window": {
     "navigationBarTextStyle": "black",

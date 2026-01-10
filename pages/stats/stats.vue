@@ -223,7 +223,7 @@ export default {
     // 查看评价
     goToEvaluations() {
       uni.navigateTo({
-        url: '/pages/evaluation/evaluation'
+        url: '/pages/rider/evaluations'
       });
     }
   }

@@ -46,6 +46,11 @@ const _sfc_main = {
             this.riderInfo = res.data.runnerInfo;
           }
           common_vendor.index.__f__("log", "at pages/order/detail.vue:260", "✅ 订单详情加载成功:", this.orderInfo);
+          common_vendor.index.__f__("log", "at pages/order/detail.vue:261", "📊 评价状态检查:", {
+            rating: this.orderInfo.rating,
+            hasRating: !!this.orderInfo.rating,
+            status: this.orderStatus
+          });
         } else {
           common_vendor.index.showToast({
             title: res.message || "加载失败",
@@ -54,7 +59,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/order/detail.vue:269", "❌ 加载订单详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/detail.vue:274", "❌ 加载订单详情失败:", error);
         common_vendor.index.showToast({
           title: "加载失败，请稍后重试",
           icon: "none"
@@ -206,7 +211,7 @@ const _sfc_main = {
               }
             } catch (error) {
               common_vendor.index.hideLoading();
-              common_vendor.index.__f__("error", "at pages/order/detail.vue:429", "❌ 取消订单失败:", error);
+              common_vendor.index.__f__("error", "at pages/order/detail.vue:434", "❌ 取消订单失败:", error);
               common_vendor.index.showToast({
                 title: "取消失败，请稍后重试",
                 icon: "none"
@@ -363,12 +368,12 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   }, $data.orderStatus === 2 ? {
     U: common_vendor.o((...args) => $options.contactRider && $options.contactRider(...args))
   } : {}, {
-    V: $data.orderStatus === 3 && !$data.orderInfo.hasEvaluated
-  }, $data.orderStatus === 3 && !$data.orderInfo.hasEvaluated ? {
+    V: $data.orderStatus === 3 && ($data.orderInfo.rating === null || $data.orderInfo.rating === void 0)
+  }, $data.orderStatus === 3 && ($data.orderInfo.rating === null || $data.orderInfo.rating === void 0) ? {
     W: common_vendor.o((...args) => $options.goToEvaluate && $options.goToEvaluate(...args))
   } : {}, {
-    X: $data.orderStatus === 3 && $data.orderInfo.hasEvaluated
-  }, $data.orderStatus === 3 && $data.orderInfo.hasEvaluated ? {
+    X: $data.orderStatus === 3 && $data.orderInfo.rating !== null && $data.orderInfo.rating !== void 0
+  }, $data.orderStatus === 3 && $data.orderInfo.rating !== null && $data.orderInfo.rating !== void 0 ? {
     Y: common_vendor.o((...args) => $options.viewEvaluation && $options.viewEvaluation(...args))
   } : {}, {
     Z: $data.orderStatus === 4

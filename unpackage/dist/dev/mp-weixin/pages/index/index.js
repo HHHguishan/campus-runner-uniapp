@@ -73,26 +73,26 @@ const _sfc_main = {
     this.loadConfigs();
   },
   onShow() {
-    common_vendor.index.__f__("log", "at pages/index/index.vue:248", "=== 首页显示，刷新数据 ===");
+    common_vendor.index.__f__("log", "at pages/index/index.vue:211", "=== 首页显示，刷新数据 ===");
   },
   methods: {
     // 加载轮播图
     async loadBanners() {
       try {
-        common_vendor.index.__f__("log", "at pages/index/index.vue:255", "=== 开始加载轮播图 ===");
+        common_vendor.index.__f__("log", "at pages/index/index.vue:218", "=== 开始加载轮播图 ===");
         const res = await api_notice.getBannerList();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:258", "轮播图API响应:", res);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:259", "响应码:", res.code);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:260", "响应数据:", res.data);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:261", "数据类型:", typeof res.data);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:262", "是否为数组:", Array.isArray(res.data));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:221", "轮播图API响应:", res);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:222", "响应码:", res.code);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:223", "响应数据:", res.data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:224", "数据类型:", typeof res.data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:225", "是否为数组:", Array.isArray(res.data));
         if (res.code === 200 && res.data) {
           const bannerData = Array.isArray(res.data) ? res.data : [];
-          common_vendor.index.__f__("log", "at pages/index/index.vue:268", "处理后的轮播图数据:", bannerData);
-          common_vendor.index.__f__("log", "at pages/index/index.vue:269", "轮播图数量:", bannerData.length);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:231", "处理后的轮播图数据:", bannerData);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:232", "轮播图数量:", bannerData.length);
           if (bannerData.length > 0) {
             this.bannerList = bannerData.map((item, index) => {
-              common_vendor.index.__f__("log", "at pages/index/index.vue:274", `处理轮播图 ${index}:`, item);
+              common_vendor.index.__f__("log", "at pages/index/index.vue:237", `处理轮播图 ${index}:`, item);
               const banner = {
                 id: item.id,
                 title: item.title || "轮播图",
@@ -114,39 +114,39 @@ const _sfc_main = {
               }
               return banner;
             });
-            common_vendor.index.__f__("log", "at pages/index/index.vue:302", "最终轮播图列表:", this.bannerList);
+            common_vendor.index.__f__("log", "at pages/index/index.vue:265", "最终轮播图列表:", this.bannerList);
           } else {
-            common_vendor.index.__f__("log", "at pages/index/index.vue:304", "后端返回空数组，使用默认轮播图");
+            common_vendor.index.__f__("log", "at pages/index/index.vue:267", "后端返回空数组，使用默认轮播图");
             this.bannerList = [];
           }
         } else {
-          common_vendor.index.__f__("log", "at pages/index/index.vue:308", "响应码不是200或没有数据，使用默认轮播图");
+          common_vendor.index.__f__("log", "at pages/index/index.vue:271", "响应码不是200或没有数据，使用默认轮播图");
           this.bannerList = [];
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:312", "=== 加载轮播图失败 ===");
-        common_vendor.index.__f__("error", "at pages/index/index.vue:313", "错误信息:", error);
-        common_vendor.index.__f__("error", "at pages/index/index.vue:314", "错误详情:", JSON.stringify(error));
+        common_vendor.index.__f__("error", "at pages/index/index.vue:275", "=== 加载轮播图失败 ===");
+        common_vendor.index.__f__("error", "at pages/index/index.vue:276", "错误信息:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:277", "错误详情:", JSON.stringify(error));
         this.bannerList = [];
       }
     },
     // 加载系统配置
     async loadConfigs() {
       try {
-        common_vendor.index.__f__("log", "at pages/index/index.vue:323", "=== 开始加载系统配置 ===");
+        common_vendor.index.__f__("log", "at pages/index/index.vue:286", "=== 开始加载系统配置 ===");
         const res = await api_config.getConfigs();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:328", "系统配置API响应完整数据:", JSON.stringify(res));
-        common_vendor.index.__f__("log", "at pages/index/index.vue:329", "响应码:", res.code);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:330", "响应数据:", res.data);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:331", "数据类型:", typeof res.data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:291", "系统配置API响应完整数据:", JSON.stringify(res));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:292", "响应码:", res.code);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:293", "响应数据:", res.data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:294", "数据类型:", typeof res.data);
         if (res.code === 200 && res.data) {
           const configs = [];
           if (typeof res.data === "object" && !Array.isArray(res.data)) {
             const keys = Object.keys(res.data);
-            common_vendor.index.__f__("log", "at pages/index/index.vue:339", "配置键列表:", keys);
+            common_vendor.index.__f__("log", "at pages/index/index.vue:302", "配置键列表:", keys);
             keys.forEach((key) => {
               const value = res.data[key];
-              common_vendor.index.__f__("log", "at pages/index/index.vue:343", `处理配置项: ${key} = ${value}`);
+              common_vendor.index.__f__("log", "at pages/index/index.vue:306", `处理配置项: ${key} = ${value}`);
               configs.push({
                 paramKey: key,
                 paramValue: String(value),
@@ -156,20 +156,20 @@ const _sfc_main = {
               });
             });
           } else if (Array.isArray(res.data)) {
-            common_vendor.index.__f__("log", "at pages/index/index.vue:354", "后端返回数组格式，转换处理");
+            common_vendor.index.__f__("log", "at pages/index/index.vue:317", "后端返回数组格式，转换处理");
             this.configList = res.data.map((item) => ({
               paramKey: item.paramKey,
               paramValue: item.paramValue,
               displayValue: this.formatConfigValue(item.paramKey, item.paramValue),
               remark: item.remark || item.paramKey
             }));
-            common_vendor.index.__f__("log", "at pages/index/index.vue:361", `✅ 配置加载成功，共${this.configList.length}个配置项`);
+            common_vendor.index.__f__("log", "at pages/index/index.vue:324", `✅ 配置加载成功，共${this.configList.length}个配置项`);
             return;
           }
-          common_vendor.index.__f__("log", "at pages/index/index.vue:365", "最终配置列表数量:", configs.length);
-          common_vendor.index.__f__("log", "at pages/index/index.vue:366", "最终配置列表:", JSON.stringify(configs));
+          common_vendor.index.__f__("log", "at pages/index/index.vue:328", "最终配置列表数量:", configs.length);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:329", "最终配置列表:", JSON.stringify(configs));
           this.configList = configs;
-          common_vendor.index.__f__("log", "at pages/index/index.vue:370", `✅ 配置加载成功，共${configs.length}个配置项`);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:333", `✅ 配置加载成功，共${configs.length}个配置项`);
           if (configs.length > 0) {
             common_vendor.index.showToast({
               title: `配置已更新`,
@@ -178,7 +178,7 @@ const _sfc_main = {
             });
           }
         } else {
-          common_vendor.index.__f__("log", "at pages/index/index.vue:381", "响应码不是200或没有数据");
+          common_vendor.index.__f__("log", "at pages/index/index.vue:344", "响应码不是200或没有数据");
           common_vendor.index.showToast({
             title: "配置为空",
             icon: "none",
@@ -186,9 +186,9 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:389", "=== 加载系统配置失败 ===");
-        common_vendor.index.__f__("error", "at pages/index/index.vue:390", "错误信息:", error);
-        common_vendor.index.__f__("error", "at pages/index/index.vue:391", "错误详情:", JSON.stringify(error));
+        common_vendor.index.__f__("error", "at pages/index/index.vue:352", "=== 加载系统配置失败 ===");
+        common_vendor.index.__f__("error", "at pages/index/index.vue:353", "错误信息:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:354", "错误详情:", JSON.stringify(error));
         common_vendor.index.showToast({
           title: "加载配置失败",
           icon: "none"
@@ -198,7 +198,7 @@ const _sfc_main = {
     },
     // 显示配置弹窗
     showConfigModal() {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:405", "点击配置按钮，当前配置数量:", this.configList.length);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:368", "点击配置按钮，当前配置数量:", this.configList.length);
       if (this.configList.length === 0) {
         common_vendor.index.showToast({
           title: "正在加载配置...",
@@ -221,7 +221,7 @@ const _sfc_main = {
     // 切换配置说明显示
     toggleConfigInfo() {
       this.showConfigInfo = !this.showConfigInfo;
-      common_vendor.index.__f__("log", "at pages/index/index.vue:433", "配置说明显示状态:", this.showConfigInfo);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:396", "配置说明显示状态:", this.showConfigInfo);
     },
     // 格式化配置值的显示
     formatConfigValue(key, value) {
@@ -251,7 +251,7 @@ const _sfc_main = {
     },
     // 下拉刷新
     async onRefresh() {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:469", "=== 开始刷新首页数据 ===");
+      common_vendor.index.__f__("log", "at pages/index/index.vue:432", "=== 开始刷新首页数据 ===");
       this.refreshing = true;
       try {
         await Promise.all([
@@ -263,7 +263,7 @@ const _sfc_main = {
           icon: "success"
         });
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:485", "刷新失败:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:448", "刷新失败:", error);
         common_vendor.index.showToast({
           title: "刷新失败",
           icon: "none"
@@ -352,42 +352,26 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     f: common_vendor.o(($event) => $options.navigateToPublish("fetch")),
     g: common_vendor.o(($event) => $options.navigateToPublish("all")),
     h: common_vendor.o(($event) => $options.navigateToPublish("all")),
-    i: $data.recentOrders.length > 0
-  }, $data.recentOrders.length > 0 ? {
-    j: common_vendor.o((...args) => $options.goToOrders && $options.goToOrders(...args)),
-    k: common_vendor.f($data.recentOrders, (order, k0, i0) => {
-      return {
-        a: common_vendor.t(order.typeText),
-        b: common_vendor.t(order.statusText),
-        c: common_vendor.n("status-" + order.status),
-        d: common_vendor.t(order.address),
-        e: common_vendor.t(order.time),
-        f: common_vendor.t(order.price),
-        g: order.id,
-        h: common_vendor.o(($event) => $options.goToOrderDetail(order.id), order.id)
-      };
-    })
-  } : {}, {
-    l: $data.refreshing,
-    m: common_vendor.o((...args) => $options.onRefresh && $options.onRefresh(...args)),
-    n: common_vendor.o((...args) => $options.showConfigModal && $options.showConfigModal(...args)),
-    o: $data.showModal
+    i: $data.refreshing,
+    j: common_vendor.o((...args) => $options.onRefresh && $options.onRefresh(...args)),
+    k: common_vendor.o((...args) => $options.showConfigModal && $options.showConfigModal(...args)),
+    l: $data.showModal
   }, $data.showModal ? common_vendor.e({
-    p: common_vendor.o((...args) => $options.toggleConfigInfo && $options.toggleConfigInfo(...args)),
-    q: common_vendor.o((...args) => $options.hideConfigModal && $options.hideConfigModal(...args)),
-    r: $data.showConfigInfo
+    m: common_vendor.o((...args) => $options.toggleConfigInfo && $options.toggleConfigInfo(...args)),
+    n: common_vendor.o((...args) => $options.hideConfigModal && $options.hideConfigModal(...args)),
+    o: $data.showConfigInfo
   }, $data.showConfigInfo ? {} : {}, {
-    s: common_vendor.f($data.configList, (config, index, i0) => {
+    p: common_vendor.f($data.configList, (config, index, i0) => {
       return {
         a: common_vendor.t(config.remark || config.paramKey),
         b: common_vendor.t(config.displayValue),
         c: index
       };
     }),
-    t: common_vendor.o((...args) => $options.hideConfigModal && $options.hideConfigModal(...args)),
-    v: common_vendor.o(() => {
+    q: common_vendor.o((...args) => $options.hideConfigModal && $options.hideConfigModal(...args)),
+    r: common_vendor.o(() => {
     }),
-    w: common_vendor.o((...args) => $options.hideConfigModal && $options.hideConfigModal(...args))
+    s: common_vendor.o((...args) => $options.hideConfigModal && $options.hideConfigModal(...args))
   }) : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-1cf27b2a"]]);

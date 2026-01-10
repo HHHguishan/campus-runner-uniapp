@@ -32,8 +32,10 @@ const _sfc_main = {
         this.loading = false;
         if (evalRes.code === 200 && evalRes.data) {
           this.evaluationInfo = evalRes.data;
-          this.userInfo = evalRes.data.user || {};
+          this.userInfo = evalRes.data.userInfo || {};
           common_vendor.index.__f__("log", "at pages/evaluation/detail.vue:134", "✅ 评价详情加载成功:", this.evaluationInfo);
+          common_vendor.index.__f__("log", "at pages/evaluation/detail.vue:135", "📝 评价内容:", this.getFeedbackText());
+          common_vendor.index.__f__("log", "at pages/evaluation/detail.vue:136", "🏷️ 评价标签:", this.getTags());
         } else {
           this.evaluationInfo = null;
         }
@@ -43,7 +45,7 @@ const _sfc_main = {
       } catch (error) {
         common_vendor.index.hideLoading();
         this.loading = false;
-        common_vendor.index.__f__("error", "at pages/evaluation/detail.vue:147", "❌ 加载评价详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/evaluation/detail.vue:149", "❌ 加载评价详情失败:", error);
         common_vendor.index.showToast({
           title: "加载失败，请稍后重试",
           icon: "none"
@@ -90,6 +92,30 @@ const _sfc_main = {
       return `${year}-${month}-${day} ${hours}:${minutes}`;
     },
     /**
+     * 从评价内容中提取标签
+     * 评价格式: [标签1, 标签2] 评价内容
+     */
+    getTags() {
+      if (!this.evaluationInfo || !this.evaluationInfo.feedback)
+        return [];
+      const feedback = this.evaluationInfo.feedback;
+      const tagMatch = feedback.match(/\[(.*?)\]/);
+      if (tagMatch && tagMatch[1]) {
+        return tagMatch[1].split(",").map((tag) => tag.trim()).filter((tag) => tag);
+      }
+      return [];
+    },
+    /**
+     * 获取纯文本评价内容（去除标签）
+     */
+    getFeedbackText() {
+      if (!this.evaluationInfo || !this.evaluationInfo.feedback)
+        return "";
+      let feedback = this.evaluationInfo.feedback;
+      feedback = feedback.replace(/\[.*?\]\s*/, "");
+      return feedback.trim();
+    },
+    /**
      * 返回上一页
      */
     goBack() {
@@ -102,9 +128,9 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     a: common_vendor.o((...args) => $options.goBack && $options.goBack(...args)),
     b: $data.loading
   }, $data.loading ? {} : !$data.evaluationInfo ? {} : common_vendor.e({
-    d: common_vendor.t($data.userInfo.userName ? $data.userInfo.userName.substring(0, 1) : "用"),
-    e: common_vendor.t($data.userInfo.userName || "用户"),
-    f: common_vendor.t($options.formatTime($data.evaluationInfo.createTime)),
+    d: common_vendor.t($data.userInfo.nickname ? $data.userInfo.nickname.substring(0, 1) : "用"),
+    e: common_vendor.t($data.userInfo.nickname || "用户"),
+    f: common_vendor.t($options.formatTime($data.evaluationInfo.evaluationTime)),
     g: common_vendor.f(5, (star, index, i0) => {
       return {
         a: common_vendor.t(index < $data.evaluationInfo.rating ? "★" : "☆"),
@@ -112,21 +138,21 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     }),
     h: common_vendor.t($options.getRatingText($data.evaluationInfo.rating)),
-    i: $data.evaluationInfo.tags
-  }, $data.evaluationInfo.tags ? {
-    j: common_vendor.f($data.evaluationInfo.tags.split(","), (tag, index, i0) => {
+    i: $options.getTags().length > 0
+  }, $options.getTags().length > 0 ? {
+    j: common_vendor.f($options.getTags(), (tag, index, i0) => {
       return {
         a: common_vendor.t(tag),
         b: index
       };
     })
   } : {}, {
-    k: common_vendor.t($data.evaluationInfo.content || ""),
-    l: $data.orderInfo
-  }, $data.orderInfo ? {
-    m: common_vendor.t($data.orderInfo.orderNo || "-"),
-    n: common_vendor.t($options.getServiceTypeName($data.orderInfo.serviceType)),
-    o: common_vendor.t($options.formatTime($data.orderInfo.completeTime))
+    k: common_vendor.t($options.getFeedbackText()),
+    l: $data.evaluationInfo.orderInfo
+  }, $data.evaluationInfo.orderInfo ? {
+    m: common_vendor.t($data.evaluationInfo.orderNo || "-"),
+    n: common_vendor.t($options.getServiceTypeName($data.evaluationInfo.orderInfo.type)),
+    o: common_vendor.t($options.formatTime($data.evaluationInfo.orderInfo.finishTime))
   } : {}), {
     c: !$data.evaluationInfo
   });

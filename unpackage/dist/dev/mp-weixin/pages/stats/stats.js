@@ -99,7 +99,7 @@ const _sfc_main = {
     // 查看评价
     goToEvaluations() {
       common_vendor.index.navigateTo({
-        url: "/pages/evaluation/evaluation"
+        url: "/pages/rider/evaluations"
       });
     }
   }

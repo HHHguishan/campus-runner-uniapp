@@ -181,12 +181,12 @@
       </view>
 
       <!-- 已完成状态 - 未评价 -->
-      <view class="action-buttons" v-if="orderStatus === 3 && !orderInfo.hasEvaluated">
+      <view class="action-buttons" v-if="orderStatus === 3 && (orderInfo.rating === null || orderInfo.rating === undefined)">
         <button class="btn-primary" @click="goToEvaluate">去评价</button>
       </view>
 
       <!-- 已完成状态 - 已评价 -->
-      <view class="action-buttons" v-if="orderStatus === 3 && orderInfo.hasEvaluated">
+      <view class="action-buttons" v-if="orderStatus === 3 && (orderInfo.rating !== null && orderInfo.rating !== undefined)">
         <button class="btn-primary" @click="viewEvaluation">查看评价</button>
       </view>
 
@@ -258,6 +258,11 @@ export default {
           }
 
           console.log('✅ 订单详情加载成功:', this.orderInfo)
+          console.log('📊 评价状态检查:', {
+            rating: this.orderInfo.rating,
+            hasRating: !!this.orderInfo.rating,
+            status: this.orderStatus
+          })
         } else {
           uni.showToast({
             title: res.message || '加载失败',

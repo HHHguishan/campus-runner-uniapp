@@ -327,12 +327,12 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       }, order.status === 2 ? {
         q: common_vendor.o(($event) => $options.contactRider(order), order.id)
       } : {}, {
-        r: order.status === 3 && !order.hasEvaluated
-      }, order.status === 3 && !order.hasEvaluated ? {
+        r: order.status === 3 && (order.rating === null || order.rating === void 0)
+      }, order.status === 3 && (order.rating === null || order.rating === void 0) ? {
         s: common_vendor.o(($event) => $options.evaluateOrder(order.id), order.id)
       } : {}, {
-        t: order.status === 3 && order.hasEvaluated
-      }, order.status === 3 && order.hasEvaluated ? {
+        t: order.status === 3 && order.rating !== null && order.rating !== void 0
+      }, order.status === 3 && order.rating !== null && order.rating !== void 0 ? {
         v: common_vendor.o(($event) => $options.viewEvaluation(order.id), order.id)
       } : {}, {
         w: order.status === 4
