@@ -93,24 +93,25 @@
               <button class="btn-action btn-cancel" @click.stop="cancelOrder(order.id)">取消订单</button>
             </template>
 
-            <!-- 进行中 -->
-            <template v-if="order.status === 2 || order.status === 3">
+            <!-- 配送中 -->
+            <template v-if="order.status === 2">
               <button class="btn-action btn-primary" @click.stop="contactRider(order)">联系骑手</button>
             </template>
 
-            <!-- 待评价 -->
-            <template v-if="order.status === 4">
-              <button class="btn-action btn-primary" @click.stop="evaluateOrder(order.id)">评价订单</button>
+            <!-- 已完成 - 未评价 -->
+            <template v-if="order.status === 3 && !order.hasEvaluated">
+              <button class="btn-action btn-primary" @click.stop="evaluateOrder(order.id)">去评价</button>
             </template>
 
-            <!-- 已完成 -->
-            <template v-if="order.status === 5">
-              <button class="btn-action btn-default" @click.stop="deleteOrder(order.id)">删除订单</button>
+            <!-- 已完成 - 已评价 -->
+            <template v-if="order.status === 3 && order.hasEvaluated">
+              <button class="btn-action btn-default" @click.stop="viewEvaluation(order.id)">查看评价</button>
             </template>
 
             <!-- 已取消 -->
-            <template v-if="order.status === 6">
+            <template v-if="order.status === 4">
               <button class="btn-action btn-default" @click.stop="deleteOrder(order.id)">删除订单</button>
+              <button class="btn-action btn-primary" @click.stop="reorder(order.id)">再来一单</button>
             </template>
           </view>
         </view>
@@ -384,9 +385,26 @@ export default {
      * 评价订单
      */
     evaluateOrder(orderId) {
-      uni.showToast({
-        title: '功能开发中',
-        icon: 'none'
+      uni.navigateTo({
+        url: `/pages/evaluation/create?orderId=${orderId}`
+      })
+    },
+
+    /**
+     * 查看评价
+     */
+    viewEvaluation(orderId) {
+      uni.navigateTo({
+        url: `/pages/evaluation/detail?orderId=${orderId}`
+      })
+    },
+
+    /**
+     * 再来一单
+     */
+    reorder(orderId) {
+      uni.navigateTo({
+        url: `/pages/order/create?orderId=${orderId}`
       })
     },
 

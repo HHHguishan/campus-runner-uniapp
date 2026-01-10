@@ -18,7 +18,9 @@
     "pages/wallet/recharge",
     "pages/order/create",
     "pages/order/payment",
-    "pages/order/detail"
+    "pages/order/detail",
+    "pages/evaluation/create",
+    "pages/evaluation/detail"
   ],
   "window": {
     "navigationBarTextStyle": "black",

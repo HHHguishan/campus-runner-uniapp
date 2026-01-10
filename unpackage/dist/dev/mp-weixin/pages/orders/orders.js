@@ -56,10 +56,10 @@ const _sfc_main = {
         return;
       try {
         this.loading = true;
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:199", "📥 开始加载订单列表");
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:200", "   - 页码:", this.page);
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:201", "   - 每页数量:", this.size);
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:202", "   - 状态筛选:", this.activeTab);
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:200", "📥 开始加载订单列表");
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:201", "   - 页码:", this.page);
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:202", "   - 每页数量:", this.size);
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:203", "   - 状态筛选:", this.activeTab);
         const params = {
           page: this.page,
           size: this.size
@@ -67,36 +67,36 @@ const _sfc_main = {
         if (this.activeTab !== null) {
           params.status = this.activeTab;
         }
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:214", "   - 请求参数:", JSON.stringify(params));
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:215", "   - 请求参数:", JSON.stringify(params));
         const res = await api_order.getOrderList(params);
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:218", "📥 订单列表API响应:");
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:219", "   - 响应码:", res.code);
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:220", "   - 响应消息:", res.message);
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:221", "   - 响应数据:", JSON.stringify(res.data, null, 2));
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:219", "📥 订单列表API响应:");
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:220", "   - 响应码:", res.code);
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:221", "   - 响应消息:", res.message);
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:222", "   - 响应数据:", JSON.stringify(res.data, null, 2));
         if (res.code === 200 && res.data) {
           const newList = res.data.records || [];
-          common_vendor.index.__f__("log", "at pages/orders/orders.vue:226", "📊 解析订单列表:");
-          common_vendor.index.__f__("log", "at pages/orders/orders.vue:227", "   - 记录总数:", res.data.total);
-          common_vendor.index.__f__("log", "at pages/orders/orders.vue:228", "   - 当前页记录数:", newList.length);
-          common_vendor.index.__f__("log", "at pages/orders/orders.vue:229", "   - 记录详情:", JSON.stringify(newList, null, 2));
+          common_vendor.index.__f__("log", "at pages/orders/orders.vue:227", "📊 解析订单列表:");
+          common_vendor.index.__f__("log", "at pages/orders/orders.vue:228", "   - 记录总数:", res.data.total);
+          common_vendor.index.__f__("log", "at pages/orders/orders.vue:229", "   - 当前页记录数:", newList.length);
+          common_vendor.index.__f__("log", "at pages/orders/orders.vue:230", "   - 记录详情:", JSON.stringify(newList, null, 2));
           if (this.page === 1) {
             this.orderList = newList;
           } else {
             this.orderList = [...this.orderList, ...newList];
           }
           this.hasMore = newList.length >= this.size;
-          common_vendor.index.__f__("log", "at pages/orders/orders.vue:240", "✅ 订单列表加载成功，当前列表共", this.orderList.length, "条");
+          common_vendor.index.__f__("log", "at pages/orders/orders.vue:241", "✅ 订单列表加载成功，当前列表共", this.orderList.length, "条");
         } else {
-          common_vendor.index.__f__("error", "at pages/orders/orders.vue:242", "❌ API返回错误:", res.code, res.message);
+          common_vendor.index.__f__("error", "at pages/orders/orders.vue:243", "❌ API返回错误:", res.code, res.message);
           common_vendor.index.showToast({
             title: res.message || "加载失败",
             icon: "none"
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/orders/orders.vue:249", "❌ 加载订单列表异常:", error);
-        common_vendor.index.__f__("error", "at pages/orders/orders.vue:250", "   - 错误信息:", error.message);
-        common_vendor.index.__f__("error", "at pages/orders/orders.vue:251", "   - 错误堆栈:", error.stack);
+        common_vendor.index.__f__("error", "at pages/orders/orders.vue:250", "❌ 加载订单列表异常:", error);
+        common_vendor.index.__f__("error", "at pages/orders/orders.vue:251", "   - 错误信息:", error.message);
+        common_vendor.index.__f__("error", "at pages/orders/orders.vue:252", "   - 错误堆栈:", error.stack);
         common_vendor.index.showToast({
           title: "加载失败，请稍后重试",
           icon: "none"
@@ -104,7 +104,7 @@ const _sfc_main = {
       } finally {
         this.loading = false;
         this.refreshing = false;
-        common_vendor.index.__f__("log", "at pages/orders/orders.vue:259", "🔄 加载状态已重置");
+        common_vendor.index.__f__("log", "at pages/orders/orders.vue:260", "🔄 加载状态已重置");
       }
     },
     /**
@@ -177,7 +177,7 @@ const _sfc_main = {
               }
             } catch (error) {
               common_vendor.index.hideLoading();
-              common_vendor.index.__f__("error", "at pages/orders/orders.vue:342", "❌ 取消订单失败:", error);
+              common_vendor.index.__f__("error", "at pages/orders/orders.vue:343", "❌ 取消订单失败:", error);
               common_vendor.index.showToast({
                 title: "取消失败，请稍后重试",
                 icon: "none"
@@ -217,9 +217,24 @@ const _sfc_main = {
      * 评价订单
      */
     evaluateOrder(orderId) {
-      common_vendor.index.showToast({
-        title: "功能开发中",
-        icon: "none"
+      common_vendor.index.navigateTo({
+        url: `/pages/evaluation/create?orderId=${orderId}`
+      });
+    },
+    /**
+     * 查看评价
+     */
+    viewEvaluation(orderId) {
+      common_vendor.index.navigateTo({
+        url: `/pages/evaluation/detail?orderId=${orderId}`
+      });
+    },
+    /**
+     * 再来一单
+     */
+    reorder(orderId) {
+      common_vendor.index.navigateTo({
+        url: `/pages/order/create?orderId=${orderId}`
       });
     },
     /**
@@ -308,24 +323,25 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       }, order.status === 1 ? {
         o: common_vendor.o(($event) => $options.cancelOrder(order.id), order.id)
       } : {}, {
-        p: order.status === 2 || order.status === 3
-      }, order.status === 2 || order.status === 3 ? {
+        p: order.status === 2
+      }, order.status === 2 ? {
         q: common_vendor.o(($event) => $options.contactRider(order), order.id)
       } : {}, {
-        r: order.status === 4
-      }, order.status === 4 ? {
+        r: order.status === 3 && !order.hasEvaluated
+      }, order.status === 3 && !order.hasEvaluated ? {
         s: common_vendor.o(($event) => $options.evaluateOrder(order.id), order.id)
       } : {}, {
-        t: order.status === 5
-      }, order.status === 5 ? {
-        v: common_vendor.o(($event) => $options.deleteOrder(order.id), order.id)
+        t: order.status === 3 && order.hasEvaluated
+      }, order.status === 3 && order.hasEvaluated ? {
+        v: common_vendor.o(($event) => $options.viewEvaluation(order.id), order.id)
       } : {}, {
-        w: order.status === 6
-      }, order.status === 6 ? {
-        x: common_vendor.o(($event) => $options.deleteOrder(order.id), order.id)
+        w: order.status === 4
+      }, order.status === 4 ? {
+        x: common_vendor.o(($event) => $options.deleteOrder(order.id), order.id),
+        y: common_vendor.o(($event) => $options.reorder(order.id), order.id)
       } : {}, {
-        y: order.id,
-        z: common_vendor.o(($event) => $options.goToDetail(order.id), order.id)
+        z: order.id,
+        A: common_vendor.o(($event) => $options.goToDetail(order.id), order.id)
       });
     }),
     c: $data.orderList.length > 0

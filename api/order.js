@@ -64,6 +64,15 @@ export function submitEvaluation(data) {
 }
 
 /**
+ * 获取订单评价详情
+ * @param {Number} orderId - 订单ID
+ * @returns {Promise}
+ */
+export function getEvaluationDetail(orderId) {
+  return get(`/evaluation/${orderId}`)
+}
+
+/**
  * 订单支付
  * @param {Object} data - 支付数据
  * @param {Number} data.orderId - 订单ID

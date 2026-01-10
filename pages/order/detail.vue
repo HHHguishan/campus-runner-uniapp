@@ -163,7 +163,7 @@
     </scroll-view>
 
     <!-- 底部操作栏 -->
-    <view class="bottom-bar" v-if="orderInfo">
+    <view class="bottom-bar" v-if="orderInfo && shouldShowBottomBar">
       <!-- 待支付状态 -->
       <view class="action-buttons" v-if="orderStatus === 0">
         <button class="btn-cancel" @click="cancelOrder">取消订单</button>
@@ -180,14 +180,20 @@
         <button class="btn-primary" @click="contactRider">联系骑手</button>
       </view>
 
-      <!-- 已完成状态 -->
+      <!-- 已完成状态 - 未评价 -->
       <view class="action-buttons" v-if="orderStatus === 3 && !orderInfo.hasEvaluated">
         <button class="btn-primary" @click="goToEvaluate">去评价</button>
       </view>
 
-      <!-- 已完成已评价 -->
+      <!-- 已完成状态 - 已评价 -->
       <view class="action-buttons" v-if="orderStatus === 3 && orderInfo.hasEvaluated">
         <button class="btn-primary" @click="viewEvaluation">查看评价</button>
+      </view>
+
+      <!-- 已取消状态 -->
+      <view class="action-buttons" v-if="orderStatus === 4">
+        <button class="btn-cancel" @click="deleteOrder">删除订单</button>
+        <button class="btn-primary" @click="reorder">再来一单</button>
       </view>
     </view>
   </view>
@@ -203,6 +209,16 @@ export default {
       orderInfo: null,
       riderInfo: null,
       orderStatus: 0 // 0-待支付, 1-待接单, 2-配送中, 3-已完成, 4-已取消
+    }
+  },
+
+  computed: {
+    /**
+     * 是否显示底部操作栏
+     */
+    shouldShowBottomBar() {
+      // 只有0-4的状态才显示底部栏
+      return this.orderStatus >= 0 && this.orderStatus <= 4
     }
   },
 
@@ -443,9 +459,8 @@ export default {
      * 查看评价
      */
     viewEvaluation() {
-      uni.showToast({
-        title: '查看评价功能开发中',
-        icon: 'none'
+      uni.navigateTo({
+        url: `/pages/evaluation/detail?orderId=${this.orderId}`
       })
     },
 
@@ -473,6 +488,38 @@ export default {
      */
     goBack() {
       uni.navigateBack()
+    },
+
+    /**
+     * 删除订单
+     */
+    deleteOrder() {
+      uni.showModal({
+        title: '删除订单',
+        content: '确定要删除这个订单吗？删除后将无法恢复',
+        success: (res) => {
+          if (res.confirm) {
+            uni.showToast({
+              title: '删除功能开发中',
+              icon: 'none'
+            })
+            // TODO: 调用删除订单API
+            // const res = await deleteOrderApi(this.orderId)
+          }
+        }
+      })
+    },
+
+    /**
+     * 再来一单
+     */
+    reorder() {
+      if (!this.orderInfo) return
+
+      // 跳转到创建订单页面，携带订单信息
+      uni.navigateTo({
+        url: `/pages/order/create?orderId=${this.orderId}`
+      })
     }
   }
 }

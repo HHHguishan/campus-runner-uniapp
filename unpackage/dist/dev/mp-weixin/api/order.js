@@ -12,12 +12,20 @@ function getOrderDetail(orderId) {
 function cancelOrder(data) {
   return utils_request.put("/order/cancel", data);
 }
+function submitEvaluation(data) {
+  return utils_request.post("/evaluation/submit", data);
+}
+function getEvaluationDetail(orderId) {
+  return utils_request.get(`/evaluation/${orderId}`);
+}
 function payOrder(data) {
   return utils_request.post("/pay/doPay", data);
 }
 exports.cancelOrder = cancelOrder;
 exports.createOrder = createOrder;
+exports.getEvaluationDetail = getEvaluationDetail;
 exports.getOrderDetail = getOrderDetail;
 exports.getOrderList = getOrderList;
 exports.payOrder = payOrder;
+exports.submitEvaluation = submitEvaluation;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/order.js.map

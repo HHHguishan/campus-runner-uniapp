@@ -121,6 +121,20 @@
 				"navigationBarTitleText": "订单详情",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/evaluation/create",
+			"style": {
+				"navigationBarTitleText": "评价订单",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/evaluation/detail",
+			"style": {
+				"navigationBarTitleText": "评价详情",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

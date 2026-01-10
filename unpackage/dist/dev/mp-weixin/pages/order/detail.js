@@ -11,6 +11,14 @@ const _sfc_main = {
       // 0-待支付, 1-待接单, 2-配送中, 3-已完成, 4-已取消
     };
   },
+  computed: {
+    /**
+     * 是否显示底部操作栏
+     */
+    shouldShowBottomBar() {
+      return this.orderStatus >= 0 && this.orderStatus <= 4;
+    }
+  },
   onLoad(options) {
     if (options.id) {
       this.orderId = options.id;
@@ -37,7 +45,7 @@ const _sfc_main = {
           if (res.data.runnerInfo) {
             this.riderInfo = res.data.runnerInfo;
           }
-          common_vendor.index.__f__("log", "at pages/order/detail.vue:244", "✅ 订单详情加载成功:", this.orderInfo);
+          common_vendor.index.__f__("log", "at pages/order/detail.vue:260", "✅ 订单详情加载成功:", this.orderInfo);
         } else {
           common_vendor.index.showToast({
             title: res.message || "加载失败",
@@ -46,7 +54,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/order/detail.vue:253", "❌ 加载订单详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/detail.vue:269", "❌ 加载订单详情失败:", error);
         common_vendor.index.showToast({
           title: "加载失败，请稍后重试",
           icon: "none"
@@ -198,7 +206,7 @@ const _sfc_main = {
               }
             } catch (error) {
               common_vendor.index.hideLoading();
-              common_vendor.index.__f__("error", "at pages/order/detail.vue:413", "❌ 取消订单失败:", error);
+              common_vendor.index.__f__("error", "at pages/order/detail.vue:429", "❌ 取消订单失败:", error);
               common_vendor.index.showToast({
                 title: "取消失败，请稍后重试",
                 icon: "none"
@@ -228,9 +236,8 @@ const _sfc_main = {
      * 查看评价
      */
     viewEvaluation() {
-      common_vendor.index.showToast({
-        title: "查看评价功能开发中",
-        icon: "none"
+      common_vendor.index.navigateTo({
+        url: `/pages/evaluation/detail?orderId=${this.orderId}`
       });
     },
     /**
@@ -256,6 +263,33 @@ const _sfc_main = {
      */
     goBack() {
       common_vendor.index.navigateBack();
+    },
+    /**
+     * 删除订单
+     */
+    deleteOrder() {
+      common_vendor.index.showModal({
+        title: "删除订单",
+        content: "确定要删除这个订单吗？删除后将无法恢复",
+        success: (res) => {
+          if (res.confirm) {
+            common_vendor.index.showToast({
+              title: "删除功能开发中",
+              icon: "none"
+            });
+          }
+        }
+      });
+    },
+    /**
+     * 再来一单
+     */
+    reorder() {
+      if (!this.orderInfo)
+        return;
+      common_vendor.index.navigateTo({
+        url: `/pages/order/create?orderId=${this.orderId}`
+      });
     }
   }
 };
@@ -314,8 +348,8 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     L: common_vendor.t($data.orderInfo.deliveryFee || "0.00"),
     M: common_vendor.t($data.orderInfo.totalAmount || "0.00")
   } : {}, {
-    N: $data.orderInfo
-  }, $data.orderInfo ? common_vendor.e({
+    N: $data.orderInfo && $options.shouldShowBottomBar
+  }, $data.orderInfo && $options.shouldShowBottomBar ? common_vendor.e({
     O: $data.orderStatus === 0
   }, $data.orderStatus === 0 ? {
     P: common_vendor.o((...args) => $options.cancelOrder && $options.cancelOrder(...args)),
@@ -336,6 +370,11 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     X: $data.orderStatus === 3 && $data.orderInfo.hasEvaluated
   }, $data.orderStatus === 3 && $data.orderInfo.hasEvaluated ? {
     Y: common_vendor.o((...args) => $options.viewEvaluation && $options.viewEvaluation(...args))
+  } : {}, {
+    Z: $data.orderStatus === 4
+  }, $data.orderStatus === 4 ? {
+    aa: common_vendor.o((...args) => $options.deleteOrder && $options.deleteOrder(...args)),
+    ab: common_vendor.o((...args) => $options.reorder && $options.reorder(...args))
   } : {}) : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-6b23c96c"]]);
