@@ -70,13 +70,12 @@
         <text class="btn-arrow">›</text>
       </view>
     </view>
-    </scroll-view>
-
-    <!-- 配置按钮 -->
-    <view class="config-float-btn" @tap="showConfigModal">
-      <text class="btn-icon">⚙️</text>
-      <text class="btn-text">配置</text>
+    
+    <!-- 计费规则入口 -->
+    <view class="billing-rules-link" @tap="showConfigModal">
+      <text>计费规则</text>
     </view>
+    </scroll-view>
 
     <!-- 配置弹窗 -->
     <view class="config-modal" v-if="showModal" @tap="hideConfigModal">
@@ -838,33 +837,17 @@ export default {
   color: #999;
 }
 
-/* 配置浮动按钮 */
-.config-float-btn {
-  position: fixed;
-  bottom: 150rpx;
-  right: 30rpx;
-  width: 100rpx;
-  height: 100rpx;
-  background: linear-gradient(135deg, #07c160 0%, #06ad56 100%);
-  border-radius: 50rpx;
-  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.4);
+/* 计费规则入口 */
+.billing-rules-link {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  z-index: 999;
+  padding: 20rpx 0 40rpx;
 }
 
-.btn-icon {
-  font-size: 40rpx;
-  line-height: 1;
-  margin-bottom: 4rpx;
-}
-
-.btn-text {
-  font-size: 20rpx;
-  color: #fff;
-  line-height: 1;
+.billing-rules-link text {
+  font-size: 26rpx;
+  color: #999;
+  text-decoration: underline;
 }
 
 /* 配置弹窗 */
