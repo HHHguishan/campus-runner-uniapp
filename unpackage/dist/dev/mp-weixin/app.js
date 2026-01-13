@@ -30,6 +30,9 @@ if (!Math) {
   "./pages/rider/completed.js";
   "./pages/rider/reply.js";
   "./pages/rider/evaluations.js";
+  "./pages/forum/index.js";
+  "./pages/forum/detail.js";
+  "./pages/forum/create.js";
 }
 const _sfc_main = {
   onLaunch: function() {

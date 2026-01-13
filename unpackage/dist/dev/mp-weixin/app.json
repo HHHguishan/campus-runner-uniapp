@@ -26,7 +26,10 @@
     "pages/upload-finish/upload-finish",
     "pages/rider/completed",
     "pages/rider/reply",
-    "pages/rider/evaluations"
+    "pages/rider/evaluations",
+    "pages/forum/index",
+    "pages/forum/detail",
+    "pages/forum/create"
   ],
   "window": {
     "navigationBarTextStyle": "black",

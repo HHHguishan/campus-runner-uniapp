@@ -178,8 +178,36 @@
 				"navigationBarTitleText": "评价列表",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/forum/index",
+			"style": {
+				"navigationBarTitleText": "校园圈子",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/forum/detail",
+			"style": {
+				"navigationBarTitleText": "帖子详情",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/forum/create",
+			"style": {
+				"navigationBarTitleText": "发布动态",
+				"navigationStyle": "custom"
+			}
 		}
 	],
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^post-card$": "@/components/post-card/post-card.vue"
+		}
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "校园跑腿",

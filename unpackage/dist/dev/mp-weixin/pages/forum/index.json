@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "校园圈子",
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "usingComponents": {}
+}

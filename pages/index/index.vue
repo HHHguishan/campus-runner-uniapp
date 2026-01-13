@@ -75,6 +75,32 @@
     <view class="billing-rules-link" @tap="showConfigModal">
       <text>计费规则</text>
     </view>
+
+    <!-- 校园圈子预览 -->
+    <view class="forum-section">
+      <view class="section-header-modern">
+        <view class="left">
+          <text class="title">校园圈子</text>
+          <text class="subtitle">有趣的事都在这里</text>
+        </view>
+        <text class="more-btn" @tap="goToForum">发现更多</text>
+      </view>
+      
+      <view class="forum-preview-list">
+        <post-card 
+          v-for="post in forumPosts" 
+          :key="post.id" 
+          :post="post"
+          @click="goToPostDetail"
+          @like="onPostLike"
+        ></post-card>
+        
+        <view v-if="forumPosts.length === 0" class="empty-forum">
+          <image class="empty-img" src="/static/images/empty-forum.png" mode="aspectFit"></image>
+          <text>还没有精彩动态，去发布一条吧~</text>
+        </view>
+      </view>
+    </view>
     </scroll-view>
 
     <!-- 配置弹窗 -->
@@ -134,6 +160,7 @@
 <script>
 import { getBannerList } from '../../api/notice.js'
 import { getConfigs } from '../../api/config.js'
+import { getPostList, likePost } from '../../api/forum.js'
 
 export default {
   data() {
@@ -189,7 +216,8 @@ export default {
           time: '10分钟前',
           price: '8.00'
         }
-      ]
+      ],
+      forumPosts: [] // 圈子动态
     };
   },
 
@@ -203,11 +231,18 @@ export default {
   onLoad() {
     this.loadBanners()
     this.loadConfigs()
+    this.loadForumPosts()
+    // 监听发布成功，自动刷新首页预览
+    uni.$on('refreshForum', this.loadForumPosts)
+  },
+  onUnload() {
+    uni.$off('refreshForum', this.loadForumPosts)
   },
 
   onShow() {
     // 页面显示时也刷新数据（从其他页面返回时）
     console.log('=== 首页显示，刷新数据 ===')
+    this.loadForumPosts()
   },
 
   methods: {
@@ -433,10 +468,11 @@ export default {
       this.refreshing = true
 
       try {
-        // 同时刷新轮播图和配置
+        // 同时刷新轮播图、配置和圈子动态
         await Promise.all([
           this.loadBanners(),
-          this.loadConfigs()
+          this.loadConfigs(),
+          this.loadForumPosts()
         ])
 
         uni.showToast({
@@ -514,12 +550,71 @@ export default {
       // uni.navigateTo({
       //   url: `/pages/order/detail?id=${orderId}`
       // });
+    },
+
+    // 加载圈子动态
+    async loadForumPosts() {
+      try {
+        const res = await getPostList({
+          page: 1,
+          size: 3,
+          orderBy: 'createTime,desc'
+        })
+        console.log('🔍 首页圈子响应:', res)
+        if (res.code === 200) {
+           let list = []
+           if (res.data) {
+              if (Array.isArray(res.data)) {
+                  list = res.data
+              } else if (Array.isArray(res.data.records)) {
+                  list = res.data.records
+              }
+           }
+          this.forumPosts = list
+          console.log('✅ 首页圈子加载成功:', this.forumPosts.length)
+        }
+      } catch (error) {
+        console.error('❌ 加载首页圈子失败:', error)
+      }
+    },
+
+    // 跳转到圈子列表
+    goToForum() {
+      uni.navigateTo({
+        url: '/pages/forum/index'
+      })
+    },
+
+    // 跳转到帖子详情
+    goToPostDetail(postId) {
+      uni.navigateTo({
+        url: `/pages/forum/detail?id=${postId}`
+      })
+    },
+
+    // 点赞处理
+    async onPostLike(postId) {
+      try {
+        const res = await likePost(postId)
+        if (res.code === 200) {
+          // 适配文档中的返回结果：data.liked, data.likeCount
+          const index = this.forumPosts.findIndex(p => p.id === postId)
+          if (index !== -1) {
+            const post = this.forumPosts[index]
+            post.liked = res.data.liked
+            post.likeCount = res.data.likeCount
+            this.forumPosts[index] = post
+          }
+        }
+      } catch (error) {
+        uni.showToast({ title: '操作失败', icon: 'none' })
+      }
     }
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .index-container {
   min-height: 100vh;
   background-color: #f5f5f5;
@@ -839,15 +934,80 @@ export default {
 
 /* 计费规则入口 */
 .billing-rules-link {
-  display: flex;
-  justify-content: center;
-  padding: 20rpx 0 40rpx;
+  padding: 20rpx;
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+  text-decoration: underline;
 }
 
-.billing-rules-link text {
-  font-size: 26rpx;
+/* 校园圈子 */
+.forum-section {
+  padding: 40rpx 30rpx;
+  background-color: #f8f9fa;
+  border-radius: 40rpx 40rpx 0 0;
+  margin-top: -20rpx;
+  position: relative;
+  z-index: 10;
+}
+
+.section-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32rpx;
+  padding: 0 10rpx;
+}
+
+.section-header-modern .left {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header-modern .left .title {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: 1rpx;
+}
+
+.section-header-modern .left .subtitle {
+  font-size: 24rpx;
   color: #999;
-  text-decoration: underline;
+  margin-top: 6rpx;
+  opacity: 0.8;
+}
+
+.section-header-modern .more-btn {
+  font-size: 24rpx;
+  color: #07c160;
+  font-weight: 600;
+  padding: 12rpx 28rpx;
+  background: #fff;
+  border-radius: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.03);
+}
+
+.empty-forum {
+  padding: 100rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.02);
+}
+
+.empty-forum .empty-img {
+  width: 240rpx;
+  height: 180rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-forum text {
+  color: #999;
+  font-size: 28rpx;
 }
 
 /* 配置弹窗 */
