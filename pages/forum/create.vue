@@ -6,9 +6,7 @@
         <text class="iconfont">✕</text>
       </view>
       <view class="nav-title">发布动态</view>
-      <view class="nav-right">
-        <button class="submit-btn" :disabled="!canSubmit || submitting" @tap="submit">发布</button>
-      </view>
+      <view class="nav-right"></view>
     </view>
 
     <scroll-view class="form-content" scroll-y>
@@ -62,7 +60,20 @@
         </view>
         <view class="image-tip">最多可上传9张图片</view>
       </view>
+      <view class="padding-bottom"></view>
     </scroll-view>
+
+    <!-- 底部操作栏 -->
+    <view class="bottom-action-bar">
+      <button 
+        class="main-submit-btn" 
+        :disabled="!canSubmit || submitting" 
+        @tap="submit"
+      >
+        <text v-if="!submitting">立即发布动态</text>
+        <text v-else>正在发布...</text>
+      </button>
+    </view>
 
     <!-- 加载中遮罩 -->
     <view v-if="submitting" class="submitting-overlay">
@@ -124,17 +135,33 @@ export default {
     async uploadImages(paths) {
       uni.showLoading({ title: '正在上传...' })
       
-      // 模拟多图上传逻辑
       for (const path of paths) {
         try {
-          // 这里应该是真实的 uni.uploadFile
-          // const res = await uni.uploadFile({ ... })
-          // const data = JSON.parse(res.data)
-          // if (data.code === 200) this.images.push(data.data.url)
-          
-          // 暂时模拟直接成功
-          this.images.push(path) 
+          const res = await new Promise((resolve, reject) => {
+            uni.uploadFile({
+              url: `${BASE_URL}/api/common/upload`,
+              filePath: path,
+              name: 'file',
+              formData: {
+                'type': 'forum'
+              },
+              header: {
+                'Authorization': uni.getStorageSync('Authorization') // 真实 Token
+              },
+              success: (uploadRes) => {
+                const data = JSON.parse(uploadRes.data)
+                if (data.code === 200) {
+                  resolve(data.data)
+                } else {
+                  reject(data.message)
+                }
+              },
+              fail: reject
+            })
+          })
+          this.images.push(res) 
         } catch (e) {
+          console.error('图片上传失败:', e)
           uni.showToast({ title: '部分图片上传失败', icon: 'none' })
         }
       }
@@ -221,34 +248,7 @@ export default {
   }
   
   .nav-right {
-    width: 140rpx;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .submit-btn {
-    margin: 0;
-    padding: 0 32rpx;
-    height: 60rpx;
-    line-height: 60rpx;
-    background: #fff;
-    color: $forum-primary;
-    font-size: 28rpx;
-    border-radius: 30rpx;
-    font-weight: 600;
-    border: none;
-    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-    
-    &[disabled] {
-      background: rgba(255, 255, 255, 0.6);
-      color: rgba(7, 193, 96, 0.5);
-      box-shadow: none;
-    }
-    
-    &:active:not([disabled]) {
-      transform: scale(0.95);
-      background: #f0f0f0;
-    }
+    width: 80rpx;
   }
 }
 
@@ -396,6 +396,54 @@ export default {
     margin-top: 24rpx;
     font-size: 24rpx;
     color: $forum-text-light;
+  }
+}
+
+.padding-bottom {
+  height: 200rpx;
+}
+
+.bottom-action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 30rpx 40rpx;
+  padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  
+  .main-submit-btn {
+    width: 100%;
+    height: 100rpx;
+    line-height: 100rpx;
+    background: $forum-primary-gradient;
+    color: #fff;
+    font-size: 32rpx;
+    font-weight: bold;
+    border-radius: 50rpx;
+    border: none;
+    box-shadow: 0 12rpx 24rpx rgba(7, 193, 96, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    
+    &::after { border: none; }
+    
+    &[disabled] {
+      background: #e0e0e0;
+      color: #aaa;
+      box-shadow: none;
+      opacity: 0.8;
+    }
+    
+    &:active:not([disabled]) {
+      transform: scale(0.98);
+      box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.15);
+    }
   }
 }
 

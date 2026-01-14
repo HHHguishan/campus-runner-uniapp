@@ -54,6 +54,17 @@ const _sfc_main = {
               list = res.data.records;
               total = res.data.total || 0;
             }
+            list = list.map((item) => {
+              if (item.images && typeof item.images === "string") {
+                try {
+                  item.images = JSON.parse(item.images);
+                } catch (e) {
+                  common_vendor.index.__f__("error", "at pages/forum/index.vue:185", "解析图片JSON失败:", e, item.images);
+                  item.images = [];
+                }
+              }
+              return item;
+            });
           }
           if (isRefresh) {
             this.posts = list;
@@ -65,13 +76,13 @@ const _sfc_main = {
             this.noMore = list.length < this.pageSize || total > 0 && this.posts.length >= total;
           }
         } else {
-          common_vendor.index.__f__("warn", "at pages/forum/index.vue:179", "⚠️ 响应异常或无数据:", res);
+          common_vendor.index.__f__("warn", "at pages/forum/index.vue:204", "⚠️ 响应异常或无数据:", res);
           if (isRefresh)
             this.posts = [];
           this.noMore = true;
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/forum/index.vue:184", "❌ 加载动态失败:", error);
+        common_vendor.index.__f__("error", "at pages/forum/index.vue:209", "❌ 加载动态失败:", error);
         common_vendor.index.showToast({ title: "加载失败", icon: "none" });
       } finally {
         this.loading = false;
@@ -120,6 +131,13 @@ const _sfc_main = {
       } catch (error) {
         common_vendor.index.showToast({ title: "操作失败", icon: "none" });
       }
+    },
+    // 图片预览方法 (新增)
+    previewImage(post, index) {
+      common_vendor.index.previewImage({
+        urls: post.images,
+        current: index
+      });
     }
   }
 };
@@ -150,18 +168,29 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         g: common_vendor.t(post.title)
       } : {}, {
         h: common_vendor.t(post.contentPreview || post.content),
-        i: common_vendor.t(post.liked ? "❤️" : "🤍"),
-        j: common_vendor.t(post.likeCount || 0),
-        k: post.liked ? 1 : "",
-        l: common_vendor.o(($event) => $options.onLike(post.id), "inline-" + post.id),
-        m: common_vendor.t(post.commentCount || 0),
-        n: common_vendor.o(($event) => $options.goToDetail(post.id), "inline-" + post.id),
-        o: post.viewCount
-      }, post.viewCount ? {
-        p: common_vendor.t(post.viewCount)
+        i: post.images && post.images.length > 0
+      }, post.images && post.images.length > 0 ? {
+        j: common_vendor.f(post.images, (img, index, i1) => {
+          return {
+            a: index,
+            b: img,
+            c: common_vendor.o(($event) => $options.previewImage(post, index), index)
+          };
+        }),
+        k: common_vendor.n("images-" + Math.min(post.images.length, 3))
       } : {}, {
-        q: "inline-" + post.id,
-        r: common_vendor.o(($event) => $options.goToDetail(post.id), "inline-" + post.id)
+        l: common_vendor.t(post.liked ? "❤️" : "🤍"),
+        m: common_vendor.t(post.likeCount || 0),
+        n: post.liked ? 1 : "",
+        o: common_vendor.o(($event) => $options.onLike(post.id), "inline-" + post.id),
+        p: common_vendor.t(post.commentCount || 0),
+        q: common_vendor.o(($event) => $options.goToDetail(post.id), "inline-" + post.id),
+        r: post.viewCount
+      }, post.viewCount ? {
+        s: common_vendor.t(post.viewCount)
+      } : {}, {
+        t: "inline-" + post.id,
+        v: common_vendor.o(($event) => $options.goToDetail(post.id), "inline-" + post.id)
       });
     }),
     f: $data.loading

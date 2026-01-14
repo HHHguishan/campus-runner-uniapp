@@ -13,9 +13,9 @@
       @refresherrefresh="onRefresh"
     >
     <!-- 顶部定位栏 -->
-    <view class="location-bar">
+    <view class="location-bar" @tap="getUserLocation">
       <text class="location-icon">📍</text>
-      <text class="location-text">广州大学城...</text>
+      <text class="location-text">{{ locationText }}</text>
     </view>
 
     <!-- 轮播图区域 -->
@@ -162,6 +162,7 @@
 import { getBannerList } from '../../api/notice.js'
 import { getConfigs } from '../../api/config.js'
 import { getPostList, likePost } from '../../api/forum.js'
+import { get } from '../../utils/request.js'
 
 export default {
   data() {
@@ -218,7 +219,8 @@ export default {
           price: '8.00'
         }
       ],
-      forumPosts: [] // 圈子动态
+      forumPosts: [], // 圈子动态
+      locationText: '正在定位...'
     };
   },
 
@@ -233,6 +235,7 @@ export default {
     this.loadBanners()
     this.loadConfigs()
     this.loadForumPosts()
+    this.getUserLocation()
     // 监听发布成功，自动刷新首页预览
     uni.$on('refreshForum', this.loadForumPosts)
   },
@@ -571,6 +574,18 @@ export default {
                   list = res.data.records
               }
            }
+            // 数据预处理：解析图片 JSON 字符串
+            list = list.map(item => {
+              if (item.images && typeof item.images === 'string') {
+                try {
+                  item.images = JSON.parse(item.images)
+                } catch (e) {
+                  console.error('首页解析图片失败:', e)
+                  item.images = []
+                }
+              }
+              return item
+            })
           this.forumPosts = list
           console.log('✅ 首页圈子加载成功:', this.forumPosts.length)
         }
@@ -609,6 +624,49 @@ export default {
         }
       } catch (error) {
         uni.showToast({ title: '操作失败', icon: 'none' })
+      }
+    },
+
+    // 获取用户定位
+    getUserLocation() {
+      console.log('=== 开始获取用户地理位置 ===')
+      this.locationText = '正在定位...'
+      
+      uni.getLocation({
+        type: 'gcj02',
+        isHighAccuracy: true, // 开启高精度定位
+        highAccuracyExpireTime: 3000, // 高精度定位超时时间(ms)，给GPS留出搜星时间
+        success: (res) => {
+          console.log('获取经纬度成功:', res)
+          this.getLocationName(res.latitude, res.longitude)
+        },
+        fail: (err) => {
+          console.error('获取经纬度失败:', err)
+          this.locationText = '定位失败'
+          uni.showToast({
+            title: '定位失败，请检查GPS权限',
+            icon: 'none'
+          })
+        }
+      })
+    },
+
+    // 逆地理编码：经纬度转地址 (通过后端代理)
+    async getLocationName(latitude, longitude) {
+      try {
+        const res = await get('/common/reverse-geocode', {
+          lat: latitude,
+          lon: longitude
+        })
+        if (res.code === 200) {
+          this.locationText = res.data || '位置获取成功'
+          console.log('后端逆地理编码成功:', this.locationText)
+        } else {
+          this.locationText = '解析地址失败'
+        }
+      } catch (error) {
+        console.error('请求后端定位接口异常:', error)
+        this.locationText = '定位解析失败'
       }
     }
   }

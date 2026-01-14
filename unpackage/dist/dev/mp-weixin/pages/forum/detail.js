@@ -31,12 +31,20 @@ const _sfc_main = {
         if (pRes.code === 200) {
           this.post = pRes.data;
           this.isMe = this.post.isOwner;
+          if (this.post.images && typeof this.post.images === "string") {
+            try {
+              this.post.images = JSON.parse(this.post.images);
+            } catch (e) {
+              common_vendor.index.__f__("error", "at pages/forum/detail.vue:133", "解析详情图片失败:", e);
+              this.post.images = [];
+            }
+          }
         }
         if (cRes.code === 200) {
           this.comments = cRes.data.records || [];
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/forum/detail.vue:133", "❌ 加载详情失败:", e);
+        common_vendor.index.__f__("error", "at pages/forum/detail.vue:143", "❌ 加载详情失败:", e);
         common_vendor.index.showToast({ title: "加载失败", icon: "none" });
       } finally {
         common_vendor.index.hideLoading();

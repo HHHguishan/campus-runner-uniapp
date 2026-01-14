@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const api_forum = require("../../api/forum.js");
+const utils_config = require("../../utils/config.js");
 const _sfc_main = {
   data() {
     return {
@@ -47,8 +48,32 @@ const _sfc_main = {
       common_vendor.index.showLoading({ title: "正在上传..." });
       for (const path of paths) {
         try {
-          this.images.push(path);
+          const res = await new Promise((resolve, reject) => {
+            common_vendor.index.uploadFile({
+              url: `${utils_config.BASE_URL}/api/common/upload`,
+              filePath: path,
+              name: "file",
+              formData: {
+                "type": "forum"
+              },
+              header: {
+                "Authorization": common_vendor.index.getStorageSync("Authorization")
+                // 真实 Token
+              },
+              success: (uploadRes) => {
+                const data = JSON.parse(uploadRes.data);
+                if (data.code === 200) {
+                  resolve(data.data);
+                } else {
+                  reject(data.message);
+                }
+              },
+              fail: reject
+            });
+          });
+          this.images.push(res);
         } catch (e) {
+          common_vendor.index.__f__("error", "at pages/forum/create.vue:164", "图片上传失败:", e);
           common_vendor.index.showToast({ title: "部分图片上传失败", icon: "none" });
         }
       }
@@ -94,14 +119,12 @@ const _sfc_main = {
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return common_vendor.e({
     a: common_vendor.o((...args) => $options.goBack && $options.goBack(...args)),
-    b: !$options.canSubmit || $data.submitting,
-    c: common_vendor.o((...args) => $options.submit && $options.submit(...args)),
-    d: $data.title,
-    e: common_vendor.o(($event) => $data.title = $event.detail.value),
-    f: $data.content,
-    g: common_vendor.o(($event) => $data.content = $event.detail.value),
-    h: common_vendor.t($data.content.length),
-    i: common_vendor.f($data.tagOptions, (t, k0, i0) => {
+    b: $data.title,
+    c: common_vendor.o(($event) => $data.title = $event.detail.value),
+    d: $data.content,
+    e: common_vendor.o(($event) => $data.content = $event.detail.value),
+    f: common_vendor.t($data.content.length),
+    g: common_vendor.f($data.tagOptions, (t, k0, i0) => {
       return {
         a: common_vendor.t(t),
         b: t,
@@ -109,7 +132,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         d: common_vendor.o(($event) => $data.tag = t, t)
       };
     }),
-    j: common_vendor.f($data.images, (img, index, i0) => {
+    h: common_vendor.f($data.images, (img, index, i0) => {
       return {
         a: img,
         b: common_vendor.o(($event) => $options.previewImage(index), index),
@@ -117,11 +140,15 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         d: index
       };
     }),
-    k: $data.images.length < 9
+    i: $data.images.length < 9
   }, $data.images.length < 9 ? {
-    l: common_vendor.o((...args) => $options.chooseImage && $options.chooseImage(...args))
+    j: common_vendor.o((...args) => $options.chooseImage && $options.chooseImage(...args))
   } : {}, {
-    m: $data.submitting
+    k: !$data.submitting
+  }, !$data.submitting ? {} : {}, {
+    l: !$options.canSubmit || $data.submitting,
+    m: common_vendor.o((...args) => $options.submit && $options.submit(...args)),
+    n: $data.submitting
   }, $data.submitting ? {} : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-ee120cef"]]);

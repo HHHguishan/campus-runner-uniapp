@@ -124,6 +124,16 @@ export default {
         if (pRes.code === 200) {
           this.post = pRes.data
           this.isMe = this.post.isOwner // 使用后端返回的 isOwner
+          
+          // 解析图片 JSON 字符串
+          if (this.post.images && typeof this.post.images === 'string') {
+            try {
+              this.post.images = JSON.parse(this.post.images)
+            } catch (e) {
+              console.error('解析详情图片失败:', e)
+              this.post.images = []
+            }
+          }
         }
         
         if (cRes.code === 200) {

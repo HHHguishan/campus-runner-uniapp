@@ -23,6 +23,7 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+/* 校园圈子（论坛）增强主题变量 */
 .evaluation-container.data-v-d86b04fa {
   min-height: 100vh;
   background-color: #f5f5f5;

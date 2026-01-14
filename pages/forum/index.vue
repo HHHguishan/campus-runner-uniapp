@@ -62,6 +62,18 @@
           <view class="post-content">
             <text v-if="post.title" class="post-title">{{ post.title }}</text>
             <text class="post-text">{{ post.contentPreview || post.content }}</text>
+            
+            <!-- 图片列表 (新增) -->
+            <view v-if="post.images && post.images.length > 0" class="post-images" :class="'images-' + Math.min(post.images.length, 3)">
+              <image 
+                v-for="(img, index) in post.images" 
+                :key="index" 
+                :src="img" 
+                class="post-image" 
+                mode="aspectFill"
+                @tap.stop="previewImage(post, index)"
+              ></image>
+            </view>
           </view>
           
           <!-- 交互栏 -->
@@ -163,6 +175,19 @@ export default {
                  list = res.data.records
                  total = res.data.total || 0
              }
+             
+             // 数据解析逻辑：处理 images 字段 (如果是字符串则解析为数组)
+             list = list.map(item => {
+               if (item.images && typeof item.images === 'string') {
+                 try {
+                   item.images = JSON.parse(item.images)
+                 } catch (e) {
+                   console.error('解析图片JSON失败:', e, item.images)
+                   item.images = []
+                 }
+               }
+               return item
+             })
           }
           
           if (isRefresh) {
@@ -229,6 +254,13 @@ export default {
       } catch (error) {
         uni.showToast({ title: '操作失败', icon: 'none' })
       }
+    },
+    // 图片预览方法 (新增)
+    previewImage(post, index) {
+      uni.previewImage({
+        urls: post.images,
+        current: index
+      })
     }
   }
 }
@@ -458,6 +490,44 @@ export default {
     .view-count {
       font-size: 22rpx;
       color: $forum-text-light;
+    }
+  }
+  
+  /* 图片列表样式 (新增) */
+  .post-images {
+    display: grid;
+    gap: 16rpx;
+    margin-top: 24rpx;
+    
+    &.images-1 {
+      grid-template-columns: 1fr;
+      .post-image {
+        height: 420rpx;
+        width: 100%;
+        border-radius: 20rpx;
+      }
+    }
+    
+    &.images-2 {
+      grid-template-columns: 1fr 1fr;
+      .post-image {
+        height: 290rpx;
+        border-radius: 16rpx;
+      }
+    }
+    
+    &.images-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+      .post-image {
+        height: 220rpx;
+        border-radius: 12rpx;
+      }
+    }
+    
+    .post-image {
+      width: 100%;
+      background: #f8f8f8;
+      box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.02);
     }
   }
 }
