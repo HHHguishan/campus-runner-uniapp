@@ -86,34 +86,37 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/uni.scss";
 .post-card {
   background: #ffffff;
-  border-radius: 24rpx;
+  border-radius: 32rpx;
   padding: 32rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.04);
+  box-shadow: $forum-card-shadow;
+  transition: all 0.2s ease;
+  border: 1rpx solid rgba(0, 0, 0, 0.02);
 }
 
 .post-card:active {
-  transform: scale(0.99);
-  background: #fafafa;
+  transform: scale(0.985);
+  background: #fcfcfc;
 }
 
 .post-header {
   display: flex;
   align-items: center;
-  margin-bottom: 24rpx;
+  margin-bottom: 20rpx;
 }
 
 .post-header .avatar {
-  width: 84rpx;
-  height: 84rpx;
+  width: 88rpx;
+  height: 88rpx;
   border-radius: 50%;
   margin-right: 20rpx;
-  background: #f5f5f5;
-  border: 2rpx solid #ffffff;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  background: #f8f8f8;
+  border: 4rpx solid #ffffff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
 }
 
 .post-header .user-info {
@@ -130,29 +133,30 @@ export default {
 .post-header .user-info .nickname {
   font-size: 30rpx;
   font-weight: 600;
-  color: #1a1a1a;
+  color: $forum-text-main;
   margin-right: 12rpx;
 }
 
 .post-header .user-info .post-tag {
   font-size: 20rpx;
-  color: #07c160;
-  background: rgba(7, 193, 96, 0.1);
-  padding: 2rpx 12rpx;
-  border-radius: 6rpx;
-  font-weight: 500;
+  color: $forum-primary;
+  background: $forum-primary-light;
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  font-weight: 600;
 }
 
 .post-header .user-info .time {
   font-size: 22rpx;
-  color: #999999;
+  color: $forum-text-light;
   margin-top: 6rpx;
 }
 
 .post-header .delete-btn {
   padding: 10rpx;
   color: #ff4d4f;
-  opacity: 0.6;
+  opacity: 0.4;
+  transition: opacity 0.2s;
 }
 
 .post-header .delete-btn:active {
@@ -164,17 +168,17 @@ export default {
 }
 
 .post-content .post-title {
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: bold;
-  color: #1a1a1a;
+  color: $forum-text-main;
   margin-bottom: 12rpx;
   display: block;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .post-content .post-text {
-  font-size: 28rpx;
-  color: #4a4a4a;
+  font-size: 29rpx;
+  color: $forum-text-sub;
   line-height: 1.6;
   display: block;
   word-break: break-all;
@@ -182,49 +186,46 @@ export default {
 
 .post-content .post-images {
   display: grid;
-  gap: 12rpx;
-  margin-top: 20rpx;
+  gap: 16rpx;
+  margin-top: 24rpx;
 }
 
 .post-content .post-images.images-1 {
   grid-template-columns: 1fr;
 }
 .post-content .post-images.images-1 .post-image {
-  height: 400rpx;
+  height: 420rpx;
   width: 100%;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
 }
 
 .post-content .post-images.images-2 {
   grid-template-columns: 1fr 1fr;
 }
 .post-content .post-images.images-2 .post-image {
-  height: 280rpx;
-  border-radius: 12rpx;
+  height: 290rpx;
+  border-radius: 16rpx;
 }
 
 .post-content .post-images.images-3 {
   grid-template-columns: 1fr 1fr 1fr;
 }
 .post-content .post-images.images-3 .post-image {
-  height: 210rpx;
-  border-radius: 8rpx;
+  height: 220rpx;
+  border-radius: 12rpx;
 }
 
 .post-content .post-images .post-image {
   width: 100%;
   background: #f8f8f8;
-}
-
-.post-content .post-images .post-image:active {
-  opacity: 0.8;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.02);
 }
 
 .post-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1rpx solid #f0f0f0;
+  border-top: 2rpx solid #fafafa;
   padding-top: 24rpx;
 }
 
@@ -235,26 +236,34 @@ export default {
 .post-footer .action-item {
   display: flex;
   align-items: center;
-  margin-right: 48rpx;
+  margin-right: 56rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 30rpx;
+  transition: background 0.2s;
+}
+
+.post-footer .action-item:active {
+  background: #f5f5f5;
 }
 
 .post-footer .action-item .action-icon {
-  font-size: 36rpx;
-  margin-right: 8rpx;
+  font-size: 38rpx;
+  margin-right: 10rpx;
 }
 
 .post-footer .action-item .action-count {
   font-size: 26rpx;
-  color: #666666;
+  color: $forum-text-sub;
   font-weight: 500;
 }
 
 .post-footer .action-item.active .action-count {
   color: #ff4d4f;
+  font-weight: 600;
 }
 
 .post-footer .view-count {
   font-size: 22rpx;
-  color: #bbbbbb;
+  color: $forum-text-light;
 }
 </style>

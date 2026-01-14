@@ -182,6 +182,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/uni.scss";
 .create-container {
   height: 100vh;
   background-color: #fff;
@@ -191,26 +192,32 @@ export default {
 
 .status-bar {
   height: var(--status-bar-height);
-  background-color: #fff;
+  background: $forum-primary-gradient;
 }
 
 .nav-bar {
   height: 44px;
+  background: $forum-primary-gradient;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 30rpx;
-  border-bottom: 1px solid #f5f5f5;
+  box-shadow: 0 4rpx 20rpx rgba(7, 193, 96, 0.15);
+  position: relative;
+  z-index: 100;
   
   .nav-back {
-    font-size: 40rpx;
-    color: #333;
+    font-size: 44rpx;
+    color: #fff;
     width: 80rpx;
+    font-weight: 300;
   }
   
   .nav-title {
-    font-size: 32rpx;
-    font-weight: bold;
+    font-size: 36rpx;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 2rpx;
   }
   
   .nav-right {
@@ -221,25 +228,33 @@ export default {
   
   .submit-btn {
     margin: 0;
-    padding: 0 24rpx;
-    height: 56rpx;
-    line-height: 56rpx;
-    background: #07c160;
-    color: #fff;
-    font-size: 26rpx;
-    border-radius: 28rpx;
+    padding: 0 32rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    background: #fff;
+    color: $forum-primary;
+    font-size: 28rpx;
+    border-radius: 30rpx;
+    font-weight: 600;
     border: none;
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
     
     &[disabled] {
-      background: #e1e1e1;
-      color: #999;
+      background: rgba(255, 255, 255, 0.6);
+      color: rgba(7, 193, 96, 0.5);
+      box-shadow: none;
+    }
+    
+    &:active:not([disabled]) {
+      transform: scale(0.95);
+      background: #f0f0f0;
     }
   }
 }
 
 .form-content {
   flex: 1;
-  padding: 30rpx;
+  padding: 40rpx 30rpx;
 }
 
 .input-section {
@@ -248,39 +263,41 @@ export default {
   
   .content-textarea {
     width: 100%;
-    min-height: 300rpx;
-    font-size: 30rpx;
+    min-height: 360rpx;
+    font-size: 32rpx;
     line-height: 1.6;
-    color: #333;
+    color: $forum-text-main;
   }
   
   .char-count {
     text-align: right;
     font-size: 24rpx;
-    color: #999;
-    margin-top: 10rpx;
+    color: $forum-text-light;
+    margin-top: 16rpx;
   }
 }
 
 .border-bottom {
-  border-bottom: 2rpx solid #f5f5f5;
-  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f8f8f8;
+  padding-bottom: 24rpx;
 }
 
 .title-input {
   width: 100%;
   height: 80rpx;
-  font-size: 34rpx;
+  font-size: 38rpx;
   font-weight: bold;
+  color: $forum-text-main;
 }
 
 .tag-section {
-  margin-bottom: 40rpx;
+  margin-bottom: 48rpx;
   
   .tag-label {
-    font-size: 26rpx;
-    color: #666;
-    margin-bottom: 20rpx;
+    font-size: 28rpx;
+    font-weight: 600;
+    color: $forum-text-main;
+    margin-bottom: 24rpx;
     display: block;
   }
   
@@ -291,16 +308,20 @@ export default {
   }
   
   .tag-item {
-    padding: 10rpx 30rpx;
+    padding: 12rpx 36rpx;
     background: #f5f5f5;
-    border-radius: 30rpx;
-    font-size: 24rpx;
-    color: #666;
+    border-radius: 40rpx;
+    font-size: 26rpx;
+    color: $forum-text-sub;
+    transition: all 0.3s;
+    border: 1rpx solid transparent;
     
     &.active {
-      background: #e6f7ff;
-      color: #007aff;
-      border: 1px solid #007aff;
+      background: $forum-primary-light;
+      color: $forum-primary;
+      border-color: rgba(7, 193, 96, 0.2);
+      font-weight: 600;
+      box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.1);
     }
   }
 }
@@ -309,63 +330,72 @@ export default {
   .image-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20rpx;
+    gap: 24rpx;
   }
   
   .image-item {
     position: relative;
     width: 100%;
-    height: 210rpx;
+    height: 220rpx;
     
     image {
       width: 100%;
       height: 100%;
-      border-radius: 12rpx;
+      border-radius: 20rpx;
+      box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
     }
     
     .delete-icon {
       position: absolute;
-      top: -10rpx;
-      right: -10rpx;
-      width: 40rpx;
-      height: 40rpx;
-      background: rgba(0, 0, 0, 0.5);
+      top: -12rpx;
+      right: -12rpx;
+      width: 44rpx;
+      height: 44rpx;
+      background: rgba(255, 77, 79, 0.9);
       color: #fff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 32rpx;
+      border: 4rpx solid #fff;
+      box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
     }
   }
   
   .upload-box {
     width: 100%;
-    height: 210rpx;
-    background: #f8f8f8;
-    border-radius: 12rpx;
+    height: 220rpx;
+    background: #fbfbfb;
+    border-radius: 20rpx;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 2rpx dashed #ddd;
+    border: 2rpx dashed #e0e0e0;
+    transition: all 0.2s;
     
     .plus {
-      font-size: 60rpx;
-      color: #999;
+      font-size: 64rpx;
+      color: #ccc;
       margin-bottom: 4rpx;
     }
     
     .upload-text {
       font-size: 24rpx;
-      color: #999;
+      color: #bbb;
+    }
+    
+    &:active {
+      background: #f5f5f5;
+      border-color: $forum-primary;
     }
   }
   
   .image-tip {
-    margin-top: 20rpx;
+    margin-top: 24rpx;
     font-size: 24rpx;
-    color: #999;
+    color: $forum-text-light;
   }
 }
 
@@ -375,7 +405,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: $forum-glass-bg;
+  backdrop-filter: blur(10rpx);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -385,20 +416,25 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: #fff;
+    padding: 40rpx 60rpx;
+    border-radius: 32rpx;
+    box-shadow: $forum-glass-shadow;
     
     .loading-icon {
-      width: 60rpx;
-      height: 60rpx;
+      width: 64rpx;
+      height: 64rpx;
       border: 6rpx solid #f3f3f3;
-      border-top: 6rpx solid #07c160;
+      border-top: 6rpx solid $forum-primary;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin-bottom: 20rpx;
+      margin-bottom: 24rpx;
     }
     
     text {
       font-size: 28rpx;
-      color: #666;
+      color: $forum-text-main;
+      font-weight: 500;
     }
   }
 }

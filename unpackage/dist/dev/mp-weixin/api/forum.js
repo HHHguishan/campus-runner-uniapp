@@ -15,6 +15,9 @@ const deletePost = (id) => {
 const likePost = (id) => {
   return utils_request.post(`/forum/post/${id}/like`);
 };
+const getMyPosts = (params) => {
+  return utils_request.get("/forum/post/my", params);
+};
 const addComment = (data) => {
   return utils_request.post("/forum/comment", data);
 };
@@ -29,6 +32,7 @@ exports.createPost = createPost;
 exports.deleteComment = deleteComment;
 exports.deletePost = deletePost;
 exports.getCommentList = getCommentList;
+exports.getMyPosts = getMyPosts;
 exports.getPostDetail = getPostDetail;
 exports.getPostList = getPostList;
 exports.likePost = likePost;

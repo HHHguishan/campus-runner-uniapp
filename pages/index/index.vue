@@ -1,5 +1,9 @@
 <template>
   <view class="index-container">
+    <view class="status-bar"></view>
+    <view class="page-header">
+      <text class="page-title">首页</text>
+    </view>
     <!-- 下拉刷新 -->
     <scroll-view
       class="scroll-container"
@@ -12,9 +16,6 @@
     <view class="location-bar">
       <text class="location-icon">📍</text>
       <text class="location-text">广州大学城...</text>
-      <view class="refresh-btn" @tap="onRefresh">
-        <text class="refresh-icon" :class="{ rotating: refreshing }">🔄</text>
-      </view>
     </view>
 
     <!-- 轮播图区域 -->
@@ -615,79 +616,95 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/uni.scss";
+
 .index-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f8fcf9;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 640rpx;
+    background: $forum-primary-gradient;
+    border-radius: 0 0 80rpx 80rpx;
+    z-index: 0;
+  }
+}
+
+.status-bar {
+  height: var(--status-bar-height);
+  background: transparent;
+  position: relative;
+  z-index: 10;
+}
+
+.page-header {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  position: relative;
+  z-index: 10;
+  
+  .page-title {
+    font-size: 38rpx;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 2rpx;
+    text-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  }
 }
 
 .scroll-container {
   height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 /* 定位栏 */
 .location-bar {
-  background: #fff;
-  padding: 20rpx 30rpx;
+  padding: 20rpx 30rpx 30rpx;
   display: flex;
   align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.location-icon {
-  font-size: 32rpx;
-  margin-right: 10rpx;
-}
-
-.location-text {
-  flex: 1;
-  font-size: 28rpx;
-  color: #333;
-}
-
-.location-arrow {
-  font-size: 20rpx;
-  color: #999;
-}
-
-.refresh-btn {
-  padding: 10rpx;
-}
-
-.refresh-icon {
-  font-size: 32rpx;
-  display: inline-block;
-}
-
-.refresh-icon.rotating {
-  animation: rotate 1s linear infinite;
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
+  position: relative;
+  z-index: 10;
+  background: transparent;
+  
+  .location-icon {
+    font-size: 36rpx;
+    margin-right: 12rpx;
   }
-  to {
-    transform: rotate(360deg);
+
+  .location-text {
+    flex: 1;
+    font-size: 30rpx;
+    color: #fff;
+    font-weight: 600;
+    text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.1);
   }
 }
 
 /* 轮播图 */
 .banner-section {
-  padding: 20rpx;
+  padding: 0 30rpx 20rpx;
 }
 
 .banner-swiper {
-  height: 300rpx;
-  border-radius: 16rpx;
+  height: 320rpx;
+  border-radius: 32rpx;
   overflow: hidden;
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.15);
 }
 
 .banner-image {
   width: 100%;
   height: 100%;
-  border-radius: 16rpx;
 }
 
 .banner-item {
@@ -697,33 +714,35 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 16rpx;
   padding: 0 40rpx;
 }
 
 .banner-text {
   color: #fff;
-  font-size: 40rpx;
-  font-weight: bold;
+  font-size: 44rpx;
+  font-weight: 800;
   margin-bottom: 12rpx;
   text-align: center;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  text-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
 }
 
 .banner-subtitle {
   color: rgba(255, 255, 255, 0.9);
   font-size: 26rpx;
   text-align: center;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.15);
+  background: rgba(0,0,0,0.1);
+  padding: 4rpx 24rpx;
+  border-radius: 20rpx;
 }
 
 /* 金刚区 */
 .nav-grid {
   display: flex;
   background: #fff;
-  padding: 40rpx 0;
-  margin: 20rpx;
-  border-radius: 16rpx;
+  padding: 40rpx 10rpx;
+  margin: 20rpx 30rpx 30rpx;
+  border-radius: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(7, 193, 96, 0.08);
 }
 
 .nav-item {
@@ -731,49 +750,55 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  
+  &:active { transform: scale(0.95); }
 }
 
 .nav-icon {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 20rpx;
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 32rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 50rpx;
+  font-size: 54rpx;
   margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.05);
 }
 
-.nav-icon-1 {
-  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-}
-
-.nav-icon-2 {
-  background: linear-gradient(135deg, #a8e6cf 0%, #56ab91 100%);
-}
-
-.nav-icon-3 {
-  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-}
-
-.nav-icon-4 {
-  background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-}
+.nav-icon-1 { background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%); }
+.nav-icon-2 { background: linear-gradient(135deg, #e6f7ef 0%, #c4ebd1 100%); }
+.nav-icon-3 { background: linear-gradient(135deg, #fff5e6 0%, #ffe0b3 100%); }
+.nav-icon-4 { background: linear-gradient(135deg, #ebf4ff 0%, #d1e6ff 100%); }
 
 .nav-label {
-  font-size: 26rpx;
-  color: #333;
+  font-size: 28rpx;
+  color: $forum-text-main;
+  font-weight: 600;
 }
 
 /* 发布卡片 */
 .publish-card {
-  margin: 0 20rpx 20rpx;
-  background: linear-gradient(135deg, #07c160 0%, #06ad56 100%);
-  border-radius: 16rpx;
-  padding: 30rpx;
+  margin: 0 30rpx 40rpx;
+  background: $forum-primary-gradient;
+  border-radius: 32rpx;
+  padding: 40rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 16rpx 40rpx rgba(7, 193, 96, 0.3);
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '🚀';
+    position: absolute;
+    right: -20rpx;
+    bottom: -20rpx;
+    font-size: 160rpx;
+    opacity: 0.1;
+    transform: rotate(-15deg);
+  }
 }
 
 .publish-header {
@@ -783,29 +808,33 @@ export default {
 .publish-title {
   display: block;
   color: #fff;
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 8rpx;
+  font-size: 36rpx;
+  font-weight: 800;
+  margin-bottom: 12rpx;
 }
 
 .publish-subtitle {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 26rpx;
 }
 
 .publish-btn {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 20rpx 30rpx;
+  background: #fff;
+  padding: 18rpx 36rpx;
   border-radius: 40rpx;
-  color: #fff;
+  color: $forum-primary;
   font-size: 28rpx;
+  font-weight: 700;
   display: flex;
   align-items: center;
+  box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.1);
+  
+  &:active { opacity: 0.8; transform: scale(0.95); }
 }
 
 .btn-arrow {
   font-size: 32rpx;
-  margin-left: 10rpx;
+  margin-left: 8rpx;
   font-weight: bold;
 }
 
@@ -934,28 +963,29 @@ export default {
 
 /* 计费规则入口 */
 .billing-rules-link {
-  padding: 20rpx;
+  padding: 0 30rpx 40rpx;
   text-align: center;
-  color: #999;
+  color: $forum-text-light;
   font-size: 24rpx;
   text-decoration: underline;
 }
 
 /* 校园圈子 */
 .forum-section {
-  padding: 40rpx 30rpx;
-  background-color: #f8f9fa;
-  border-radius: 40rpx 40rpx 0 0;
-  margin-top: -20rpx;
+  padding: 50rpx 30rpx;
+  background-color: #fff;
+  border-radius: 60rpx 60rpx 0 0;
+  margin-top: 0;
   position: relative;
   z-index: 10;
+  box-shadow: 0 -12rpx 32rpx rgba(0,0,0,0.02);
 }
 
 .section-header-modern {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 32rpx;
+  margin-bottom: 40rpx;
   padding: 0 10rpx;
 }
 
@@ -965,37 +995,40 @@ export default {
 }
 
 .section-header-modern .left .title {
-  font-size: 40rpx;
+  font-size: 42rpx;
   font-weight: 800;
-  color: #1a1a1a;
-  letter-spacing: 1rpx;
+  color: $forum-text-main;
 }
 
 .section-header-modern .left .subtitle {
-  font-size: 24rpx;
-  color: #999;
-  margin-top: 6rpx;
-  opacity: 0.8;
+  font-size: 26rpx;
+  color: $forum-text-light;
+  margin-top: 8rpx;
 }
 
 .section-header-modern .more-btn {
-  font-size: 24rpx;
-  color: #07c160;
-  font-weight: 600;
-  padding: 12rpx 28rpx;
-  background: #fff;
-  border-radius: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.03);
+  font-size: 26rpx;
+  color: $forum-primary;
+  font-weight: 700;
+  padding: 12rpx 32rpx;
+  background: $forum-primary-light;
+  border-radius: 32rpx;
+  transition: all 0.2s;
+  
+  &:active {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
 }
 
 .empty-forum {
-  padding: 100rpx 0;
+  padding: 120rpx 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  border-radius: 32rpx;
+  background: #fafafa;
+  border-radius: 40rpx;
   box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.02);
 }
 
@@ -1017,7 +1050,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: $forum-glass-bg;
+  backdrop-filter: blur(10rpx);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1025,27 +1059,28 @@ export default {
 }
 
 .modal-content {
-  width: 600rpx;
-  max-height: 800rpx;
+  width: 620rpx;
+  max-height: 900rpx;
   background: #fff;
-  border-radius: 24rpx;
+  border-radius: 48rpx;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: $forum-glass-shadow;
 }
 
 .modal-header {
-  padding: 30rpx;
-  border-bottom: 2rpx solid #f5f5f5;
+  padding: 40rpx;
+  border-bottom: 1rpx solid #fafafa;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .modal-title {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
+  font-size: 38rpx;
+  font-weight: 800;
+  color: $forum-text-main;
 }
 
 .header-right {
@@ -1175,7 +1210,7 @@ export default {
 
 .item-value {
   font-size: 32rpx;
-  color: #07c160;
+  color: $forum-primary;
   font-weight: bold;
 }
 
@@ -1186,13 +1221,15 @@ export default {
 
 .modal-btn {
   width: 100%;
-  height: 80rpx;
-  line-height: 80rpx;
-  background: #07c160;
+  height: 90rpx;
+  line-height: 90rpx;
+  background: $forum-primary-gradient;
   color: #fff;
   font-size: 32rpx;
-  border-radius: 40rpx;
+  font-weight: bold;
+  border-radius: 45rpx;
   border: none;
+  box-shadow: 0 8rpx 20rpx rgba(7, 193, 96, 0.2);
 }
 
 .modal-btn::after {

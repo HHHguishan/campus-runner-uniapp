@@ -235,38 +235,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/uni.scss";
 .forum-container {
   height: 100vh;
-  background-color: #f8f8f8;
+  background-color: #f8fcf9; // 更清新的淡绿色背景
   display: flex;
   flex-direction: column;
 }
 
 .status-bar {
   height: var(--status-bar-height);
-  background-color: #fff;
+  background: $forum-primary-gradient;
 }
 
 .nav-bar {
   height: 44px;
-  background-color: #fff;
+  background: $forum-primary-gradient;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 30rpx;
   position: relative;
   z-index: 100;
+  box-shadow: 0 4rpx 20rpx rgba(7, 193, 96, 0.15);
   
   .nav-back {
     width: 60rpx;
-    font-size: 48rpx;
-    color: #333;
+    font-size: 52rpx;
+    color: #fff;
+    font-weight: 300;
   }
   
   .nav-title {
-    font-size: 34rpx;
-    font-weight: bold;
-    color: #1a1a1a;
+    font-size: 36rpx;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 2rpx;
   }
   
   .nav-right {
@@ -275,9 +279,11 @@ export default {
 }
 
 .filter-bar {
-  background: #fff;
-  padding: 20rpx 0;
-  border-bottom: 1rpx solid #f0f0f0;
+  background: $forum-glass-bg;
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid $forum-glass-border;
   position: sticky;
   top: 0;
   z-index: 90;
@@ -288,19 +294,22 @@ export default {
     
     .tag-pill {
       display: inline-block;
-      padding: 12rpx 32rpx;
-      margin-right: 16rpx;
-      background: #f5f5f5;
-      color: #666;
+      padding: 14rpx 36rpx;
+      margin-right: 20rpx;
+      background: rgba(255, 255, 255, 0.6);
+      color: $forum-text-sub;
       border-radius: 40rpx;
       font-size: 26rpx;
-      transition: all 0.3s;
+      border: 1rpx solid rgba(0, 0, 0, 0.03);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       
       &.active {
-        background: #07c160;
+        background: $forum-primary;
         color: #fff;
         font-weight: 600;
-        box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.2);
+        box-shadow: 0 8rpx 16rpx rgba(7, 193, 96, 0.25);
+        transform: translateY(-2rpx);
+        border-color: rgba(7, 193, 96, 0.1);
       }
     }
   }
@@ -308,26 +317,25 @@ export default {
 
 .post-list-scroll {
   flex: 1;
-  height: 0; /* 配合 flex: 1 确保占据剩余高度 */
-  overflow: hidden;
+  height: 0;
 }
 
 .post-list {
   padding: 24rpx;
   
   .loading-status {
-    padding: 40rpx 0;
+    padding: 60rpx 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     color: #bbb;
-    font-size: 24rpx;
+    font-size: 26rpx;
     
     .loading-spinner {
-      width: 40rpx;
-      height: 40rpx;
-      border: 3rpx solid #f3f3f3;
-      border-top: 3rpx solid #07c160;
+      width: 44rpx;
+      height: 44rpx;
+      border: 4rpx solid #f3f3f3;
+      border-top: 4rpx solid $forum-primary;
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-bottom: 20rpx;
@@ -335,13 +343,14 @@ export default {
   }
 }
 
-/* 内联帖子卡片样式 */
+/* 内联帖子卡片样式 (兜底使用) */
 .post-card-inline {
   background: #ffffff;
-  border-radius: 24rpx;
-  padding: 32rpx;
+  border-radius: 32rpx;
+  padding: 36rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.04);
+  box-shadow: $forum-card-shadow;
+  border: 1rpx solid rgba(0, 0, 0, 0.02);
   
   .post-header {
     display: flex;
@@ -349,13 +358,13 @@ export default {
     margin-bottom: 24rpx;
     
     .avatar {
-      width: 84rpx;
-      height: 84rpx;
+      width: 88rpx;
+      height: 88rpx;
       border-radius: 50%;
       margin-right: 20rpx;
       background: #f5f5f5;
-      border: 2rpx solid #ffffff;
-      box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+      border: 4rpx solid #ffffff;
+      box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
     }
     
     .user-info {
@@ -371,42 +380,42 @@ export default {
       .nickname {
         font-size: 30rpx;
         font-weight: 600;
-        color: #1a1a1a;
+        color: $forum-text-main;
         margin-right: 12rpx;
       }
       
       .post-tag {
         font-size: 20rpx;
-        color: #07c160;
-        background: rgba(7, 193, 96, 0.1);
-        padding: 2rpx 12rpx;
-        border-radius: 6rpx;
-        font-weight: 500;
+        color: $forum-primary;
+        background: $forum-primary-light;
+        padding: 4rpx 14rpx;
+        border-radius: 8rpx;
+        font-weight: 600;
       }
       
       .time {
         font-size: 22rpx;
-        color: #999999;
+        color: $forum-text-light;
         margin-top: 6rpx;
       }
     }
   }
   
   .post-content {
-    margin-bottom: 24rpx;
+    margin-bottom: 28rpx;
     
     .post-title {
-      font-size: 32rpx;
+      font-size: 34rpx;
       font-weight: bold;
-      color: #1a1a1a;
-      margin-bottom: 12rpx;
+      color: $forum-text-main;
+      margin-bottom: 14rpx;
       display: block;
-      line-height: 1.4;
+      line-height: 1.5;
     }
     
     .post-text {
-      font-size: 28rpx;
-      color: #4a4a4a;
+      font-size: 29rpx;
+      color: $forum-text-sub;
       line-height: 1.6;
       display: block;
       word-break: break-all;
@@ -417,7 +426,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-top: 1rpx solid #f0f0f0;
+    border-top: 2rpx solid #fafafa;
     padding-top: 24rpx;
     
     .action-group {
@@ -427,27 +436,28 @@ export default {
     .action-item {
       display: flex;
       align-items: center;
-      margin-right: 48rpx;
+      margin-right: 56rpx;
       
       .action-icon {
-        font-size: 36rpx;
-        margin-right: 8rpx;
+        font-size: 38rpx;
+        margin-right: 10rpx;
       }
       
       .action-count {
         font-size: 26rpx;
-        color: #666666;
+        color: $forum-text-sub;
         font-weight: 500;
       }
       
       &.active .action-count {
         color: #ff4d4f;
+        font-weight: 600;
       }
     }
     
     .view-count {
       font-size: 22rpx;
-      color: #bbbbbb;
+      color: $forum-text-light;
     }
   }
 }
@@ -459,27 +469,29 @@ export default {
 
 .publish-btn {
   position: fixed;
-  right: 40rpx;
+  right: 50rpx;
   bottom: 80rpx;
-  width: 110rpx;
-  height: 110rpx;
-  background: linear-gradient(135deg, #07c160 0%, #06ad56 100%);
+  width: 116rpx;
+  height: 116rpx;
+  background: $forum-primary-gradient;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 12rpx 32rpx rgba(7, 193, 96, 0.35);
+  box-shadow: 0 16rpx 40rpx rgba(7, 193, 96, 0.4);
   z-index: 99;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   
   .plus-icon {
-    font-size: 64rpx;
+    font-size: 68rpx;
     color: #fff;
     font-weight: 300;
-    margin-bottom: 4rpx;
+    margin-bottom: 6rpx;
   }
   
   &:active {
-    transform: scale(0.9);
+    transform: scale(0.85) rotate(90deg);
+    box-shadow: 0 8rpx 20rpx rgba(7, 193, 96, 0.2);
   }
 }
 </style>

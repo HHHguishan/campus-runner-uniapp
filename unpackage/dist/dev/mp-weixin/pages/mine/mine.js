@@ -35,31 +35,31 @@ const _sfc_main = {
     // 加载用户信息
     async loadUserInfo() {
       try {
-        common_vendor.index.__f__("log", "at pages/mine/mine.vue:173", "=== 开始加载用户信息 ===");
+        common_vendor.index.__f__("log", "at pages/mine/mine.vue:181", "=== 开始加载用户信息 ===");
         const result = await api_user.getUserInfo();
-        common_vendor.index.__f__("log", "at pages/mine/mine.vue:177", "API返回结果:", result);
-        common_vendor.index.__f__("log", "at pages/mine/mine.vue:178", "result.data:", result.data);
+        common_vendor.index.__f__("log", "at pages/mine/mine.vue:185", "API返回结果:", result);
+        common_vendor.index.__f__("log", "at pages/mine/mine.vue:186", "result.data:", result.data);
         if (result.data) {
           this.userInfo = result.data;
           utils_token.setUserInfo(result.data);
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:187", "=== 用户信息详情 ===");
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:188", "完整用户对象:", JSON.stringify(result.data, null, 2));
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:189", "isRider值:", result.data.isRider, "类型:", typeof result.data.isRider);
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:190", "riderStatus值:", result.data.riderStatus, "类型:", typeof result.data.riderStatus);
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:195", "=== 用户信息详情 ===");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:196", "完整用户对象:", JSON.stringify(result.data, null, 2));
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:197", "isRider值:", result.data.isRider, "类型:", typeof result.data.isRider);
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:198", "riderStatus值:", result.data.riderStatus, "类型:", typeof result.data.riderStatus);
           const isCertified = result.data.isRider === 1 && result.data.riderStatus === 1;
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:194", "是否已认证:", isCertified);
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:195", "认证状态文本:", this.getRiderStatusText());
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:202", "是否已认证:", isCertified);
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:203", "认证状态文本:", this.getRiderStatusText());
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/mine/mine.vue:198", "=== 获取用户信息失败 ===");
-        common_vendor.index.__f__("error", "at pages/mine/mine.vue:199", "错误信息:", error);
-        common_vendor.index.__f__("error", "at pages/mine/mine.vue:200", "错误详情:", JSON.stringify(error));
+        common_vendor.index.__f__("error", "at pages/mine/mine.vue:206", "=== 获取用户信息失败 ===");
+        common_vendor.index.__f__("error", "at pages/mine/mine.vue:207", "错误信息:", error);
+        common_vendor.index.__f__("error", "at pages/mine/mine.vue:208", "错误详情:", JSON.stringify(error));
         const userInfo = utils_token.getUserInfo();
         if (userInfo) {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:205", "使用本地缓存数据:", userInfo);
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:213", "使用本地缓存数据:", userInfo);
           this.userInfo = userInfo;
         } else {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:209", "未登录，跳转到登录页");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:217", "未登录，跳转到登录页");
           common_vendor.index.reLaunch({
             url: "/pages/login/login"
           });
@@ -69,10 +69,10 @@ const _sfc_main = {
     // 切换为骑手模式
     switchToRiderMode() {
       const isRiderCertified = this.userInfo.isRider === 1 && this.userInfo.riderStatus === 1;
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:222", "当前用户信息:", this.userInfo);
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:223", "isRider:", this.userInfo.isRider);
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:224", "riderStatus:", this.userInfo.riderStatus);
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:225", "是否已认证:", isRiderCertified);
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:230", "当前用户信息:", this.userInfo);
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:231", "isRider:", this.userInfo.isRider);
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:232", "riderStatus:", this.userInfo.riderStatus);
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:233", "是否已认证:", isRiderCertified);
       if (!isRiderCertified) {
         common_vendor.index.showModal({
           title: "提示",
@@ -91,7 +91,7 @@ const _sfc_main = {
       common_vendor.index.redirectTo({
         url: "/pages/hall/hall"
       });
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:250", "✅ 已切换到骑手模式，currentMode = 2");
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:258", "✅ 已切换到骑手模式，currentMode = 2");
     },
     // 退出登录
     handleLogout() {
@@ -129,15 +129,15 @@ const _sfc_main = {
     },
     // 跳转到地址列表
     goToAddressList() {
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:295", "🚀 准备跳转到地址列表页");
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:303", "🚀 准备跳转到地址列表页");
       common_vendor.index.navigateTo({
         url: "/pages/address/list",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:300", "✅ 地址列表页跳转成功");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:308", "✅ 地址列表页跳转成功");
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:303", "❌ 地址列表页跳转失败:", err);
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:304", "错误详情:", JSON.stringify(err));
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:311", "❌ 地址列表页跳转失败:", err);
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:312", "错误详情:", JSON.stringify(err));
           common_vendor.index.showModal({
             title: "跳转失败",
             content: "地址管理页面未找到，请重新编译项目。\n\n步骤：\n1. 删除unpackage文件夹\n2. 重新运行项目",
@@ -149,15 +149,15 @@ const _sfc_main = {
     },
     // 跳转到钱包页面
     goToWallet() {
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:319", "🚀 准备跳转到钱包页面");
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:327", "🚀 准备跳转到钱包页面");
       common_vendor.index.navigateTo({
         url: "/pages/wallet/wallet",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:324", "✅ 钱包页面跳转成功");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:332", "✅ 钱包页面跳转成功");
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:327", "❌ 钱包页面跳转失败:", err);
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:328", "错误详情:", JSON.stringify(err));
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:335", "❌ 钱包页面跳转失败:", err);
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:336", "错误详情:", JSON.stringify(err));
           common_vendor.index.showModal({
             title: "跳转失败",
             content: "钱包页面未找到，请重新编译项目。\n\n步骤：\n1. 删除unpackage文件夹\n2. 重新运行项目",
@@ -178,10 +178,10 @@ const _sfc_main = {
       common_vendor.index.navigateTo({
         url: "/pages/admin/order-list",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:352", "✅ 管理员订单列表页跳转成功");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:360", "✅ 管理员订单列表页跳转成功");
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:355", "❌ 管理员订单列表页跳转失败", err);
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:363", "❌ 管理员订单列表页跳转失败", err);
           common_vendor.index.showToast({
             title: "页面跳转失败",
             icon: "none"
@@ -202,14 +202,15 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     g: common_vendor.t($options.getRiderStatusText()),
     h: common_vendor.o((...args) => $options.switchToRiderMode && $options.switchToRiderMode(...args)),
     i: common_vendor.o((...args) => $options.goToAddressList && $options.goToAddressList(...args)),
-    j: common_vendor.o((...args) => $options.goToWallet && $options.goToWallet(...args)),
-    k: common_vendor.t($options.getRiderStatusText()),
-    l: common_vendor.o(($event) => $options.navigateTo("/pages/rider/auth")),
-    m: common_vendor.o(($event) => $options.navigateTo("/pages/evaluation/evaluation")),
-    n: common_vendor.o(($event) => $options.navigateTo("/pages/settings/settings")),
-    o: common_vendor.o(($event) => $options.navigateTo("/pages/debug/api")),
-    p: common_vendor.o((...args) => $options.goToAdminOrderList && $options.goToAdminOrderList(...args)),
-    q: common_vendor.o((...args) => $options.handleLogout && $options.handleLogout(...args))
+    j: common_vendor.o(($event) => $options.navigateTo("/pages/forum/my-posts")),
+    k: common_vendor.o((...args) => $options.goToWallet && $options.goToWallet(...args)),
+    l: common_vendor.t($options.getRiderStatusText()),
+    m: common_vendor.o(($event) => $options.navigateTo("/pages/rider/auth")),
+    n: common_vendor.o(($event) => $options.navigateTo("/pages/evaluation/evaluation")),
+    o: common_vendor.o(($event) => $options.navigateTo("/pages/settings/settings")),
+    p: common_vendor.o(($event) => $options.navigateTo("/pages/debug/api")),
+    q: common_vendor.o((...args) => $options.goToAdminOrderList && $options.goToAdminOrderList(...args)),
+    r: common_vendor.o((...args) => $options.handleLogout && $options.handleLogout(...args))
   };
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-7c2ebfa5"]]);

@@ -65,6 +65,14 @@
           <text class="item-arrow">›</text>
         </view>
 
+        <view class="function-item" @tap="navigateTo('/pages/forum/my-posts')">
+          <view class="item-left">
+            <text class="item-icon">📝</text>
+            <text class="item-label">我的帖子</text>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+
         <view class="function-item" @tap="goToWallet">
           <view class="item-left">
             <text class="item-icon">💰</text>

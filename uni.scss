@@ -74,3 +74,16 @@ $uni-color-subtitle: #555555; // 二级标题颜色
 $uni-font-size-subtitle:26px;
 $uni-color-paragraph: #3F536E; // 文章段落颜色
 $uni-font-size-paragraph:15px;
+
+/* 校园圈子（论坛）增强主题变量 */
+$forum-primary: #07c160;
+$forum-primary-light: #e6f7ef;
+$forum-primary-gradient: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+$forum-bg-soft: #f4fcf8;
+$forum-glass-bg: rgba(255, 255, 255, 0.7);
+$forum-glass-border: rgba(255, 255, 255, 0.3);
+$forum-glass-shadow: 0 8rpx 32rpx 0 rgba(7, 193, 96, 0.08);
+$forum-card-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.04);
+$forum-text-main: #1a1a1a;
+$forum-text-sub: #666666;
+$forum-text-light: #999999;

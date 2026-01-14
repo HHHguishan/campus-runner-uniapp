@@ -33,6 +33,7 @@ if (!Math) {
   "./pages/forum/index.js";
   "./pages/forum/detail.js";
   "./pages/forum/create.js";
+  "./pages/forum/my-posts.js";
 }
 const _sfc_main = {
   onLaunch: function() {
