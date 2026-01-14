@@ -16,6 +16,7 @@
     "pages/address/edit",
     "pages/wallet/wallet",
     "pages/wallet/recharge",
+    "pages/wallet/alipay-pay",
     "pages/order/create",
     "pages/order/payment",
     "pages/order/detail",

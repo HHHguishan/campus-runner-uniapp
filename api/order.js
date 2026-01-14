@@ -83,3 +83,12 @@ export function getEvaluationDetail(orderId) {
 export function payOrder(data) {
   return post('/pay/doPay', data)
 }
+/**
+ * 支付宝订单支付
+ * @param {Object} data - 支付数据
+ * @param {Number} data.orderId - 订单ID
+ * @returns {Promise}
+ */
+export function alipayPayOrder(data) {
+  return post('/pay/alipay', data)
+}

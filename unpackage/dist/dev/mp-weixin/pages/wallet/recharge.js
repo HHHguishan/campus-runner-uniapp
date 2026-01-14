@@ -83,29 +83,25 @@ const _sfc_main = {
      */
     async doRecharge(amount) {
       try {
-        common_vendor.index.showLoading({ title: "充值中..." });
-        const res = await api_wallet.recharge({ amount });
+        common_vendor.index.showLoading({ title: "正在发起支付..." });
+        const res = await api_wallet.alipayRecharge({ amount });
         common_vendor.index.hideLoading();
-        if (res.code === 200) {
-          common_vendor.index.showToast({
-            title: "充值成功",
-            icon: "success",
-            duration: 1500
+        if (res.code === 200 && res.data) {
+          common_vendor.index.setStorageSync("alipay_form", res.data);
+          common_vendor.index.navigateTo({
+            url: `/pages/wallet/alipay-pay?amount=${amount.toFixed(2)}`
           });
-          setTimeout(() => {
-            common_vendor.index.navigateBack();
-          }, 1500);
         } else {
           common_vendor.index.showToast({
-            title: res.message || "充值失败",
+            title: res.message || "发起支付失败",
             icon: "none"
           });
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/wallet/recharge.vue:210", "❌ 充值失败:", error);
+        common_vendor.index.__f__("error", "at pages/wallet/recharge.vue:209", "❌ 充值失败:", error);
         common_vendor.index.showToast({
-          title: "充值失败，请稍后重试",
+          title: "发起支付失败，请稍后重试",
           icon: "none"
         });
       }

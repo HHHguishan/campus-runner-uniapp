@@ -103,6 +103,13 @@
 			}
 		},
 		{
+			"path": "pages/wallet/alipay-pay",
+			"style": {
+				"navigationBarTitleText": "支付跳转",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/order/create",
 			"style": {
 				"navigationBarTitleText": "发布订单",

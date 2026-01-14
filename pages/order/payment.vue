@@ -59,6 +59,22 @@
             </view>
           </view>
 
+          <!-- 支付宝支付 -->
+          <view class="payment-method-item" @click="selectPayType(2)">
+            <view class="method-left">
+              <view class="method-icon alipay">
+                <text class="iconfont">🔷</text>
+              </view>
+              <view class="method-info">
+                <text class="method-name">支付宝支付</text>
+                <text class="method-desc">支持支付宝沙箱环境测试</text>
+              </view>
+            </view>
+            <view class="method-check" :class="{ active: payType === 'ALIPAY' }">
+              <text class="check-icon" v-if="payType === 'ALIPAY'">✓</text>
+            </view>
+          </view>
+
           <!-- 微信支付（未开通） -->
           <view class="payment-method-item disabled">
             <view class="method-left">
@@ -100,7 +116,7 @@
 </template>
 
 <script>
-import { payOrder, getOrderDetail } from '@/api/order.js'
+import { payOrder, getOrderDetail, alipayPayOrder } from '@/api/order.js'
 import { getWalletBalance } from '@/api/wallet.js'
 
 export default {
@@ -270,35 +286,58 @@ export default {
 
       try {
         this.paying = true
-        uni.showLoading({ title: '支付中...' })
+        uni.showLoading({ title: '正在发起支付...' })
 
-        const res = await payOrder({
-          orderId: this.orderId,
-          payType: this.payType
-          // payPassword: '123456' // 如果需要支付密码
-        })
-
-        uni.hideLoading()
-        this.paying = false
-
-        if (res.code === 200) {
-          uni.showToast({
-            title: '支付成功',
-            icon: 'success',
-            duration: 1500
+        if (this.payType === 'BALANCE') {
+          // 余额支付
+          const res = await payOrder({
+            orderId: this.orderId,
+            payType: 'BALANCE'
           })
 
-          // 跳转到订单详情页
-          setTimeout(() => {
-            uni.redirectTo({
-              url: `/pages/order/detail?id=${this.orderId}`
+          uni.hideLoading()
+          this.paying = false
+
+          if (res.code === 200) {
+            uni.showToast({
+              title: '支付成功',
+              icon: 'success',
+              duration: 1500
             })
-          }, 1500)
-        } else {
-          uni.showToast({
-            title: res.message || '支付失败',
-            icon: 'none'
+
+            // 跳转到订单详情页
+            setTimeout(() => {
+              uni.redirectTo({
+                url: `/pages/order/detail?id=${this.orderId}`
+              })
+            }, 1500)
+          } else {
+            uni.showToast({
+              title: res.message || '支付失败',
+              icon: 'none'
+            })
+          }
+        } else if (this.payType === 'ALIPAY') {
+          // 支付宝支付
+          const res = await alipayPayOrder({
+            orderId: this.orderId
           })
+
+          uni.hideLoading()
+          this.paying = false
+
+          if (res.code === 200 && res.data) {
+            // 存入支付表单并跳转
+            uni.setStorageSync('alipay_form', res.data)
+            uni.navigateTo({
+              url: `/pages/wallet/alipay-pay?orderId=${this.orderId}&amount=${this.totalAmount}&type=order`
+            })
+          } else {
+            uni.showToast({
+              title: res.message || '发起支付宝支付失败',
+              icon: 'none'
+            })
+          }
         }
       } catch (error) {
         uni.hideLoading()

@@ -48,15 +48,17 @@
       <!-- 支付方式 -->
       <view class="payment-section">
         <view class="section-title">支付方式</view>
-        <view class="payment-method">
-          <view class="method-icon">
-            <text>💰</text>
+        <view class="payment-method list-item">
+          <view class="method-left">
+            <view class="method-icon alipay">
+              <text class="iconfont alipay-icon">🔷</text>
+            </view>
+            <view class="method-info">
+              <text class="method-name">支付宝支付</text>
+              <text class="method-desc">支持支付宝沙箱环境测试</text>
+            </view>
           </view>
-          <view class="method-info">
-            <text class="method-name">模拟支付</text>
-            <text class="method-desc">测试环境虚拟支付</text>
-          </view>
-          <view class="method-check">
+          <view class="method-check active">
             <text class="iconfont">✓</text>
           </view>
         </view>
@@ -67,8 +69,8 @@
         <view class="tips-title">充值说明</view>
         <view class="tips-list">
           <text class="tip-item">• 充值后余额实时到账</text>
-          <text class="tip-item">• 测试环境使用模拟充值，无需实际支付</text>
-          <text class="tip-item">• 如有问题请联系客服</text>
+          <text class="tip-item">• 当前为支付宝沙箱测试环境，请使用沙箱账号支付</text>
+          <text class="tip-item">• 如有充值未到账问题，请联系客服处理</text>
         </view>
       </view>
     </view>
@@ -87,7 +89,7 @@
 </template>
 
 <script>
-import { recharge } from '@/api/wallet.js'
+import { alipayRecharge } from '@/api/wallet.js'
 
 export default {
   data() {
@@ -181,27 +183,24 @@ export default {
      */
     async doRecharge(amount) {
       try {
-        uni.showLoading({ title: '充值中...' })
+        uni.showLoading({ title: '正在发起支付...' })
 
-        const res = await recharge({ amount })
+        // 调用支付宝充值接口，获取支付表单HTML
+        const res = await alipayRecharge({ amount })
 
         uni.hideLoading()
 
-        if (res.code === 200) {
-          // 充值成功
-          uni.showToast({
-            title: '充值成功',
-            icon: 'success',
-            duration: 1500
+        if (res.code === 200 && res.data) {
+          // 将支付表单HTML编码或直接存入全局，跳转到支付中间页
+          // 注意：支付表单HTML可能很大，通过URL传参可能超长，建议使用storage
+          uni.setStorageSync('alipay_form', res.data)
+          
+          uni.navigateTo({
+            url: `/pages/wallet/alipay-pay?amount=${amount.toFixed(2)}`
           })
-
-          // 延迟返回上一页
-          setTimeout(() => {
-            uni.navigateBack()
-          }, 1500)
         } else {
           uni.showToast({
-            title: res.message || '充值失败',
+            title: res.message || '发起支付失败',
             icon: 'none'
           })
         }
@@ -209,7 +208,7 @@ export default {
         uni.hideLoading()
         console.error('❌ 充值失败:', error)
         uni.showToast({
-          title: '充值失败，请稍后重试',
+          title: '发起支付失败，请稍后重试',
           icon: 'none'
         })
       }

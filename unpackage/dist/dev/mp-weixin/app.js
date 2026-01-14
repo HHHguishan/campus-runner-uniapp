@@ -19,6 +19,7 @@ if (!Math) {
   "./pages/address/edit.js";
   "./pages/wallet/wallet.js";
   "./pages/wallet/recharge.js";
+  "./pages/wallet/alipay-pay.js";
   "./pages/order/create.js";
   "./pages/order/payment.js";
   "./pages/order/detail.js";

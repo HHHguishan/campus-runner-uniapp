@@ -11,7 +11,15 @@ function recharge(data) {
 function getTransactions(params = {}) {
   return utils_request.get("/wallet/transactions", params);
 }
+function alipayRecharge(data) {
+  return utils_request.post("/recharge/create", data);
+}
+function syncAlipayStatus(outTradeNo) {
+  return utils_request.get(`/recharge/sync-status?outTradeNo=${outTradeNo}`);
+}
+exports.alipayRecharge = alipayRecharge;
 exports.getTransactions = getTransactions;
 exports.getWalletBalance = getWalletBalance;
 exports.recharge = recharge;
+exports.syncAlipayStatus = syncAlipayStatus;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/wallet.js.map

@@ -21,6 +21,10 @@ function getEvaluationDetail(orderId) {
 function payOrder(data) {
   return utils_request.post("/pay/doPay", data);
 }
+function alipayPayOrder(data) {
+  return utils_request.post("/pay/alipay", data);
+}
+exports.alipayPayOrder = alipayPayOrder;
 exports.cancelOrder = cancelOrder;
 exports.createOrder = createOrder;
 exports.getEvaluationDetail = getEvaluationDetail;

@@ -17,12 +17,12 @@ const _sfc_main = {
     };
   },
   onLoad(options) {
-    common_vendor.index.__f__("log", "at pages/order/payment.vue:119", "📝 支付页面参数:", options);
+    common_vendor.index.__f__("log", "at pages/order/payment.vue:135", "📝 支付页面参数:", options);
     if (options.orderId) {
       this.orderId = options.orderId;
-      common_vendor.index.__f__("log", "at pages/order/payment.vue:123", "✅ 订单ID:", this.orderId);
+      common_vendor.index.__f__("log", "at pages/order/payment.vue:139", "✅ 订单ID:", this.orderId);
     } else {
-      common_vendor.index.__f__("error", "at pages/order/payment.vue:125", "❌ 缺少订单ID参数");
+      common_vendor.index.__f__("error", "at pages/order/payment.vue:141", "❌ 缺少订单ID参数");
       common_vendor.index.showToast({
         title: "参数错误",
         icon: "none"
@@ -34,7 +34,7 @@ const _sfc_main = {
     }
     if (options.totalAmount) {
       this.totalAmount = Number(options.totalAmount).toFixed(2);
-      common_vendor.index.__f__("log", "at pages/order/payment.vue:138", "✅ 支付金额:", this.totalAmount);
+      common_vendor.index.__f__("log", "at pages/order/payment.vue:154", "✅ 支付金额:", this.totalAmount);
     }
     this.loadOrderDetail();
     this.loadBalance();
@@ -45,22 +45,22 @@ const _sfc_main = {
      */
     async loadOrderDetail() {
       if (!this.orderId) {
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:154", "❌ 订单ID为空，无法加载订单详情");
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:170", "❌ 订单ID为空，无法加载订单详情");
         return;
       }
       try {
-        common_vendor.index.__f__("log", "at pages/order/payment.vue:159", "📥 加载订单详情, orderId:", this.orderId);
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:175", "📥 加载订单详情, orderId:", this.orderId);
         const res = await api_order.getOrderDetail(this.orderId);
-        common_vendor.index.__f__("log", "at pages/order/payment.vue:161", "📥 订单详情响应:", JSON.stringify(res, null, 2));
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:177", "📥 订单详情响应:", JSON.stringify(res, null, 2));
         if (res.code === 200 && res.data) {
           this.orderInfo = res.data;
           if (res.data.totalFee) {
             this.totalAmount = Number(res.data.totalFee).toFixed(2);
-            common_vendor.index.__f__("log", "at pages/order/payment.vue:168", "✅ 更新支付金额:", this.totalAmount);
+            common_vendor.index.__f__("log", "at pages/order/payment.vue:184", "✅ 更新支付金额:", this.totalAmount);
           }
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:172", "❌ 加载订单详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:188", "❌ 加载订单详情失败:", error);
         common_vendor.index.showToast({
           title: "加载订单详情失败",
           icon: "none"
@@ -72,22 +72,22 @@ const _sfc_main = {
      */
     async loadBalance() {
       try {
-        common_vendor.index.__f__("log", "at pages/order/payment.vue:185", "📥 加载钱包余额...");
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:201", "📥 加载钱包余额...");
         const res = await api_wallet.getWalletBalance();
-        common_vendor.index.__f__("log", "at pages/order/payment.vue:187", "📥 余额响应:", JSON.stringify(res, null, 2));
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:203", "📥 余额响应:", JSON.stringify(res, null, 2));
         if (res.code === 200) {
           const balanceValue = res.data !== null ? res.data : 0;
           this.balance = Number(balanceValue).toFixed(2);
-          common_vendor.index.__f__("log", "at pages/order/payment.vue:193", "✅ 当前余额:", this.balance);
+          common_vendor.index.__f__("log", "at pages/order/payment.vue:209", "✅ 当前余额:", this.balance);
         } else {
-          common_vendor.index.__f__("error", "at pages/order/payment.vue:195", "❌ 获取余额失败:", res.message);
+          common_vendor.index.__f__("error", "at pages/order/payment.vue:211", "❌ 获取余额失败:", res.message);
           common_vendor.index.showToast({
             title: res.message || "获取余额失败",
             icon: "none"
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:202", "❌ 加载余额失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:218", "❌ 加载余额失败:", error);
         common_vendor.index.showToast({
           title: "加载余额失败",
           icon: "none"
@@ -153,35 +153,53 @@ const _sfc_main = {
         return;
       try {
         this.paying = true;
-        common_vendor.index.showLoading({ title: "支付中..." });
-        const res = await api_order.payOrder({
-          orderId: this.orderId,
-          payType: this.payType
-          // payPassword: '123456' // 如果需要支付密码
-        });
-        common_vendor.index.hideLoading();
-        this.paying = false;
-        if (res.code === 200) {
-          common_vendor.index.showToast({
-            title: "支付成功",
-            icon: "success",
-            duration: 1500
+        common_vendor.index.showLoading({ title: "正在发起支付..." });
+        if (this.payType === "BALANCE") {
+          const res = await api_order.payOrder({
+            orderId: this.orderId,
+            payType: "BALANCE"
           });
-          setTimeout(() => {
-            common_vendor.index.redirectTo({
-              url: `/pages/order/detail?id=${this.orderId}`
+          common_vendor.index.hideLoading();
+          this.paying = false;
+          if (res.code === 200) {
+            common_vendor.index.showToast({
+              title: "支付成功",
+              icon: "success",
+              duration: 1500
             });
-          }, 1500);
-        } else {
-          common_vendor.index.showToast({
-            title: res.message || "支付失败",
-            icon: "none"
+            setTimeout(() => {
+              common_vendor.index.redirectTo({
+                url: `/pages/order/detail?id=${this.orderId}`
+              });
+            }, 1500);
+          } else {
+            common_vendor.index.showToast({
+              title: res.message || "支付失败",
+              icon: "none"
+            });
+          }
+        } else if (this.payType === "ALIPAY") {
+          const res = await api_order.alipayPayOrder({
+            orderId: this.orderId
           });
+          common_vendor.index.hideLoading();
+          this.paying = false;
+          if (res.code === 200 && res.data) {
+            common_vendor.index.setStorageSync("alipay_form", res.data);
+            common_vendor.index.navigateTo({
+              url: `/pages/wallet/alipay-pay?orderId=${this.orderId}&amount=${this.totalAmount}&type=order`
+            });
+          } else {
+            common_vendor.index.showToast({
+              title: res.message || "发起支付宝支付失败",
+              icon: "none"
+            });
+          }
         }
       } catch (error) {
         common_vendor.index.hideLoading();
         this.paying = false;
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:306", "❌ 支付失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:345", "❌ 支付失败:", error);
         common_vendor.index.showToast({
           title: "支付失败，请稍后重试",
           icon: "none"
@@ -211,10 +229,14 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   }, $data.payType === "BALANCE" ? {} : {}, {
     i: $data.payType === "BALANCE" ? 1 : "",
     j: common_vendor.o(($event) => $options.selectPayType(1)),
-    k: common_vendor.t($data.totalAmount),
-    l: common_vendor.t($data.paying ? "支付中..." : "确认支付"),
-    m: common_vendor.o((...args) => $options.confirmPay && $options.confirmPay(...args)),
-    n: $data.paying
+    k: $data.payType === "ALIPAY"
+  }, $data.payType === "ALIPAY" ? {} : {}, {
+    l: $data.payType === "ALIPAY" ? 1 : "",
+    m: common_vendor.o(($event) => $options.selectPayType(2)),
+    n: common_vendor.t($data.totalAmount),
+    o: common_vendor.t($data.paying ? "支付中..." : "确认支付"),
+    p: common_vendor.o((...args) => $options.confirmPay && $options.confirmPay(...args)),
+    q: $data.paying
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-13c3fb22"]]);
