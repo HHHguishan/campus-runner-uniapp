@@ -162,6 +162,7 @@
 import { getBannerList } from '../../api/notice.js'
 import { getConfigs } from '../../api/config.js'
 import { getPostList, likePost } from '../../api/forum.js'
+import { getBaiduLocation } from '../../utils/location.js'
 import { get } from '../../utils/request.js'
 
 export default {
@@ -220,7 +221,9 @@ export default {
         }
       ],
       forumPosts: [], // 圈子动态
-      locationText: '正在定位...'
+      locationText: '正在定位...',
+      latitude: null,  // 当前经度
+      longitude: null  // 当前纬度
     };
   },
 
@@ -627,28 +630,30 @@ export default {
       }
     },
 
-    // 获取用户定位
-    getUserLocation() {
-      console.log('=== 开始获取用户地理位置 ===')
+    // 获取用户定位 (改用百度高精度 SDK)
+    async getUserLocation() {
+      console.log('=== 开始获取用户地理位置 (百度 SDK) ===')
       this.locationText = '正在定位...'
       
-      uni.getLocation({
-        type: 'gcj02',
-        isHighAccuracy: true, // 开启高精度定位
-        highAccuracyExpireTime: 3000, // 高精度定位超时时间(ms)，给GPS留出搜星时间
-        success: (res) => {
-          console.log('获取经纬度成功:', res)
-          this.getLocationName(res.latitude, res.longitude)
-        },
-        fail: (err) => {
-          console.error('获取经纬度失败:', err)
-          this.locationText = '定位失败'
-          uni.showToast({
-            title: '定位失败，请检查GPS权限',
-            icon: 'none'
-          })
-        }
-      })
+      try {
+        const res = await getBaiduLocation()
+        console.log('📍 百度定位获取成功:', res)
+        
+        // 保存经纬度到组件状态，供后续计费等逻辑使用
+        this.latitude = res.latitude
+        this.longitude = res.longitude
+        this.locationText = res.displayName || res.address
+        
+        console.log(`📌 位置已同步到状态: Lat=${this.latitude}, Lon=${this.longitude}`)
+        
+      } catch (err) {
+        console.error('❌ 获取经纬度失败:', err)
+        this.locationText = '定位失败'
+        uni.showToast({
+          title: '定位失败，请检查GPS权限或AK设置',
+          icon: 'none'
+        })
+      }
     },
 
     // 逆地理编码：经纬度转地址 (通过后端代理)

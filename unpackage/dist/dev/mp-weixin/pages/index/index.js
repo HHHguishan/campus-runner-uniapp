@@ -3,6 +3,7 @@ const common_vendor = require("../../common/vendor.js");
 const api_notice = require("../../api/notice.js");
 const api_config = require("../../api/config.js");
 const api_forum = require("../../api/forum.js");
+const utils_location = require("../../utils/location.js");
 const utils_request = require("../../utils/request.js");
 const common_assets = require("../../common/assets.js");
 const _sfc_main = {
@@ -65,7 +66,11 @@ const _sfc_main = {
       ],
       forumPosts: [],
       // 圈子动态
-      locationText: "正在定位..."
+      locationText: "正在定位...",
+      latitude: null,
+      // 当前经度
+      longitude: null
+      // 当前纬度
     };
   },
   computed: {
@@ -85,27 +90,27 @@ const _sfc_main = {
     common_vendor.index.$off("refreshForum", this.loadForumPosts);
   },
   onShow() {
-    common_vendor.index.__f__("log", "at pages/index/index.vue:248", "=== 首页显示，刷新数据 ===");
+    common_vendor.index.__f__("log", "at pages/index/index.vue:251", "=== 首页显示，刷新数据 ===");
     this.loadForumPosts();
   },
   methods: {
     // 加载轮播图
     async loadBanners() {
       try {
-        common_vendor.index.__f__("log", "at pages/index/index.vue:256", "=== 开始加载轮播图 ===");
+        common_vendor.index.__f__("log", "at pages/index/index.vue:259", "=== 开始加载轮播图 ===");
         const res = await api_notice.getBannerList();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:259", "轮播图API响应:", res);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:260", "响应码:", res.code);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:261", "响应数据:", res.data);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:262", "数据类型:", typeof res.data);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:263", "是否为数组:", Array.isArray(res.data));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:262", "轮播图API响应:", res);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:263", "响应码:", res.code);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:264", "响应数据:", res.data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:265", "数据类型:", typeof res.data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:266", "是否为数组:", Array.isArray(res.data));
         if (res.code === 200 && res.data) {
           const bannerData = Array.isArray(res.data) ? res.data : [];
-          common_vendor.index.__f__("log", "at pages/index/index.vue:269", "处理后的轮播图数据:", bannerData);
-          common_vendor.index.__f__("log", "at pages/index/index.vue:270", "轮播图数量:", bannerData.length);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:272", "处理后的轮播图数据:", bannerData);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:273", "轮播图数量:", bannerData.length);
           if (bannerData.length > 0) {
             this.bannerList = bannerData.map((item, index) => {
-              common_vendor.index.__f__("log", "at pages/index/index.vue:275", `处理轮播图 ${index}:`, item);
+              common_vendor.index.__f__("log", "at pages/index/index.vue:278", `处理轮播图 ${index}:`, item);
               const banner = {
                 id: item.id,
                 title: item.title || "轮播图",
@@ -127,39 +132,39 @@ const _sfc_main = {
               }
               return banner;
             });
-            common_vendor.index.__f__("log", "at pages/index/index.vue:303", "最终轮播图列表:", this.bannerList);
+            common_vendor.index.__f__("log", "at pages/index/index.vue:306", "最终轮播图列表:", this.bannerList);
           } else {
-            common_vendor.index.__f__("log", "at pages/index/index.vue:305", "后端返回空数组，使用默认轮播图");
+            common_vendor.index.__f__("log", "at pages/index/index.vue:308", "后端返回空数组，使用默认轮播图");
             this.bannerList = [];
           }
         } else {
-          common_vendor.index.__f__("log", "at pages/index/index.vue:309", "响应码不是200或没有数据，使用默认轮播图");
+          common_vendor.index.__f__("log", "at pages/index/index.vue:312", "响应码不是200或没有数据，使用默认轮播图");
           this.bannerList = [];
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:313", "=== 加载轮播图失败 ===");
-        common_vendor.index.__f__("error", "at pages/index/index.vue:314", "错误信息:", error);
-        common_vendor.index.__f__("error", "at pages/index/index.vue:315", "错误详情:", JSON.stringify(error));
+        common_vendor.index.__f__("error", "at pages/index/index.vue:316", "=== 加载轮播图失败 ===");
+        common_vendor.index.__f__("error", "at pages/index/index.vue:317", "错误信息:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:318", "错误详情:", JSON.stringify(error));
         this.bannerList = [];
       }
     },
     // 加载系统配置
     async loadConfigs() {
       try {
-        common_vendor.index.__f__("log", "at pages/index/index.vue:324", "=== 开始加载系统配置 ===");
+        common_vendor.index.__f__("log", "at pages/index/index.vue:327", "=== 开始加载系统配置 ===");
         const res = await api_config.getConfigs();
-        common_vendor.index.__f__("log", "at pages/index/index.vue:329", "系统配置API响应完整数据:", JSON.stringify(res));
-        common_vendor.index.__f__("log", "at pages/index/index.vue:330", "响应码:", res.code);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:331", "响应数据:", res.data);
-        common_vendor.index.__f__("log", "at pages/index/index.vue:332", "数据类型:", typeof res.data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:332", "系统配置API响应完整数据:", JSON.stringify(res));
+        common_vendor.index.__f__("log", "at pages/index/index.vue:333", "响应码:", res.code);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:334", "响应数据:", res.data);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:335", "数据类型:", typeof res.data);
         if (res.code === 200 && res.data) {
           const configs = [];
           if (typeof res.data === "object" && !Array.isArray(res.data)) {
             const keys = Object.keys(res.data);
-            common_vendor.index.__f__("log", "at pages/index/index.vue:340", "配置键列表:", keys);
+            common_vendor.index.__f__("log", "at pages/index/index.vue:343", "配置键列表:", keys);
             keys.forEach((key) => {
               const value = res.data[key];
-              common_vendor.index.__f__("log", "at pages/index/index.vue:344", `处理配置项: ${key} = ${value}`);
+              common_vendor.index.__f__("log", "at pages/index/index.vue:347", `处理配置项: ${key} = ${value}`);
               configs.push({
                 paramKey: key,
                 paramValue: String(value),
@@ -169,20 +174,20 @@ const _sfc_main = {
               });
             });
           } else if (Array.isArray(res.data)) {
-            common_vendor.index.__f__("log", "at pages/index/index.vue:355", "后端返回数组格式，转换处理");
+            common_vendor.index.__f__("log", "at pages/index/index.vue:358", "后端返回数组格式，转换处理");
             this.configList = res.data.map((item) => ({
               paramKey: item.paramKey,
               paramValue: item.paramValue,
               displayValue: this.formatConfigValue(item.paramKey, item.paramValue),
               remark: item.remark || item.paramKey
             }));
-            common_vendor.index.__f__("log", "at pages/index/index.vue:362", `✅ 配置加载成功，共${this.configList.length}个配置项`);
+            common_vendor.index.__f__("log", "at pages/index/index.vue:365", `✅ 配置加载成功，共${this.configList.length}个配置项`);
             return;
           }
-          common_vendor.index.__f__("log", "at pages/index/index.vue:366", "最终配置列表数量:", configs.length);
-          common_vendor.index.__f__("log", "at pages/index/index.vue:367", "最终配置列表:", JSON.stringify(configs));
+          common_vendor.index.__f__("log", "at pages/index/index.vue:369", "最终配置列表数量:", configs.length);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:370", "最终配置列表:", JSON.stringify(configs));
           this.configList = configs;
-          common_vendor.index.__f__("log", "at pages/index/index.vue:371", `✅ 配置加载成功，共${configs.length}个配置项`);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:374", `✅ 配置加载成功，共${configs.length}个配置项`);
           if (configs.length > 0) {
             common_vendor.index.showToast({
               title: `配置已更新`,
@@ -191,7 +196,7 @@ const _sfc_main = {
             });
           }
         } else {
-          common_vendor.index.__f__("log", "at pages/index/index.vue:382", "响应码不是200或没有数据");
+          common_vendor.index.__f__("log", "at pages/index/index.vue:385", "响应码不是200或没有数据");
           common_vendor.index.showToast({
             title: "配置为空",
             icon: "none",
@@ -199,9 +204,9 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:390", "=== 加载系统配置失败 ===");
-        common_vendor.index.__f__("error", "at pages/index/index.vue:391", "错误信息:", error);
-        common_vendor.index.__f__("error", "at pages/index/index.vue:392", "错误详情:", JSON.stringify(error));
+        common_vendor.index.__f__("error", "at pages/index/index.vue:393", "=== 加载系统配置失败 ===");
+        common_vendor.index.__f__("error", "at pages/index/index.vue:394", "错误信息:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:395", "错误详情:", JSON.stringify(error));
         common_vendor.index.showToast({
           title: "加载配置失败",
           icon: "none"
@@ -211,7 +216,7 @@ const _sfc_main = {
     },
     // 显示配置弹窗
     showConfigModal() {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:406", "点击配置按钮，当前配置数量:", this.configList.length);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:409", "点击配置按钮，当前配置数量:", this.configList.length);
       if (this.configList.length === 0) {
         common_vendor.index.showToast({
           title: "正在加载配置...",
@@ -234,7 +239,7 @@ const _sfc_main = {
     // 切换配置说明显示
     toggleConfigInfo() {
       this.showConfigInfo = !this.showConfigInfo;
-      common_vendor.index.__f__("log", "at pages/index/index.vue:434", "配置说明显示状态:", this.showConfigInfo);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:437", "配置说明显示状态:", this.showConfigInfo);
     },
     // 格式化配置值的显示
     formatConfigValue(key, value) {
@@ -264,7 +269,7 @@ const _sfc_main = {
     },
     // 下拉刷新
     async onRefresh() {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:470", "=== 开始刷新首页数据 ===");
+      common_vendor.index.__f__("log", "at pages/index/index.vue:473", "=== 开始刷新首页数据 ===");
       this.refreshing = true;
       try {
         await Promise.all([
@@ -277,7 +282,7 @@ const _sfc_main = {
           icon: "success"
         });
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:487", "刷新失败:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:490", "刷新失败:", error);
         common_vendor.index.showToast({
           title: "刷新失败",
           icon: "none"
@@ -346,7 +351,7 @@ const _sfc_main = {
           size: 3,
           orderBy: "createTime,desc"
         });
-        common_vendor.index.__f__("log", "at pages/index/index.vue:567", "🔍 首页圈子响应:", res);
+        common_vendor.index.__f__("log", "at pages/index/index.vue:570", "🔍 首页圈子响应:", res);
         if (res.code === 200) {
           let list = [];
           if (res.data) {
@@ -361,17 +366,17 @@ const _sfc_main = {
               try {
                 item.images = JSON.parse(item.images);
               } catch (e) {
-                common_vendor.index.__f__("error", "at pages/index/index.vue:583", "首页解析图片失败:", e);
+                common_vendor.index.__f__("error", "at pages/index/index.vue:586", "首页解析图片失败:", e);
                 item.images = [];
               }
             }
             return item;
           });
           this.forumPosts = list;
-          common_vendor.index.__f__("log", "at pages/index/index.vue:590", "✅ 首页圈子加载成功:", this.forumPosts.length);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:593", "✅ 首页圈子加载成功:", this.forumPosts.length);
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:593", "❌ 加载首页圈子失败:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:596", "❌ 加载首页圈子失败:", error);
       }
     },
     // 跳转到圈子列表
@@ -403,29 +408,25 @@ const _sfc_main = {
         common_vendor.index.showToast({ title: "操作失败", icon: "none" });
       }
     },
-    // 获取用户定位
-    getUserLocation() {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:632", "=== 开始获取用户地理位置 ===");
+    // 获取用户定位 (改用百度高精度 SDK)
+    async getUserLocation() {
+      common_vendor.index.__f__("log", "at pages/index/index.vue:635", "=== 开始获取用户地理位置 (百度 SDK) ===");
       this.locationText = "正在定位...";
-      common_vendor.index.getLocation({
-        type: "gcj02",
-        isHighAccuracy: true,
-        // 开启高精度定位
-        highAccuracyExpireTime: 3e3,
-        // 高精度定位超时时间(ms)，给GPS留出搜星时间
-        success: (res) => {
-          common_vendor.index.__f__("log", "at pages/index/index.vue:640", "获取经纬度成功:", res);
-          this.getLocationName(res.latitude, res.longitude);
-        },
-        fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/index/index.vue:644", "获取经纬度失败:", err);
-          this.locationText = "定位失败";
-          common_vendor.index.showToast({
-            title: "定位失败，请检查GPS权限",
-            icon: "none"
-          });
-        }
-      });
+      try {
+        const res = await utils_location.getBaiduLocation();
+        common_vendor.index.__f__("log", "at pages/index/index.vue:640", "📍 百度定位获取成功:", res);
+        this.latitude = res.latitude;
+        this.longitude = res.longitude;
+        this.locationText = res.displayName || res.address;
+        common_vendor.index.__f__("log", "at pages/index/index.vue:647", `📌 位置已同步到状态: Lat=${this.latitude}, Lon=${this.longitude}`);
+      } catch (err) {
+        common_vendor.index.__f__("error", "at pages/index/index.vue:650", "❌ 获取经纬度失败:", err);
+        this.locationText = "定位失败";
+        common_vendor.index.showToast({
+          title: "定位失败，请检查GPS权限或AK设置",
+          icon: "none"
+        });
+      }
     },
     // 逆地理编码：经纬度转地址 (通过后端代理)
     async getLocationName(latitude, longitude) {
@@ -436,12 +437,12 @@ const _sfc_main = {
         });
         if (res.code === 200) {
           this.locationText = res.data || "位置获取成功";
-          common_vendor.index.__f__("log", "at pages/index/index.vue:663", "后端逆地理编码成功:", this.locationText);
+          common_vendor.index.__f__("log", "at pages/index/index.vue:668", "后端逆地理编码成功:", this.locationText);
         } else {
           this.locationText = "解析地址失败";
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:668", "请求后端定位接口异常:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:673", "请求后端定位接口异常:", error);
         this.locationText = "定位解析失败";
       }
     }

@@ -19,3 +19,6 @@ export const TOKEN_KEY = 'Authorization'
 
 // 用户信息存储的key
 export const USER_INFO_KEY = 'userInfo'
+
+// 百度地图微信小程序AK
+export const BAIDU_MAP_AK = 'qL6Hd380Yo4rEmR1rNZvwkl63e7Jo1lC'
