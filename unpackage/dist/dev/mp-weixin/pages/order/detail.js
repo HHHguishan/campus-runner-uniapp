@@ -7,8 +7,12 @@ const _sfc_main = {
       orderId: null,
       orderInfo: null,
       riderInfo: null,
-      orderStatus: 0
+      orderStatus: 0,
       // 0-待支付, 1-待接单, 2-配送中, 3-已完成, 4-已取消
+      countdown: -1,
+      // 倒计时秒数
+      countdownTimer: null
+      // 倒计时定时器
     };
   },
   computed: {
@@ -30,6 +34,9 @@ const _sfc_main = {
       this.loadOrderDetail();
     }
   },
+  onUnload() {
+    this.stopCountdown();
+  },
   methods: {
     /**
      * 加载订单详情
@@ -45,12 +52,19 @@ const _sfc_main = {
           if (res.data.runnerInfo) {
             this.riderInfo = res.data.runnerInfo;
           }
-          common_vendor.index.__f__("log", "at pages/order/detail.vue:260", "✅ 订单详情加载成功:", this.orderInfo);
-          common_vendor.index.__f__("log", "at pages/order/detail.vue:261", "📊 评价状态检查:", {
+          common_vendor.index.__f__("log", "at pages/order/detail.vue:273", "✅ 订单详情加载成功:", this.orderInfo);
+          common_vendor.index.__f__("log", "at pages/order/detail.vue:274", "📊 评价状态检查:", {
             rating: this.orderInfo.rating,
             hasRating: !!this.orderInfo.rating,
             status: this.orderStatus
           });
+          if (this.orderStatus === 0) {
+            if (res.data.countdown && res.data.countdown > 0) {
+              this.startCountdown(res.data.countdown);
+            } else {
+              this.countdown = 0;
+            }
+          }
         } else {
           common_vendor.index.showToast({
             title: res.message || "加载失败",
@@ -59,7 +73,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/order/detail.vue:274", "❌ 加载订单详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/detail.vue:297", "❌ 加载订单详情失败:", error);
         common_vendor.index.showToast({
           title: "加载失败，请稍后重试",
           icon: "none"
@@ -211,7 +225,7 @@ const _sfc_main = {
               }
             } catch (error) {
               common_vendor.index.hideLoading();
-              common_vendor.index.__f__("error", "at pages/order/detail.vue:434", "❌ 取消订单失败:", error);
+              common_vendor.index.__f__("error", "at pages/order/detail.vue:457", "❌ 取消订单失败:", error);
               common_vendor.index.showToast({
                 title: "取消失败，请稍后重试",
                 icon: "none"
@@ -295,6 +309,38 @@ const _sfc_main = {
       common_vendor.index.navigateTo({
         url: `/pages/order/create?orderId=${this.orderId}`
       });
+    },
+    /**
+     * 启动倒计时
+     */
+    startCountdown(seconds) {
+      this.countdown = seconds;
+      this.stopCountdown();
+      this.countdownTimer = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--;
+        } else {
+          this.stopCountdown();
+          this.loadOrderDetail();
+        }
+      }, 1e3);
+    },
+    /**
+     * 停止倒计时
+     */
+    stopCountdown() {
+      if (this.countdownTimer) {
+        clearInterval(this.countdownTimer);
+        this.countdownTimer = null;
+      }
+    },
+    /**
+     * 格式化倒计时显示
+     */
+    formatCountdown(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
     }
   }
 };
@@ -305,81 +351,90 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     b: common_vendor.o((...args) => $options.showMoreMenu && $options.showMoreMenu(...args)),
     c: common_vendor.t($options.getStatusIcon($data.orderStatus)),
     d: common_vendor.t($options.getStatusTitle($data.orderStatus)),
-    e: common_vendor.t($options.getStatusDesc($data.orderStatus)),
-    f: common_vendor.n("status-" + $data.orderStatus),
-    g: $data.orderInfo && $data.orderInfo.serviceType
+    e: $data.orderStatus !== 0 || $data.countdown <= 0
+  }, $data.orderStatus !== 0 || $data.countdown <= 0 ? {
+    f: common_vendor.t($options.getStatusDesc($data.orderStatus))
+  } : {}, {
+    g: $data.orderStatus === 0 && $data.countdown > 0
+  }, $data.orderStatus === 0 && $data.countdown > 0 ? {
+    h: common_vendor.t($options.formatCountdown($data.countdown))
+  } : {}, {
+    i: $data.orderStatus === 0 && $data.countdown === 0
+  }, $data.orderStatus === 0 && $data.countdown === 0 ? {} : {}, {
+    j: common_vendor.n("status-" + $data.orderStatus),
+    k: $data.orderInfo && $data.orderInfo.serviceType
   }, $data.orderInfo && $data.orderInfo.serviceType ? {
-    h: common_vendor.t($options.formatTime($data.orderInfo.createTime)),
-    i: $data.orderStatus >= 1 ? 1 : "",
-    j: common_vendor.t($data.orderInfo.acceptTime ? $options.formatTime($data.orderInfo.acceptTime) : "等待接单"),
-    k: $data.orderStatus >= 2 ? 1 : "",
-    l: common_vendor.t($data.orderInfo.deliveryTime ? $options.formatTime($data.orderInfo.deliveryTime) : "配送中"),
-    m: $data.orderStatus >= 3 ? 1 : "",
-    n: common_vendor.t($data.orderInfo.completeTime ? $options.formatTime($data.orderInfo.completeTime) : "等待完成"),
-    o: $data.orderStatus >= 4 ? 1 : ""
+    l: common_vendor.t($options.formatTime($data.orderInfo.createTime)),
+    m: $data.orderStatus >= 1 ? 1 : "",
+    n: common_vendor.t($data.orderInfo.acceptTime ? $options.formatTime($data.orderInfo.acceptTime) : "等待接单"),
+    o: $data.orderStatus >= 2 ? 1 : "",
+    p: common_vendor.t($data.orderInfo.deliveryTime ? $options.formatTime($data.orderInfo.deliveryTime) : "配送中"),
+    q: $data.orderStatus >= 3 ? 1 : "",
+    r: common_vendor.t($data.orderInfo.completeTime ? $options.formatTime($data.orderInfo.completeTime) : "等待完成"),
+    s: $data.orderStatus >= 4 ? 1 : ""
   } : {}, {
-    p: $data.orderInfo
+    t: $data.orderInfo
   }, $data.orderInfo ? common_vendor.e({
-    q: common_vendor.t($data.orderInfo.orderNo || "-"),
-    r: common_vendor.o((...args) => $options.copyOrderNo && $options.copyOrderNo(...args)),
-    s: common_vendor.t($options.getServiceTypeName($data.orderInfo.serviceType)),
-    t: common_vendor.t($data.orderInfo.goodsInfo || "-"),
-    v: $data.orderInfo.remark
+    v: common_vendor.t($data.orderInfo.orderNo || "-"),
+    w: common_vendor.o((...args) => $options.copyOrderNo && $options.copyOrderNo(...args)),
+    x: common_vendor.t($options.getServiceTypeName($data.orderInfo.serviceType)),
+    y: common_vendor.t($data.orderInfo.goodsInfo || "-"),
+    z: $data.orderInfo.remark
   }, $data.orderInfo.remark ? {
-    w: common_vendor.t($data.orderInfo.remark)
+    A: common_vendor.t($data.orderInfo.remark)
   } : {}, {
-    x: common_vendor.t($options.formatTime($data.orderInfo.createTime))
+    B: common_vendor.t($options.formatTime($data.orderInfo.createTime))
   }) : {}, {
-    y: $data.orderInfo
+    C: $data.orderInfo
   }, $data.orderInfo ? {
-    z: common_vendor.t(((_a = $data.orderInfo.addressInfo) == null ? void 0 : _a.pickupAddress) || "-"),
-    A: common_vendor.t($data.orderInfo.deliveryName),
-    B: common_vendor.t($data.orderInfo.deliveryPhone),
-    C: common_vendor.t($data.orderInfo.deliveryAddress || "-")
+    D: common_vendor.t(((_a = $data.orderInfo.addressInfo) == null ? void 0 : _a.pickupAddress) || "-"),
+    E: common_vendor.t($data.orderInfo.deliveryName),
+    F: common_vendor.t($data.orderInfo.deliveryPhone),
+    G: common_vendor.t($data.orderInfo.deliveryAddress || "-")
   } : {}, {
-    D: $data.riderInfo
+    H: $data.riderInfo
   }, $data.riderInfo ? common_vendor.e({
-    E: common_vendor.t($data.riderInfo.realName ? $data.riderInfo.realName.substring(0, 1) : "骑"),
-    F: common_vendor.t($data.riderInfo.realName || "骑手"),
-    G: $data.riderInfo.averageRating
+    I: common_vendor.t($data.riderInfo.realName ? $data.riderInfo.realName.substring(0, 1) : "骑"),
+    J: common_vendor.t($data.riderInfo.realName || "骑手"),
+    K: $data.riderInfo.averageRating
   }, $data.riderInfo.averageRating ? {
-    H: common_vendor.t($data.riderInfo.averageRating.toFixed(1))
+    L: common_vendor.t($data.riderInfo.averageRating.toFixed(1))
   } : {}, {
-    I: common_vendor.o((...args) => $options.callRider && $options.callRider(...args))
+    M: common_vendor.o((...args) => $options.callRider && $options.callRider(...args))
   }) : {}, {
-    J: $data.orderInfo
+    N: $data.orderInfo
   }, $data.orderInfo ? {
-    K: common_vendor.t($data.orderInfo.goodsAmount || "0.00"),
-    L: common_vendor.t($data.orderInfo.deliveryFee || "0.00"),
-    M: common_vendor.t($data.orderInfo.totalAmount || "0.00")
+    O: common_vendor.t($data.orderInfo.goodsAmount || "0.00"),
+    P: common_vendor.t($data.orderInfo.deliveryFee || "0.00"),
+    Q: common_vendor.t($data.orderInfo.totalAmount || "0.00")
   } : {}, {
-    N: $data.orderInfo && $options.shouldShowBottomBar
+    R: $data.orderInfo && $options.shouldShowBottomBar
   }, $data.orderInfo && $options.shouldShowBottomBar ? common_vendor.e({
-    O: $data.orderStatus === 0
+    S: $data.orderStatus === 0
   }, $data.orderStatus === 0 ? {
-    P: common_vendor.o((...args) => $options.cancelOrder && $options.cancelOrder(...args)),
-    Q: common_vendor.o((...args) => $options.goToPay && $options.goToPay(...args))
+    T: common_vendor.o((...args) => $options.cancelOrder && $options.cancelOrder(...args)),
+    U: common_vendor.o((...args) => $options.goToPay && $options.goToPay(...args))
   } : {}, {
-    R: $data.orderStatus === 1
+    V: $data.orderStatus === 1
   }, $data.orderStatus === 1 ? {
-    S: common_vendor.o((...args) => $options.cancelOrder && $options.cancelOrder(...args))
+    W: common_vendor.o((...args) => $options.cancelOrder && $options.cancelOrder(...args))
   } : {}, {
-    T: $data.orderStatus === 2
+    X: $data.orderStatus === 2
   }, $data.orderStatus === 2 ? {
-    U: common_vendor.o((...args) => $options.contactRider && $options.contactRider(...args))
+    Y: common_vendor.o((...args) => $options.contactRider && $options.contactRider(...args))
   } : {}, {
-    V: $data.orderStatus === 3 && ($data.orderInfo.rating === null || $data.orderInfo.rating === void 0)
+    Z: $data.orderStatus === 3 && ($data.orderInfo.rating === null || $data.orderInfo.rating === void 0)
   }, $data.orderStatus === 3 && ($data.orderInfo.rating === null || $data.orderInfo.rating === void 0) ? {
-    W: common_vendor.o((...args) => $options.goToEvaluate && $options.goToEvaluate(...args))
+    aa: common_vendor.o((...args) => $options.goToEvaluate && $options.goToEvaluate(...args))
   } : {}, {
-    X: $data.orderStatus === 3 && $data.orderInfo.rating !== null && $data.orderInfo.rating !== void 0
+    ab: $data.orderStatus === 3 && $data.orderInfo.rating !== null && $data.orderInfo.rating !== void 0
   }, $data.orderStatus === 3 && $data.orderInfo.rating !== null && $data.orderInfo.rating !== void 0 ? {
-    Y: common_vendor.o((...args) => $options.viewEvaluation && $options.viewEvaluation(...args))
+    ac: common_vendor.o((...args) => $options.viewEvaluation && $options.viewEvaluation(...args))
   } : {}, {
-    Z: $data.orderStatus === 4
+    ad: $data.orderStatus === 4
   }, $data.orderStatus === 4 ? {
-    aa: common_vendor.o((...args) => $options.deleteOrder && $options.deleteOrder(...args)),
-    ab: common_vendor.o((...args) => $options.reorder && $options.reorder(...args))
+    ae: common_vendor.o((...args) => $options.deleteOrder && $options.deleteOrder(...args)),
+    af: common_vendor.o((...args) => $options.reorder && $options.reorder(...args))
   } : {}) : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-6b23c96c"]]);

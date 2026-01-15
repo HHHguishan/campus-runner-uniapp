@@ -12,17 +12,21 @@ const _sfc_main = {
       // BALANCE-余额支付, ALIPAY-支付宝
       balance: 0,
       // 余额
-      paying: false
+      paying: false,
       // 支付中
+      countdown: -1,
+      // 倒计时秒数, -1表示未初始化
+      countdownTimer: null
+      // 倒计时定时器
     };
   },
   onLoad(options) {
-    common_vendor.index.__f__("log", "at pages/order/payment.vue:135", "📝 支付页面参数:", options);
+    common_vendor.index.__f__("log", "at pages/order/payment.vue:146", "📝 支付页面参数:", options);
     if (options.orderId) {
       this.orderId = options.orderId;
-      common_vendor.index.__f__("log", "at pages/order/payment.vue:139", "✅ 订单ID:", this.orderId);
+      common_vendor.index.__f__("log", "at pages/order/payment.vue:150", "✅ 订单ID:", this.orderId);
     } else {
-      common_vendor.index.__f__("error", "at pages/order/payment.vue:141", "❌ 缺少订单ID参数");
+      common_vendor.index.__f__("error", "at pages/order/payment.vue:152", "❌ 缺少订单ID参数");
       common_vendor.index.showToast({
         title: "参数错误",
         icon: "none"
@@ -34,10 +38,13 @@ const _sfc_main = {
     }
     if (options.totalAmount) {
       this.totalAmount = Number(options.totalAmount).toFixed(2);
-      common_vendor.index.__f__("log", "at pages/order/payment.vue:154", "✅ 支付金额:", this.totalAmount);
+      common_vendor.index.__f__("log", "at pages/order/payment.vue:165", "✅ 支付金额:", this.totalAmount);
     }
     this.loadOrderDetail();
     this.loadBalance();
+  },
+  onUnload() {
+    this.stopCountdown();
   },
   methods: {
     /**
@@ -45,22 +52,27 @@ const _sfc_main = {
      */
     async loadOrderDetail() {
       if (!this.orderId) {
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:170", "❌ 订单ID为空，无法加载订单详情");
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:186", "❌ 订单ID为空，无法加载订单详情");
         return;
       }
       try {
-        common_vendor.index.__f__("log", "at pages/order/payment.vue:175", "📥 加载订单详情, orderId:", this.orderId);
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:191", "📥 加载订单详情, orderId:", this.orderId);
         const res = await api_order.getOrderDetail(this.orderId);
-        common_vendor.index.__f__("log", "at pages/order/payment.vue:177", "📥 订单详情响应:", JSON.stringify(res, null, 2));
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:193", "📥 订单详情响应:", JSON.stringify(res, null, 2));
         if (res.code === 200 && res.data) {
           this.orderInfo = res.data;
           if (res.data.totalFee) {
             this.totalAmount = Number(res.data.totalFee).toFixed(2);
-            common_vendor.index.__f__("log", "at pages/order/payment.vue:184", "✅ 更新支付金额:", this.totalAmount);
+            common_vendor.index.__f__("log", "at pages/order/payment.vue:200", "✅ 更新支付金额:", this.totalAmount);
+          }
+          if (res.data.countdown && res.data.countdown > 0) {
+            this.startCountdown(res.data.countdown);
+          } else if (res.data.status === 0) {
+            this.startCountdown(30 * 60);
           }
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:188", "❌ 加载订单详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:211", "❌ 加载订单详情失败:", error);
         common_vendor.index.showToast({
           title: "加载订单详情失败",
           icon: "none"
@@ -72,22 +84,22 @@ const _sfc_main = {
      */
     async loadBalance() {
       try {
-        common_vendor.index.__f__("log", "at pages/order/payment.vue:201", "📥 加载钱包余额...");
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:224", "📥 加载钱包余额...");
         const res = await api_wallet.getWalletBalance();
-        common_vendor.index.__f__("log", "at pages/order/payment.vue:203", "📥 余额响应:", JSON.stringify(res, null, 2));
+        common_vendor.index.__f__("log", "at pages/order/payment.vue:226", "📥 余额响应:", JSON.stringify(res, null, 2));
         if (res.code === 200) {
           const balanceValue = res.data !== null ? res.data : 0;
           this.balance = Number(balanceValue).toFixed(2);
-          common_vendor.index.__f__("log", "at pages/order/payment.vue:209", "✅ 当前余额:", this.balance);
+          common_vendor.index.__f__("log", "at pages/order/payment.vue:232", "✅ 当前余额:", this.balance);
         } else {
-          common_vendor.index.__f__("error", "at pages/order/payment.vue:211", "❌ 获取余额失败:", res.message);
+          common_vendor.index.__f__("error", "at pages/order/payment.vue:234", "❌ 获取余额失败:", res.message);
           common_vendor.index.showToast({
             title: res.message || "获取余额失败",
             icon: "none"
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:218", "❌ 加载余额失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:241", "❌ 加载余额失败:", error);
         common_vendor.index.showToast({
           title: "加载余额失败",
           icon: "none"
@@ -199,7 +211,7 @@ const _sfc_main = {
       } catch (error) {
         common_vendor.index.hideLoading();
         this.paying = false;
-        common_vendor.index.__f__("error", "at pages/order/payment.vue:345", "❌ 支付失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/payment.vue:368", "❌ 支付失败:", error);
         common_vendor.index.showToast({
           title: "支付失败，请稍后重试",
           icon: "none"
@@ -211,6 +223,45 @@ const _sfc_main = {
      */
     goBack() {
       common_vendor.index.navigateBack();
+    },
+    /**
+     * 启动倒计时
+     */
+    startCountdown(seconds) {
+      this.countdown = seconds;
+      this.stopCountdown();
+      this.countdownTimer = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--;
+        } else {
+          this.stopCountdown();
+          common_vendor.index.showModal({
+            title: "订单已超时",
+            content: "该订单已超过支付时限，请重新下单",
+            showCancel: false,
+            success: () => {
+              common_vendor.index.navigateBack();
+            }
+          });
+        }
+      }, 1e3);
+    },
+    /**
+     * 停止倒计时
+     */
+    stopCountdown() {
+      if (this.countdownTimer) {
+        clearInterval(this.countdownTimer);
+        this.countdownTimer = null;
+      }
+    },
+    /**
+     * 格式化倒计时显示
+     */
+    formatCountdown(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
     }
   }
 };
@@ -218,25 +269,30 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return common_vendor.e({
     a: common_vendor.o((...args) => $options.goBack && $options.goBack(...args)),
     b: common_vendor.t($data.totalAmount),
-    c: $data.orderInfo
+    c: $data.countdown > 0
+  }, $data.countdown > 0 ? {
+    d: common_vendor.t($options.formatCountdown($data.countdown))
+  } : $data.countdown === 0 ? {} : {}, {
+    e: $data.countdown === 0,
+    f: $data.orderInfo
   }, $data.orderInfo ? {
-    d: common_vendor.t($data.orderInfo.orderNo || "-"),
-    e: common_vendor.t($options.getServiceTypeName($data.orderInfo.type)),
-    f: common_vendor.t($data.orderInfo.goodsDesc || "-")
+    g: common_vendor.t($data.orderInfo.orderNo || "-"),
+    h: common_vendor.t($options.getServiceTypeName($data.orderInfo.type)),
+    i: common_vendor.t($data.orderInfo.goodsDesc || "-")
   } : {}, {
-    g: common_vendor.t($data.balance),
-    h: $data.payType === "BALANCE"
+    j: common_vendor.t($data.balance),
+    k: $data.payType === "BALANCE"
   }, $data.payType === "BALANCE" ? {} : {}, {
-    i: $data.payType === "BALANCE" ? 1 : "",
-    j: common_vendor.o(($event) => $options.selectPayType(1)),
-    k: $data.payType === "ALIPAY"
+    l: $data.payType === "BALANCE" ? 1 : "",
+    m: common_vendor.o(($event) => $options.selectPayType(1)),
+    n: $data.payType === "ALIPAY"
   }, $data.payType === "ALIPAY" ? {} : {}, {
-    l: $data.payType === "ALIPAY" ? 1 : "",
-    m: common_vendor.o(($event) => $options.selectPayType(2)),
-    n: common_vendor.t($data.totalAmount),
-    o: common_vendor.t($data.paying ? "支付中..." : "确认支付"),
-    p: common_vendor.o((...args) => $options.confirmPay && $options.confirmPay(...args)),
-    q: $data.paying
+    o: $data.payType === "ALIPAY" ? 1 : "",
+    p: common_vendor.o(($event) => $options.selectPayType(2)),
+    q: common_vendor.t($data.totalAmount),
+    r: common_vendor.t($data.paying ? "支付中..." : "确认支付"),
+    s: common_vendor.o((...args) => $options.confirmPay && $options.confirmPay(...args)),
+    t: $data.paying
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-13c3fb22"]]);

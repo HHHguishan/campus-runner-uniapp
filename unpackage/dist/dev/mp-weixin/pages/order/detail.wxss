@@ -108,6 +108,28 @@
   font-size: 13px;
   color: rgba(255, 255, 255, 0.8);
 }
+.status-desc.expired.data-v-6b23c96c {
+  color: #ff4d4f;
+}
+
+/* 倒计时内联样式 */
+.countdown-inline.data-v-6b23c96c {
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+}
+.countdown-inline .countdown-icon.data-v-6b23c96c {
+  font-size: 14px;
+  margin-right: 6px;
+}
+.countdown-inline .countdown-text.data-v-6b23c96c {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 500;
+}
 
 /* 进度时间线 */
 .progress-section.data-v-6b23c96c,

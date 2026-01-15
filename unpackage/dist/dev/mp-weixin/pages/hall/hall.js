@@ -30,11 +30,9 @@ const _sfc_main = {
         return;
       try {
         this.loading = true;
-        const result = await api_rider.getRiderOrders({
+        const result = await api_rider.getOrderPool({
           page: 1,
-          size: 20,
-          status: 1
-          // 待接单
+          size: 20
         });
         if (result.data && result.data.records) {
           this.orderList = result.data.records.map((order) => ({
@@ -50,7 +48,7 @@ const _sfc_main = {
           }));
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/hall/hall.vue:148", "获取订单列表失败:", error);
+        common_vendor.index.__f__("error", "at pages/hall/hall.vue:147", "获取订单列表失败:", error);
         this.orderList = [];
       } finally {
         this.loading = false;
@@ -108,7 +106,7 @@ const _sfc_main = {
               }, 1500);
             } catch (error) {
               common_vendor.index.hideLoading();
-              common_vendor.index.__f__("error", "at pages/hall/hall.vue:215", "接单失败:", error);
+              common_vendor.index.__f__("error", "at pages/hall/hall.vue:214", "接单失败:", error);
             }
           }
         }

@@ -15,6 +15,9 @@ function finishOrder(data) {
 function getRiderOrders(params) {
   return utils_request.get("/order/list", params);
 }
+function getOrderPool(params) {
+  return utils_request.get("/order/pool", params);
+}
 function getRiderDashboard() {
   return utils_request.get("/runner/dashboard/overview");
 }
@@ -31,6 +34,7 @@ function getRiderEvaluations(params) {
   return utils_request.get("/evaluation/list", params);
 }
 exports.finishOrder = finishOrder;
+exports.getOrderPool = getOrderPool;
 exports.getRiderDashboard = getRiderDashboard;
 exports.getRiderEvaluationStats = getRiderEvaluationStats;
 exports.getRiderEvaluations = getRiderEvaluations;

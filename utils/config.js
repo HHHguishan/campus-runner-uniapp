@@ -3,7 +3,7 @@
  */
 
 // 后端API基础地址 (切换为 cpolar 地址以支持手机 4G/5G 访问)
-export const BASE_URL = 'https://73cccb07.r18.cpolar.top'
+export const BASE_URL = 'https://213df68.r18.cpolar.top'
 
 // API版本
 export const API_VERSION = '/api'

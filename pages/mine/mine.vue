@@ -268,6 +268,7 @@ export default {
             // 清除本地存储
             removeToken();
             removeUserInfo();
+            uni.removeStorageSync('currentMode'); // 重置身份模式
 
             uni.showToast({
               title: '已退出登录',

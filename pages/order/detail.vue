@@ -20,7 +20,13 @@
         </view>
         <view class="status-info">
           <text class="status-title">{{ getStatusTitle(orderStatus) }}</text>
-          <text class="status-desc">{{ getStatusDesc(orderStatus) }}</text>
+          <text class="status-desc" v-if="orderStatus !== 0 || countdown <= 0">{{ getStatusDesc(orderStatus) }}</text>
+          <!-- 待支付状态显示倒计时 -->
+          <view class="countdown-inline" v-if="orderStatus === 0 && countdown > 0">
+            <text class="countdown-icon">⏱️</text>
+            <text class="countdown-text">支付剩余时间：{{ formatCountdown(countdown) }}</text>
+          </view>
+          <text class="status-desc expired" v-if="orderStatus === 0 && countdown === 0">订单已超时</text>
         </view>
       </view>
 
@@ -208,7 +214,9 @@ export default {
       orderId: null,
       orderInfo: null,
       riderInfo: null,
-      orderStatus: 0 // 0-待支付, 1-待接单, 2-配送中, 3-已完成, 4-已取消
+      orderStatus: 0, // 0-待支付, 1-待接单, 2-配送中, 3-已完成, 4-已取消
+      countdown: -1, // 倒计时秒数
+      countdownTimer: null // 倒计时定时器
     }
   },
 
@@ -234,6 +242,11 @@ export default {
     if (this.orderId) {
       this.loadOrderDetail()
     }
+  },
+
+  onUnload() {
+    // 页面卸载时清除定时器
+    this.stopCountdown()
   },
 
   methods: {
@@ -263,6 +276,16 @@ export default {
             hasRating: !!this.orderInfo.rating,
             status: this.orderStatus
           })
+
+          // 如果是待支付状态，启动倒计时
+          if (this.orderStatus === 0) {
+            if (res.data.countdown && res.data.countdown > 0) {
+              this.startCountdown(res.data.countdown)
+            } else {
+              // 订单可能已超时
+              this.countdown = 0
+            }
+          }
         } else {
           uni.showToast({
             title: res.message || '加载失败',
@@ -525,6 +548,43 @@ export default {
       uni.navigateTo({
         url: `/pages/order/create?orderId=${this.orderId}`
       })
+    },
+
+    /**
+     * 启动倒计时
+     */
+    startCountdown(seconds) {
+      this.countdown = seconds
+      this.stopCountdown() // 先停止已有的定时器
+      
+      this.countdownTimer = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--
+        } else {
+          this.stopCountdown()
+          // 订单已超时，刷新订单详情获取最新状态
+          this.loadOrderDetail()
+        }
+      }, 1000)
+    },
+
+    /**
+     * 停止倒计时
+     */
+    stopCountdown() {
+      if (this.countdownTimer) {
+        clearInterval(this.countdownTimer)
+        this.countdownTimer = null
+      }
+    },
+
+    /**
+     * 格式化倒计时显示
+     */
+    formatCountdown(seconds) {
+      const minutes = Math.floor(seconds / 60)
+      const secs = seconds % 60
+      return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
     }
   }
 }
@@ -620,6 +680,31 @@ export default {
 .status-desc {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.status-desc.expired {
+  color: #ff4d4f;
+}
+
+/* 倒计时内联样式 */
+.countdown-inline {
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+}
+
+.countdown-inline .countdown-icon {
+  font-size: 14px;
+  margin-right: 6px;
+}
+
+.countdown-inline .countdown-text {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 500;
 }
 
 /* 进度时间线 */

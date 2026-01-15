@@ -102,6 +102,7 @@ const _sfc_main = {
           if (res.confirm) {
             utils_token.removeToken();
             utils_token.removeUserInfo();
+            common_vendor.index.removeStorageSync("currentMode");
             common_vendor.index.showToast({
               title: "已退出登录",
               icon: "success"
@@ -129,15 +130,15 @@ const _sfc_main = {
     },
     // 跳转到地址列表
     goToAddressList() {
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:303", "🚀 准备跳转到地址列表页");
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:304", "🚀 准备跳转到地址列表页");
       common_vendor.index.navigateTo({
         url: "/pages/address/list",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:308", "✅ 地址列表页跳转成功");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:309", "✅ 地址列表页跳转成功");
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:311", "❌ 地址列表页跳转失败:", err);
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:312", "错误详情:", JSON.stringify(err));
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:312", "❌ 地址列表页跳转失败:", err);
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:313", "错误详情:", JSON.stringify(err));
           common_vendor.index.showModal({
             title: "跳转失败",
             content: "地址管理页面未找到，请重新编译项目。\n\n步骤：\n1. 删除unpackage文件夹\n2. 重新运行项目",
@@ -149,15 +150,15 @@ const _sfc_main = {
     },
     // 跳转到钱包页面
     goToWallet() {
-      common_vendor.index.__f__("log", "at pages/mine/mine.vue:327", "🚀 准备跳转到钱包页面");
+      common_vendor.index.__f__("log", "at pages/mine/mine.vue:328", "🚀 准备跳转到钱包页面");
       common_vendor.index.navigateTo({
         url: "/pages/wallet/wallet",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:332", "✅ 钱包页面跳转成功");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:333", "✅ 钱包页面跳转成功");
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:335", "❌ 钱包页面跳转失败:", err);
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:336", "错误详情:", JSON.stringify(err));
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:336", "❌ 钱包页面跳转失败:", err);
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:337", "错误详情:", JSON.stringify(err));
           common_vendor.index.showModal({
             title: "跳转失败",
             content: "钱包页面未找到，请重新编译项目。\n\n步骤：\n1. 删除unpackage文件夹\n2. 重新运行项目",
@@ -178,10 +179,10 @@ const _sfc_main = {
       common_vendor.index.navigateTo({
         url: "/pages/admin/order-list",
         success: () => {
-          common_vendor.index.__f__("log", "at pages/mine/mine.vue:360", "✅ 管理员订单列表页跳转成功");
+          common_vendor.index.__f__("log", "at pages/mine/mine.vue:361", "✅ 管理员订单列表页跳转成功");
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/mine/mine.vue:363", "❌ 管理员订单列表页跳转失败", err);
+          common_vendor.index.__f__("error", "at pages/mine/mine.vue:364", "❌ 管理员订单列表页跳转失败", err);
           common_vendor.index.showToast({
             title: "页面跳转失败",
             icon: "none"

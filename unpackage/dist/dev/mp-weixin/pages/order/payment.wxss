@@ -105,6 +105,29 @@
   line-height: 1;
 }
 
+/* 倒计时样式 */
+.countdown-bar.data-v-13c3fb22 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+}
+.countdown-bar.expired.data-v-13c3fb22 {
+  background: rgba(255, 77, 79, 0.3);
+}
+.countdown-icon.data-v-13c3fb22 {
+  font-size: 16px;
+  margin-right: 8px;
+}
+.countdown-text.data-v-13c3fb22 {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+}
+
 /* 订单信息 */
 .order-info-section.data-v-13c3fb22,
 .payment-method-section.data-v-13c3fb22,

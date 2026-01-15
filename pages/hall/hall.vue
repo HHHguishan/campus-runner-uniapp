@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { grabOrder, getRiderOrders } from '@/api/rider.js';
+import { grabOrder, getOrderPool } from '@/api/rider.js';
 import RiderNav from '@/components/rider-nav/rider-nav.vue';
 
 export default {
@@ -122,11 +122,10 @@ export default {
       try {
         this.loading = true;
 
-        // 调用后端API获取待接单列表（状态=1，待接单）
-        const result = await getRiderOrders({
+        // 调用后端API获取待接单列表（接单池）
+        const result = await getOrderPool({
           page: 1,
-          size: 20,
-          status: 1 // 待接单
+          size: 20
         });
 
         if (result.data && result.data.records) {

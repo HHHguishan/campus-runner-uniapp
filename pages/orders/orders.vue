@@ -163,6 +163,9 @@ export default {
   },
 
   onLoad(options) {
+    // 确保进入用户订单页面时使用用户模式
+    uni.setStorageSync('currentMode', 1)
+    
     // 如果从其他页面跳转过来，带有状态参数
     if (options.status !== undefined) {
       this.activeTab = Number(options.status)

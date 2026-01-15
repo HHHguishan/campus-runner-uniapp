@@ -18,6 +18,15 @@
           <text class="amount-symbol">¥</text>
           <text class="amount-number">{{ totalAmount }}</text>
         </view>
+        <!-- 倒计时显示 -->
+        <view class="countdown-bar" v-if="countdown > 0">
+          <text class="countdown-icon">⏱️</text>
+          <text class="countdown-text">支付剩余时间：{{ formatCountdown(countdown) }}</text>
+        </view>
+        <view class="countdown-bar expired" v-else-if="countdown === 0">
+          <text class="countdown-icon">⚠️</text>
+          <text class="countdown-text">订单已超时</text>
+        </view>
       </view>
 
       <!-- 订单信息 -->
@@ -127,7 +136,9 @@ export default {
       orderInfo: null,
       payType: 'BALANCE', // BALANCE-余额支付, ALIPAY-支付宝
       balance: 0, // 余额
-      paying: false // 支付中
+      paying: false, // 支付中
+      countdown: -1, // 倒计时秒数, -1表示未初始化
+      countdownTimer: null // 倒计时定时器
     }
   },
 
@@ -161,6 +172,11 @@ export default {
     this.loadBalance()
   },
 
+  onUnload() {
+    // 页面卸载时清除定时器
+    this.stopCountdown()
+  },
+
   methods: {
     /**
      * 加载订单详情
@@ -182,6 +198,13 @@ export default {
           if (res.data.totalFee) {
             this.totalAmount = Number(res.data.totalFee).toFixed(2)
             console.log('✅ 更新支付金额:', this.totalAmount)
+          }
+          // 启动倒计时
+          if (res.data.countdown && res.data.countdown > 0) {
+            this.startCountdown(res.data.countdown)
+          } else if (res.data.status === 0) {
+            // 如果状态是待支付但没有countdown字段，使用默认30分钟
+            this.startCountdown(30 * 60)
           }
         }
       } catch (error) {
@@ -355,6 +378,50 @@ export default {
      */
     goBack() {
       uni.navigateBack()
+    },
+
+    /**
+     * 启动倒计时
+     */
+    startCountdown(seconds) {
+      this.countdown = seconds
+      this.stopCountdown() // 先停止已有的定时器
+      
+      this.countdownTimer = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--
+        } else {
+          this.stopCountdown()
+          // 订单已超时，提示并返回
+          uni.showModal({
+            title: '订单已超时',
+            content: '该订单已超过支付时限，请重新下单',
+            showCancel: false,
+            success: () => {
+              uni.navigateBack()
+            }
+          })
+        }
+      }, 1000)
+    },
+
+    /**
+     * 停止倒计时
+     */
+    stopCountdown() {
+      if (this.countdownTimer) {
+        clearInterval(this.countdownTimer)
+        this.countdownTimer = null
+      }
+    },
+
+    /**
+     * 格式化倒计时显示
+     */
+    formatCountdown(seconds) {
+      const minutes = Math.floor(seconds / 60)
+      const secs = seconds % 60
+      return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
     }
   }
 }
@@ -447,6 +514,32 @@ export default {
   font-weight: bold;
   color: #fff;
   line-height: 1;
+}
+
+/* 倒计时样式 */
+.countdown-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+}
+
+.countdown-bar.expired {
+  background: rgba(255, 77, 79, 0.3);
+}
+
+.countdown-icon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.countdown-text {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
 }
 
 /* 订单信息 */
