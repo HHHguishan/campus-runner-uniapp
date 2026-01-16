@@ -35,6 +35,13 @@
         <view class="status-info">
           <text class="status-title">{{ getStatusTitle(orderStatus) }}</text>
           <text class="status-desc" v-if="orderStatus !== 0 || countdown <= 0">{{ getStatusDesc(orderStatus) }}</text>
+          
+          <!-- 获取配送距离和预计时间提示 (仅配送中且有数据时显示) -->
+          <view class="eta-info" v-if="orderStatus === 2 && distanceText">
+            <text class="eta-icon">🛵</text>
+            <text class="eta-text">距离您 {{ distanceText }}，{{ arrivalTimeText }}</text>
+          </view>
+
           <!-- 待支付状态显示倒计时 -->
           <view class="countdown-inline" v-if="orderStatus === 0 && countdown > 0">
             <text class="countdown-icon">⏱️</text>
@@ -240,6 +247,8 @@ export default {
       markers: [],
       polyline: [],
       trackingTimer: null, // 位置追踪定时器 (拉取或报)
+      distanceText: '', // 距离描述
+      arrivalTimeText: '', // 预计时间描述
     }
   },
 
@@ -797,6 +806,9 @@ export default {
         }
       }
 
+      // 计算距离和预计时间
+      this.calculateRiderETA(latNum, lngNum)
+
       if (existingIndex > -1) {
         this.$set(this.markers, existingIndex, riderMarker)
         console.log('✅ 已使用 $set 更新现有骑手标点')
@@ -814,6 +826,52 @@ export default {
           padding: [80, 80, 80, 80],
           points: this.markers
         })
+      })
+    },
+
+    /**
+     * 计算骑手距离和预计到达时间
+     */
+    calculateRiderETA(riderLat, riderLng) {
+      if (!this.orderInfo || !this.orderInfo.deliveryLat) return
+
+      const destLat = Number(this.orderInfo.deliveryLat)
+      const destLng = Number(this.orderInfo.deliveryLng)
+
+      // 使用 Haversine 公式计算直线距离 (单位: km)
+      const R = 6371 // 地球半径
+      const dLat = (destLat - riderLat) * Math.PI / 180
+      const dLng = (destLng - riderLng) * Math.PI / 180
+      const a = 
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(riderLat * Math.PI / 180) * Math.cos(destLat * Math.PI / 180) * 
+        Math.sin(dLng / 2) * Math.sin(dLng / 2)
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+      const distance = R * c
+
+      // 格式化距离文字
+      if (distance < 1) {
+        this.distanceText = Math.round(distance * 1000) + 'm'
+      } else {
+        this.distanceText = distance.toFixed(1) + 'km'
+      }
+
+      // 预估到达时间 (假设时速 20km/h)
+      // 时间 (分钟) = 距离 (km) / 速度 (km/h) * 60
+      const speed = 20
+      const minutes = Math.ceil((distance / speed) * 60)
+      
+      if (minutes <= 1) {
+        this.arrivalTimeText = '即将送达'
+      } else {
+        this.arrivalTimeText = `预计 ${minutes} 分钟内送达`
+      }
+
+      console.log('📏 [ETA] 距离计算结果:', {
+        distance: distance,
+        distanceText: this.distanceText,
+        time: minutes,
+        arrivalTimeText: this.arrivalTimeText
       })
     },
 
@@ -961,6 +1019,28 @@ export default {
   font-size: 13px;
   color: #fff;
   font-weight: 500;
+}
+
+/* 距离与ETA提示 */
+.eta-info {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.eta-icon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.eta-text {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 600;
 }
 
 /* 进度时间线 */

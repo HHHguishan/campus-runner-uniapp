@@ -144,6 +144,26 @@
   font-weight: 500;
 }
 
+/* 距离与ETA提示 */
+.eta-info.data-v-6b23c96c {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.eta-icon.data-v-6b23c96c {
+  font-size: 16px;
+  margin-right: 8px;
+}
+.eta-text.data-v-6b23c96c {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 600;
+}
+
 /* 进度时间线 */
 .progress-section.data-v-6b23c96c,
 .info-section.data-v-6b23c96c,

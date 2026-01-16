@@ -1,5 +1,5 @@
 "use strict";
-const BASE_URL = "https://7b1efa9e.r18.cpolar.top";
+const BASE_URL = "https://62390432.r18.cpolar.top";
 const API_VERSION = "/api";
 const API_BASE_URL = BASE_URL + API_VERSION;
 const REQUEST_TIMEOUT = 3e4;
