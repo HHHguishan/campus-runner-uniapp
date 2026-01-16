@@ -1,1 +1,1 @@
-{"version":3,"file":"assets.js","sources":["D:/static/images/empty-forum.png"],"sourcesContent":["export default \"/static/images/empty-forum.png\""],"names":[],"mappings":";AAAA,MAAe,aAAA;;"}
+{"version":3,"file":"assets.js","sources":["D:/static/images/empty-forum.png","D:/static/empty_data.png"],"sourcesContent":["export default \"/static/images/empty-forum.png\"","export default \"/static/empty_data.png\""],"names":[],"mappings":";AAAA,MAAe,eAAA;ACAf,MAAe,aAAA;;;"}

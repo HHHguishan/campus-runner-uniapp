@@ -268,13 +268,11 @@ export default {
     },
 
     /**
-     * 提现功能（开发中）
+     * 提现功能
      */
     handleWithdraw() {
-      uni.showModal({
-        title: '提示',
-        content: '提现功能开发中，敬请期待',
-        showCancel: false
+      uni.navigateTo({
+        url: '/pages/wallet/withdraw'
       })
     },
 

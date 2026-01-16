@@ -3,6 +3,7 @@ Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const utils_token = require("./utils/token.js");
 const utils_tracker = require("./utils/tracker.js");
+const utils_request = require("./utils/request.js");
 if (!Math) {
   "./pages/index/index.js";
   "./pages/orders/orders.js";
@@ -21,6 +22,9 @@ if (!Math) {
   "./pages/wallet/wallet.js";
   "./pages/wallet/recharge.js";
   "./pages/wallet/alipay-pay.js";
+  "./pages/wallet/withdraw.js";
+  "./pages/wallet/withdraw-records.js";
+  "./pages/wallet/alipay-bind.js";
   "./pages/order/create.js";
   "./pages/order/payment.js";
   "./pages/order/detail.js";
@@ -61,6 +65,7 @@ const _sfc_main = {
 };
 function createApp() {
   const app = common_vendor.createSSRApp(_sfc_main);
+  app.config.globalProperties.$request = utils_request.request;
   return {
     app
   };

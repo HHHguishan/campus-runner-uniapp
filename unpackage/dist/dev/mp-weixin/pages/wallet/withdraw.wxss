@@ -1,0 +1,173 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+/* 校园圈子（论坛）增强主题变量 */
+.container.data-v-9be921b8 {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20rpx;
+  padding-top: calc(var(--status-bar-height) + 110rpx);
+}
+
+/* 导航栏 */
+.nav-bar.data-v-9be921b8 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 30rpx;
+  padding-top: var(--status-bar-height);
+  background: linear-gradient(135deg, #1677ff, #4096ff);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+.nav-back.data-v-9be921b8 {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  color: #fff;
+  font-weight: 300;
+}
+.nav-title.data-v-9be921b8 {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fff;
+}
+.nav-placeholder.data-v-9be921b8 {
+  width: 60rpx;
+}
+.balance-card.data-v-9be921b8 {
+  background: linear-gradient(135deg, #1677ff, #4096ff);
+  padding: 60rpx 40rpx;
+  border-radius: 20rpx;
+  color: #fff;
+  margin-bottom: 30rpx;
+  box-shadow: 0 10rpx 20rpx rgba(22, 119, 255, 0.2);
+}
+.balance-card .label.data-v-9be921b8 {
+  font-size: 28rpx;
+  opacity: 0.9;
+  margin-bottom: 15rpx;
+}
+.balance-card .amount.data-v-9be921b8 {
+  font-size: 64rpx;
+  font-weight: bold;
+}
+.form-section.data-v-9be921b8 {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+}
+.form-item.data-v-9be921b8 {
+  margin-bottom: 40rpx;
+}
+.form-item .item-label.data-v-9be921b8 {
+  display: block;
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+.input-wrapper.data-v-9be921b8 {
+  display: flex;
+  align-items: center;
+  border-bottom: 1rpx solid #eee;
+  padding: 10rpx 0;
+}
+.input-wrapper .currency.data-v-9be921b8 {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-right: 15rpx;
+}
+.input-wrapper .amount-input.data-v-9be921b8 {
+  flex: 1;
+  height: 80rpx;
+  font-size: 48rpx;
+  font-weight: 500;
+}
+.input-wrapper .all-btn.data-v-9be921b8 {
+  font-size: 28rpx;
+  color: #1677ff;
+  padding-left: 20rpx;
+}
+.tip.data-v-9be921b8 {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 15rpx;
+}
+.notice.data-v-9be921b8 {
+  font-size: 24rpx;
+  color: #ff4d4f;
+  margin-top: 15rpx;
+  display: block;
+}
+.type-group.data-v-9be921b8 {
+  display: flex;
+  flex-wrap: wrap;
+}
+.type-group .type-label.data-v-9be921b8 {
+  display: flex;
+  align-items: center;
+  margin-right: 40rpx;
+  margin-bottom: 10rpx;
+}
+.type-group .type-text.data-v-9be921b8 {
+  font-size: 28rpx;
+  margin-left: 10rpx;
+}
+.normal-input.data-v-9be921b8 {
+  background-color: #f5f5f5;
+  height: 90rpx;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+}
+.btn-area.data-v-9be921b8 {
+  margin-top: 60rpx;
+  padding-bottom: 40rpx;
+}
+.submit-btn.data-v-9be921b8 {
+  background-color: #1677ff;
+  color: #fff;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 10rpx 20rpx rgba(22, 119, 255, 0.3);
+}
+.history-link.data-v-9be921b8 {
+  text-align: center;
+  color: #666;
+  font-size: 28rpx;
+  padding: 30rpx;
+}

@@ -152,13 +152,11 @@ const _sfc_main = {
       }
     },
     /**
-     * 提现功能（开发中）
+     * 提现功能
      */
     handleWithdraw() {
-      common_vendor.index.showModal({
-        title: "提示",
-        content: "提现功能开发中，敬请期待",
-        showCancel: false
+      common_vendor.index.navigateTo({
+        url: "/pages/wallet/withdraw"
       });
     },
     /**

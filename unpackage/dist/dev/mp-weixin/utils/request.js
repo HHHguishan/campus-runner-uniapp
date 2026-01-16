@@ -204,5 +204,6 @@ exports.del = del;
 exports.get = get;
 exports.post = post;
 exports.put = put;
+exports.request = request;
 exports.uploadFile = uploadFile;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/utils/request.js.map

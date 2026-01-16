@@ -21,7 +21,7 @@
       <!-- 数据统计 -->
       <view class="stats-row">
         <view class="stat-item">
-          <text class="stat-value">{{ userInfo.balance || 0 }}</text>
+          <text class="stat-value">{{ (userInfo.balance || 0).toFixed(2) }}</text>
           <text class="stat-label">余额</text>
         </view>
         <view class="stat-divider"></view>
@@ -77,6 +77,14 @@
           <view class="item-left">
             <text class="item-icon">💰</text>
             <text class="item-label">我的钱包</text>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+
+        <view class="function-item" @tap="navigateTo('/pages/wallet/alipay-bind')">
+          <view class="item-left">
+            <text class="item-icon">💙</text>
+            <text class="item-label">绑定支付宝</text>
           </view>
           <text class="item-arrow">›</text>
         </view>

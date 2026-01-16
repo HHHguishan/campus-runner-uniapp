@@ -110,6 +110,28 @@
 			}
 		},
 		{
+			"path": "pages/wallet/withdraw",
+			"style": {
+				"navigationBarTitleText": "提现申请",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/wallet/withdraw-records",
+			"style": {
+				"navigationBarTitleText": "提现记录",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/wallet/alipay-bind",
+			"style": {
+				"navigationBarTitleText": "绑定支付宝",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/order/create",
 			"style": {
 				"navigationBarTitleText": "发布订单",
