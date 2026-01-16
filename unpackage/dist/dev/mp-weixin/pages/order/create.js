@@ -169,6 +169,14 @@ const _sfc_main = {
         common_vendor.index.showToast({ title: "请选择送达地址", icon: "none" });
         return false;
       }
+      if (!this.formData.pickupAddress.lat || !this.formData.pickupAddress.lng) {
+        common_vendor.index.showToast({ title: "取件地址缺少坐标，请重新选择", icon: "none" });
+        return false;
+      }
+      if (!this.formData.deliveryAddress.lat || !this.formData.deliveryAddress.lng) {
+        common_vendor.index.showToast({ title: "送达地址缺少坐标，请重新选择", icon: "none" });
+        return false;
+      }
       const phoneReg = /^1[3-9]\d{9}$/;
       if (!phoneReg.test(this.formData.contactPhone)) {
         common_vendor.index.showToast({ title: "请输入正确的手机号", icon: "none" });
@@ -176,6 +184,14 @@ const _sfc_main = {
       }
       if (!this.formData.contactName.trim()) {
         common_vendor.index.showToast({ title: "请输入联系人姓名", icon: "none" });
+        return false;
+      }
+      if (this.formData.pickupAddress.lat && Math.abs(this.formData.pickupAddress.lat - 39.9) < 0.1 && !this.formData.pickupAddress.detail.includes("北京")) {
+        common_vendor.index.showToast({ title: "取件地址定位异常（在北京），请前往地址管理重新开启地图选点", icon: "none", duration: 3e3 });
+        return false;
+      }
+      if (this.formData.deliveryAddress.lat && Math.abs(this.formData.deliveryAddress.lat - 39.9) < 0.1 && !this.formData.deliveryAddress.detail.includes("北京")) {
+        common_vendor.index.showToast({ title: "送达地址定位异常（在北京），请前往地址管理重新开启地图选点", icon: "none", duration: 3e3 });
         return false;
       }
       return true;
@@ -196,16 +212,16 @@ const _sfc_main = {
           // 物品描述
           pickupAddr: this.formData.pickupAddress.detail,
           // 取货地址（详细门牌号）
-          pickupLat: this.formData.pickupAddress.lat || 23.123456,
-          // 取货纬度（默认值）
-          pickupLng: this.formData.pickupAddress.lng || 113.123456,
-          // 取货经度（默认值）
+          pickupLat: this.formData.pickupAddress.lat,
+          // 取货纬度
+          pickupLng: this.formData.pickupAddress.lng,
+          // 取货经度
           deliveryAddr: this.formData.deliveryAddress.detail,
           // 送货地址（详细门牌号）
-          deliveryLat: this.formData.deliveryAddress.lat || 23.123456,
-          // 送货纬度（默认值）
-          deliveryLng: this.formData.deliveryAddress.lng || 113.123456,
-          // 送货经度（默认值）
+          deliveryLat: this.formData.deliveryAddress.lat,
+          // 送达纬度
+          deliveryLng: this.formData.deliveryAddress.lng,
+          // 送达经度
           contactName: this.formData.contactName,
           // 收货人姓名
           contactPhone: this.formData.contactPhone,
@@ -217,19 +233,19 @@ const _sfc_main = {
           distance: this.formData.distance || void 0
           // 距离（可选）
         };
-        common_vendor.index.__f__("log", "at pages/order/create.vue:411", "📤 提交订单数据:", orderData);
+        common_vendor.index.__f__("log", "at pages/order/create.vue:433", "📤 [CREATE] 准备提交订单数据:", JSON.stringify(orderData, null, 2));
         const res = await api_order.createOrder(orderData);
-        common_vendor.index.__f__("log", "at pages/order/create.vue:415", "📥 创建订单响应:", JSON.stringify(res, null, 2));
+        common_vendor.index.__f__("log", "at pages/order/create.vue:437", "📥 创建订单响应:", JSON.stringify(res, null, 2));
         common_vendor.index.hideLoading();
         if (res.code === 200) {
           const orderInfo = res.data;
-          common_vendor.index.__f__("log", "at pages/order/create.vue:421", "✅ 订单信息:", orderInfo);
+          common_vendor.index.__f__("log", "at pages/order/create.vue:443", "✅ 订单信息:", orderInfo);
           const orderId = orderInfo.id;
           const totalAmount = orderInfo.totalFee || "0.00";
-          common_vendor.index.__f__("log", "at pages/order/create.vue:427", "订单ID:", orderId);
-          common_vendor.index.__f__("log", "at pages/order/create.vue:428", "订单金额:", totalAmount);
+          common_vendor.index.__f__("log", "at pages/order/create.vue:449", "订单ID:", orderId);
+          common_vendor.index.__f__("log", "at pages/order/create.vue:450", "订单金额:", totalAmount);
           if (!orderId) {
-            common_vendor.index.__f__("error", "at pages/order/create.vue:431", "❌ 订单ID不存在，无法跳转支付页面");
+            common_vendor.index.__f__("error", "at pages/order/create.vue:453", "❌ 订单ID不存在，无法跳转支付页面");
             common_vendor.index.showToast({
               title: "订单创建失败，缺少订单ID",
               icon: "none",
@@ -255,7 +271,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/order/create.vue:460", "❌ 创建订单失败:", error);
+        common_vendor.index.__f__("error", "at pages/order/create.vue:482", "❌ 创建订单失败:", error);
         common_vendor.index.showToast({
           title: "创建失败，请稍后重试",
           icon: "none"

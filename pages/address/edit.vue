@@ -22,6 +22,10 @@
           placeholder="请输入地址名称，如：北门菜鸟、学校宿舍"
           maxlength="20"
         />
+        <view class="map-picker-btn" @click="chooseFromMap">
+          <text class="iconfont">📍</text>
+          <text>地图选点</text>
+        </view>
       </view>
 
       <!-- 联系人 -->
@@ -57,6 +61,10 @@
           maxlength="200"
           :show-confirm-bar="false"
         />
+        <view class="coordinate-status" :class="{ 'error': isBeijingCoord, 'valid': hasCoords && !isBeijingCoord }">
+          <text class="status-icon">{{ isBeijingCoord ? '⚠️' : (hasCoords ? '✅' : '❓') }}</text>
+          <text class="status-text">{{ coordStatusText }}</text>
+        </view>
       </view>
 
       <!-- 设为默认地址 -->
@@ -98,6 +106,24 @@ export default {
         lat: null, // 纬度
         lng: null // 经度
       }
+    }
+  },
+
+  computed: {
+    hasCoords() {
+      return this.formData.lat && this.formData.lng
+    },
+    isBeijingCoord() {
+      if (!this.hasCoords) return false
+      // 北京中心约在 39.9, 116.4
+      return Math.abs(this.formData.lat - 39.9) < 0.1 && Math.abs(this.formData.lng - 116.4) < 0.1
+    },
+    coordStatusText() {
+      if (!this.hasCoords) return '未设置定位坐标，请点击地图选点'
+      if (this.isBeijingCoord && !this.formData.detail.includes('北京')) {
+        return '检测到定位可能在异常区域（北京），请重选'
+      }
+      return `位置已设定 (${this.formData.lat.toFixed(3)}, ${this.formData.lng.toFixed(3)})`
     }
   },
 
@@ -204,7 +230,67 @@ export default {
         return false
       }
 
+      // 增加防呆检查：防止模拟器默认定位在背景（39.9/116.4）
+      if (this.formData.lat && Math.abs(this.formData.lat - 39.9) < 0.1 && !this.formData.detail.includes('北京')) {
+        uni.showToast({
+          title: '检测到定位在异常区域（北京），请在地图选点重新选择',
+          icon: 'none',
+          duration: 3000
+        })
+        return false
+      }
+
       return true
+    },
+
+    /**
+     * 从地图选择位置
+     */
+    async chooseFromMap() {
+      // 获取当前位置作为地图中心，避免默认北京
+      let centerLat = 22.817
+      let centerLng = 108.366
+      try {
+        const loc = await new Promise((resolve) => {
+          uni.getLocation({ type: 'gcj02', success: resolve, fail: () => resolve(null) })
+        })
+        if (loc) {
+          centerLat = loc.latitude
+          centerLng = loc.longitude
+        }
+      } catch (e) {}
+
+      uni.chooseLocation({
+        latitude: centerLat,
+        longitude: centerLng,
+        success: (res) => {
+          console.log('📍 [EDIT] 地图选点结果 Raw:', JSON.stringify(res))
+          // 回填数据
+          this.formData.addressName = res.name || ''
+          this.formData.detail = res.address || ''
+          this.formData.lat = res.latitude
+          this.formData.lng = res.longitude
+          
+          uni.showToast({
+            title: '位置已同步',
+            icon: 'none'
+          })
+        },
+        fail: (err) => {
+          console.error('❌ 地图选点失败:', err)
+          if (err.errMsg.indexOf('auth deny') > -1) {
+            uni.showModal({
+              title: '提示',
+              content: '请在设置中开启位置权限',
+              success: (modalRes) => {
+                if (modalRes.confirm) {
+                  uni.openSetting()
+                }
+              }
+            })
+          }
+        }
+      })
     },
 
     /**
@@ -353,6 +439,22 @@ export default {
   color: #333;
 }
 
+.map-picker-btn {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background-color: #f0f4ff;
+  color: #667eea;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.map-picker-btn .iconfont {
+  margin-right: 6px;
+}
+
 .form-textarea {
   width: 100%;
   min-height: 80px;
@@ -360,6 +462,38 @@ export default {
   color: #333;
   line-height: 1.6;
   padding: 5px 0;
+}
+
+.coordinate-status {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s;
+
+  &.error {
+    background-color: #fff1f0;
+    border: 1px solid #ffccc7;
+    .status-text { color: #ff4d4f; }
+  }
+
+  &.valid {
+    background-color: #f6ffed;
+    border: 1px solid #b7eb8f;
+    .status-text { color: #52c41a; }
+  }
+}
+
+.status-icon {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.status-text {
+  font-size: 12px;
+  color: #8c8c8c;
 }
 
 /* 开关 */

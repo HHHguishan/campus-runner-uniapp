@@ -73,11 +73,17 @@
   },
   "permission": {
     "scope.userLocation": {
-      "desc": "您的位置信息将用于识别附近的配送地址"
+      "desc": "用于识别配送地址及实时共享配送轨迹"
     }
   },
   "requiredPrivateInfos": [
-    "getLocation"
+    "getLocation",
+    "onLocationChange",
+    "startLocationUpdateBackground",
+    "chooseLocation"
+  ],
+  "requiredBackgroundModes": [
+    "location"
   ],
   "usingComponents": {}
 }

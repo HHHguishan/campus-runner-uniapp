@@ -3,68 +3,70 @@
     <!-- 骑手导航栏 -->
     <rider-nav current-page="running"></rider-nav>
 
-    <!-- 当前配送订单 -->
-    <view class="current-order" v-if="currentOrder">
-      <view class="order-header">
-        <text class="header-title">📦 当前配送</text>
-        <text class="order-status">配送中</text>
-      </view>
+    <!-- 配送中订单列表 -->
+    <view class="order-list" v-if="orderList.length > 0">
+      <view class="current-order" v-for="order in orderList" :key="order.id">
+        <view class="order-header">
+          <text class="header-title">📦 订单 #{{ order.id }}</text>
+          <text class="order-status">配送中</text>
+        </view>
 
-      <!-- 进度条 -->
-      <view class="progress-bar">
-        <view class="progress-step active">
-          <view class="step-icon">✓</view>
-          <text class="step-text">已接单</text>
-        </view>
-        <view class="progress-line active"></view>
-        <view class="progress-step active">
-          <view class="step-icon">2</view>
-          <text class="step-text">配送中</text>
-        </view>
-        <view class="progress-line"></view>
-        <view class="progress-step">
-          <view class="step-icon">3</view>
-          <text class="step-text">已完成</text>
-        </view>
-      </view>
-
-      <!-- 订单信息 -->
-      <view class="order-info-card">
-        <view class="info-section">
-          <view class="section-title">📍 配送地址</view>
-          <view class="address-item">
-            <text class="addr-label">取货地址</text>
-            <text class="addr-value">{{ currentOrder.pickupAddr }}</text>
+        <!-- 进度条 -->
+        <view class="progress-bar">
+          <view class="progress-step active">
+            <view class="step-icon">✓</view>
+            <text class="step-text">已接单</text>
           </view>
-          <view class="address-item">
-            <text class="addr-label">送货地址</text>
-            <text class="addr-value">{{ currentOrder.deliveryAddr }}</text>
+          <view class="progress-line active"></view>
+          <view class="progress-step active">
+            <view class="step-icon">2</view>
+            <text class="step-text">配送中</text>
+          </view>
+          <view class="progress-line"></view>
+          <view class="progress-step">
+            <view class="step-icon">3</view>
+            <text class="step-text">已完成</text>
           </view>
         </view>
 
-        <view class="info-section">
-          <view class="section-title">📞 联系信息</view>
-          <view class="contact-item">
-            <text class="contact-label">联系人</text>
-            <text class="contact-value">{{ currentOrder.contactName }}</text>
+        <!-- 订单信息 -->
+        <view class="order-info-card">
+          <view class="info-section">
+            <view class="section-title">📍 配送地址</view>
+            <view class="address-item">
+              <text class="addr-label">取货地址</text>
+              <text class="addr-value">{{ order.pickupAddr }}</text>
+            </view>
+            <view class="address-item">
+              <text class="addr-label">送货地址</text>
+              <text class="addr-value">{{ order.deliveryAddr }}</text>
+            </view>
           </view>
-          <view class="contact-item">
-            <text class="contact-label">联系电话</text>
-            <text class="contact-value">{{ currentOrder.contactPhone }}</text>
+
+          <view class="info-section">
+            <view class="section-title">📞 联系信息</view>
+            <view class="contact-item">
+              <text class="contact-label">联系人</text>
+              <text class="contact-value">{{ order.contactName }}</text>
+            </view>
+            <view class="contact-item">
+              <text class="contact-label">联系电话</text>
+              <text class="contact-value">{{ order.contactPhone }}</text>
+            </view>
           </view>
         </view>
-      </view>
 
-      <!-- 操作按钮 -->
-      <view class="action-buttons">
-        <button class="action-btn call-btn" @tap="makeCall">
-          <text class="btn-icon">📞</text>
-          <text>拨打电话</text>
-        </button>
-        <button class="action-btn finish-btn" @tap="finishOrder">
-          <text class="btn-icon">✅</text>
-          <text>完成配送</text>
-        </button>
+        <!-- 操作按钮 -->
+        <view class="action-buttons">
+          <button class="action-btn call-btn" @tap="makeCall(order)">
+            <text class="btn-icon">📞</text>
+            <text>拨打电话</text>
+          </button>
+          <button class="action-btn finish-btn" @tap="finishOrder(order)">
+            <text class="btn-icon">✅</text>
+            <text>完成配送</text>
+          </button>
+        </view>
       </view>
     </view>
 
@@ -103,6 +105,7 @@
 
 <script>
 import { finishOrder, getRiderOrders, getRiderDashboard } from '@/api/rider.js';
+import riderTracker from '@/utils/tracker.js';
 import RiderNav from '@/components/rider-nav/rider-nav.vue';
 
 export default {
@@ -111,53 +114,57 @@ export default {
   },
   data() {
     return {
-      currentOrder: null, // 当前配送订单
+      orderList: [], // 配送中的订单列表
       todayStats: {
-        completedOrders: 8,
-        todayEarnings: '125.50',
-        rating: 4.9
+        completedOrders: 0,
+        todayEarnings: '0.00',
+        rating: 5.0
       }
     };
   },
 
   onLoad() {
-    this.loadCurrentOrder();
+    this.loadOrderList();
     this.loadTodayStats();
   },
 
   onShow() {
     // 每次显示时刷新数据
-    this.loadCurrentOrder();
+    this.loadOrderList();
   },
 
   methods: {
-    // 加载当前配送订单
-    async loadCurrentOrder() {
+    // 加载当前配送订单列表
+    async loadOrderList() {
       try {
         // 调用后端API获取当前配送中的订单（状态=2，配送中）
         const result = await getRiderOrders({
           page: 1,
-          size: 1,
+          size: 20, // 获取更多订单
           status: 2 // 配送中
         });
 
-        if (result.data && result.data.records && result.data.records.length > 0) {
-          const order = result.data.records[0];
-          this.currentOrder = {
+        if (result.data && result.data.records) {
+          this.orderList = result.data.records.map(order => ({
             id: order.id,
             pickupAddr: order.pickupAddr,
             deliveryAddr: order.deliveryAddr,
             contactName: order.contactName,
             contactPhone: order.contactPhone,
             goodsDesc: order.goodsDesc
-          };
+          }));
+          
+          // 如果有正在配送的单，检查并确保全局追踪器开启
+          if (this.orderList.length > 0) {
+            riderTracker.checkAndStart();
+          }
         } else {
-          this.currentOrder = null;
+          this.orderList = [];
         }
 
       } catch (error) {
-        console.error('获取当前订单失败:', error);
-        this.currentOrder = null;
+        console.error('获取订单列表失败:', error);
+        this.orderList = [];
       }
     },
 
@@ -181,71 +188,25 @@ export default {
     },
 
     // 拨打电话
-    makeCall() {
-      if (!this.currentOrder) return;
+    makeCall(order) {
+      if (!order) return;
 
       uni.makePhoneCall({
-        phoneNumber: this.currentOrder.contactPhone
+        phoneNumber: order.contactPhone
       });
-    },
-
-    // 完成配送
-    async handleFinish() {
-      if (!this.currentOrder) return;
-
-      // 先上传完成凭证图片
-      uni.chooseImage({
-        count: 1,
-        success: (res) => {
-          const tempFilePath = res.tempFilePaths[0];
-          this.confirmFinish(tempFilePath);
-        }
-      });
-    },
-
-    // 确认完成
-    async confirmFinish(imagePath) {
-      try {
-        uni.showLoading({ title: '上传中...', mask: true });
-
-        // TODO: 上传图片
-        const finishImg = imagePath;
-
-        await finishOrder({
-          orderId: this.currentOrder.id,
-          finishImg: finishImg
-        });
-
-        uni.hideLoading();
-
-        uni.showToast({
-          title: '配送完成',
-          icon: 'success'
-        });
-
-        // 刷新数据
-        setTimeout(() => {
-          this.loadCurrentOrder();
-          this.loadTodayStats();
-        }, 1500);
-
-      } catch (error) {
-        uni.hideLoading();
-        console.error('完成配送失败:', error);
-      }
     },
 
     // 完成订单（跳转到上传图片页面）
-    finishOrder() {
-      if (!this.currentOrder) return;
+    finishOrder(order) {
+      if (!order) return;
 
       // 将订单信息编码后传递给上传页面
       const orderInfo = encodeURIComponent(JSON.stringify({
-        deliveryAddr: this.currentOrder.deliveryAddr
+        deliveryAddr: order.deliveryAddr
       }));
 
       uni.navigateTo({
-        url: `/pages/upload-finish/upload-finish?orderId=${this.currentOrder.id}&orderInfo=${orderInfo}`
+        url: `/pages/upload-finish/upload-finish?orderId=${order.id}&orderInfo=${orderInfo}`
       });
     },
 

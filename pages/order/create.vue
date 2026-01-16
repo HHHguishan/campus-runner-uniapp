@@ -364,6 +364,17 @@ export default {
         return false
       }
 
+      // 验证经纬度坐标（确保地址在地图上点选过）
+      if (!this.formData.pickupAddress.lat || !this.formData.pickupAddress.lng) {
+        uni.showToast({ title: '取件地址缺少坐标，请重新选择', icon: 'none' })
+        return false
+      }
+
+      if (!this.formData.deliveryAddress.lat || !this.formData.deliveryAddress.lng) {
+        uni.showToast({ title: '送达地址缺少坐标，请重新选择', icon: 'none' })
+        return false
+      }
+
       // 验证手机号
       const phoneReg = /^1[3-9]\d{9}$/
       if (!phoneReg.test(this.formData.contactPhone)) {
@@ -373,6 +384,17 @@ export default {
 
       if (!this.formData.contactName.trim()) {
         uni.showToast({ title: '请输入联系人姓名', icon: 'none' })
+        return false
+      }
+
+      // 增加防呆检查：防止使用带有北京默认坐标的地址（如果是外地地址）
+      if (this.formData.pickupAddress.lat && Math.abs(this.formData.pickupAddress.lat - 39.9) < 0.1 && !this.formData.pickupAddress.detail.includes('北京')) {
+        uni.showToast({ title: '取件地址定位异常（在北京），请前往地址管理重新开启地图选点', icon: 'none', duration: 3000 })
+        return false
+      }
+
+      if (this.formData.deliveryAddress.lat && Math.abs(this.formData.deliveryAddress.lat - 39.9) < 0.1 && !this.formData.deliveryAddress.detail.includes('北京')) {
+        uni.showToast({ title: '送达地址定位异常（在北京），请前往地址管理重新开启地图选点', icon: 'none', duration: 3000 })
         return false
       }
 
@@ -396,11 +418,11 @@ export default {
           type: this.formData.type, // 订单类型：1-帮买, 2-帮送, 3-帮取, 4-全能
           goodsDesc: this.formData.goodsDesc, // 物品描述
           pickupAddr: this.formData.pickupAddress.detail, // 取货地址（详细门牌号）
-          pickupLat: this.formData.pickupAddress.lat || 23.123456, // 取货纬度（默认值）
-          pickupLng: this.formData.pickupAddress.lng || 113.123456, // 取货经度（默认值）
+          pickupLat: this.formData.pickupAddress.lat, // 取货纬度
+          pickupLng: this.formData.pickupAddress.lng, // 取货经度
           deliveryAddr: this.formData.deliveryAddress.detail, // 送货地址（详细门牌号）
-          deliveryLat: this.formData.deliveryAddress.lat || 23.123456, // 送货纬度（默认值）
-          deliveryLng: this.formData.deliveryAddress.lng || 113.123456, // 送货经度（默认值）
+          deliveryLat: this.formData.deliveryAddress.lat, // 送达纬度
+          deliveryLng: this.formData.deliveryAddress.lng, // 送达经度
           contactName: this.formData.contactName, // 收货人姓名
           contactPhone: this.formData.contactPhone, // 收货人电话
           weight: this.formData.weight, // 重量（可选）
@@ -408,7 +430,7 @@ export default {
           distance: this.formData.distance || undefined // 距离（可选）
         }
 
-        console.log('📤 提交订单数据:', orderData)
+        console.log('📤 [CREATE] 准备提交订单数据:', JSON.stringify(orderData, null, 2))
 
         const res = await createOrder(orderData)
 

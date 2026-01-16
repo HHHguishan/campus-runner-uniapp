@@ -92,3 +92,21 @@ export function payOrder(data) {
 export function alipayPayOrder(data) {
   return post('/pay/alipay', data)
 }
+
+/**
+ * 上报位置(骑手端)
+ * @param {Object} data - 位置数据
+ * @returns {Promise}
+ */
+export function reportLocation(data) {
+  return post('/order/location/report', data)
+}
+
+/**
+ * 获取骑手最新位置(用户端)
+ * @param {Number} orderId - 订单ID
+ * @returns {Promise}
+ */
+export function getRiderLocation(orderId) {
+  return get(`/order/location/${orderId}`)
+}

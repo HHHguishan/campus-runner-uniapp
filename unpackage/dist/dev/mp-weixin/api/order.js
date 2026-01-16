@@ -24,12 +24,20 @@ function payOrder(data) {
 function alipayPayOrder(data) {
   return utils_request.post("/pay/alipay", data);
 }
+function reportLocation(data) {
+  return utils_request.post("/order/location/report", data);
+}
+function getRiderLocation(orderId) {
+  return utils_request.get(`/order/location/${orderId}`);
+}
 exports.alipayPayOrder = alipayPayOrder;
 exports.cancelOrder = cancelOrder;
 exports.createOrder = createOrder;
 exports.getEvaluationDetail = getEvaluationDetail;
 exports.getOrderDetail = getOrderDetail;
 exports.getOrderList = getOrderList;
+exports.getRiderLocation = getRiderLocation;
 exports.payOrder = payOrder;
+exports.reportLocation = reportLocation;
 exports.submitEvaluation = submitEvaluation;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/order.js.map

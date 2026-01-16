@@ -13,6 +13,20 @@
 
     <!-- 订单内容 -->
     <scroll-view class="detail-content" scroll-y>
+      <!-- 地图展示 (仅在配送中、待接单或已完成且有坐标时显示) -->
+      <view class="map-section" v-if="orderInfo && (orderStatus === 1 || orderStatus === 2 || orderStatus === 3)">
+        <map 
+          id="orderMap"
+          class="order-map" 
+          :latitude="mapCenter.latitude" 
+          :longitude="mapCenter.longitude" 
+          :markers="markers"
+          :polyline="polyline"
+          :include-points="markers"
+          show-location
+        ></map>
+      </view>
+
       <!-- 订单状态卡片 -->
       <view class="status-card" :class="'status-' + orderStatus">
         <view class="status-icon">
@@ -206,7 +220,10 @@
 </template>
 
 <script>
-import { getOrderDetail, cancelOrder } from '@/api/order.js'
+import { getOrderDetail, cancelOrder, reportLocation, getRiderLocation } from '@/api/order.js'
+import { getBaiduLocation } from '@/utils/location.js'
+import { getUserInfo } from '@/utils/token.js'
+import riderTracker from '@/utils/tracker.js'
 
 export default {
   data() {
@@ -216,7 +233,13 @@ export default {
       riderInfo: null,
       orderStatus: 0, // 0-待支付, 1-待接单, 2-配送中, 3-已完成, 4-已取消
       countdown: -1, // 倒计时秒数
-      countdownTimer: null // 倒计时定时器
+      countdownTimer: null, // 倒计时定时器
+      
+      // 地图相关数据
+      mapCenter: { latitude: 22.817, longitude: 108.366 }, // 默认南宁
+      markers: [],
+      polyline: [],
+      trackingTimer: null, // 位置追踪定时器 (拉取或报)
     }
   },
 
@@ -247,6 +270,7 @@ export default {
   onUnload() {
     // 页面卸载时清除定时器
     this.stopCountdown()
+    this.stopTracking()
   },
 
   methods: {
@@ -286,6 +310,12 @@ export default {
               this.countdown = 0
             }
           }
+
+          // 处理地图标注
+          this.initMapMarkers()
+
+          // 处理位置追踪逻辑
+          this.handleTracking()
         } else {
           uni.showToast({
             title: res.message || '加载失败',
@@ -585,12 +615,238 @@ export default {
       const minutes = Math.floor(seconds / 60)
       const secs = seconds % 60
       return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+    },
+
+    /**
+     * 初始化地图标记
+     */
+    initMapMarkers() {
+      if (!this.orderInfo || !this.orderInfo.pickupLat) return
+
+      const markers = [
+        {
+          id: 1,
+          latitude: this.orderInfo.pickupLat,
+          longitude: this.orderInfo.pickupLng,
+          title: '取件点',
+          iconPath: '/static/icons/marker_pickup.png',
+          width: 32,
+          height: 32,
+          anchor: { x: 0.5, y: 1 },
+          label: { content: '取', color: '#667eea', bgColor: '#fff', padding: 4, borderRadius: 10, fontSize: 10 },
+          callout: {
+            content: this.orderInfo.pickupAddr || '取货地',
+            color: '#333',
+            fontSize: 12,
+            borderRadius: 4,
+            bgColor: '#fff',
+            padding: 6,
+            display: 'ALWAYS'
+          }
+        },
+        {
+          id: 2,
+          latitude: this.orderInfo.deliveryLat,
+          longitude: this.orderInfo.deliveryLng,
+          title: '送达点',
+          iconPath: '/static/icons/marker_delivery.png',
+          width: 32,
+          height: 32,
+          anchor: { x: 0.5, y: 1 },
+          label: { content: '收', color: '#ff4d4f', bgColor: '#fff', padding: 4, borderRadius: 10, fontSize: 10 },
+          callout: {
+            content: this.orderInfo.deliveryAddr || '送货地',
+            color: '#333',
+            fontSize: 12,
+            borderRadius: 4,
+            bgColor: '#fff',
+            padding: 6,
+            display: 'ALWAYS'
+          }
+        }
+      ]
+
+      this.markers = markers
+      this.mapCenter = {
+        latitude: (this.orderInfo.pickupLat + this.orderInfo.deliveryLat) / 2,
+        longitude: (this.orderInfo.pickupLng + this.orderInfo.deliveryLng) / 2
+      }
+
+      console.log('🗺️ [DETAIL] 地图标注初始化:', {
+        markersCount: markers.length,
+        pickup: [this.orderInfo.pickupLat, this.orderInfo.pickupLng],
+        delivery: [this.orderInfo.deliveryLat, this.orderInfo.deliveryLng],
+        center: this.mapCenter
+      })
+
+      // 画出起终点连线
+      this.polyline = [{
+        points: [
+          { latitude: this.orderInfo.pickupLat, longitude: this.orderInfo.pickupLng },
+          { latitude: this.orderInfo.deliveryLat, longitude: this.orderInfo.deliveryLng }
+        ],
+        color: '#667eea',
+        width: 4,
+        dottedLine: true
+      }]
+
+      // 强制触发 includePoints
+      this.$nextTick(() => {
+        const mapCtx = uni.createMapContext('orderMap', this)
+        mapCtx.includePoints({
+          padding: [50, 50, 50, 50],
+          points: this.markers
+        })
+      })
+    },
+
+    /**
+     * 处理位置追踪逻辑
+     */
+    handleTracking() {
+      this.stopTracking()
+
+      const user = getUserInfo()
+      const currentUserId = user ? user.id : null
+      
+      console.log('🧐 [DETAIL] 追踪权限检查:', {
+        orderId: this.orderId,
+        runnerId: this.orderInfo.runnerId,
+        userId: this.orderInfo.userId,
+        currentUserId: currentUserId,
+        status: this.orderStatus
+      })
+
+      if (this.orderInfo.runnerId && this.orderInfo.runnerId == currentUserId) {
+        console.log('🏁 当前用户是骑手，开启追踪和拉取')
+        // 我是骑手 -> 开启全局位置追踪（即使离开详情页也会继续上报）
+        riderTracker.checkAndStart();
+        // 同时也拉取位置，以便在此显示自己的图标
+        this.startUserPolling()
+      } else if (this.orderInfo.userId && this.orderInfo.userId == currentUserId) {
+        console.log('🏁 当前用户是客，开启拉取')
+        // 我是发单人 -> 只要是配送中(2)或已完成(3)就尝试拉取位置
+        if (this.orderStatus === 2 || this.orderStatus === 3) {
+          this.startUserPolling()
+        } else {
+          console.log('⏭️ 订单非配送中/已完成状态，跳过拉取')
+        }
+      } else {
+        console.log('🚷 无权限开启位置追踪')
+      }
+    },
+    /**
+     * 用户端：拉取位置
+     */
+    startUserPolling() {
+      console.log('👀 用户端：开启轨迹拉取定时器')
+      
+      const doPoll = async () => {
+        try {
+          const res = await getRiderLocation(this.orderId)
+          if (res.code === 200 && res.data) {
+            console.log('🏎️ [POLL] 收到骑手位置数据:', JSON.stringify(res.data))
+            this.updateRiderMarker(res.data.latitude, res.data.longitude)
+          } else {
+            console.log('🏎️ [POLL] 接口返回空或失败:', res)
+          }
+        } catch (err) {
+          console.error('❌ 拉取轨迹失败:', err)
+        }
+      }
+
+      doPoll()
+      this.trackingTimer = setInterval(doPoll, 15000) // 15秒一次
+    },
+
+    updateRiderMarker(lat, lng) {
+      if (!lat || !lng) {
+        console.warn('⚠️ updateRiderMarker: 坐标无效', lat, lng)
+        return
+      }
+      
+      const riderMarkerId = 999
+      const latNum = Number(lat)
+      const lngNum = Number(lng)
+      
+      console.log('📍 [DETAIL] 更新骑手标点:', latNum, lngNum)
+      
+      const existingIndex = this.markers.findIndex(m => m.id === riderMarkerId)
+      
+      const riderMarker = {
+        id: riderMarkerId,
+        latitude: latNum,
+        longitude: lngNum,
+        title: '骑手位置',
+        iconPath: '/static/icons/marker_rider.png',
+        width: 36,
+        height: 36,
+        zIndex: 999,
+        // 如果上面都不显示，尝试不加这些复杂配置看看
+        anchor: { x: 0.5, y: 0.5 },
+        // 添加文字标签，防止图片加载失败时看不见
+        label: {
+          content: '配送中',
+          color: '#ffffff',
+          fontSize: 10,
+          bgColor: '#07c160',
+          padding: 3,
+          borderRadius: 5,
+          anchorX: 0,
+          anchorY: -40
+        }
+      }
+
+      if (existingIndex > -1) {
+        this.$set(this.markers, existingIndex, riderMarker)
+        console.log('✅ 已使用 $set 更新现有骑手标点')
+      } else {
+        this.markers = [...this.markers, riderMarker]
+        console.log('✅ 已使用解构赋值新增骑手标点，当前总标点数:', this.markers.length)
+      }
+      
+      console.log('🔍 当前所有标记详情 (仅经纬度):', this.markers.map(m => ({ id: m.id, lat: m.latitude, lng: m.longitude })))
+
+      // 实时调整视野以包含骑手
+      this.$nextTick(() => {
+        const mapCtx = uni.createMapContext('orderMap', this)
+        mapCtx.includePoints({
+          padding: [80, 80, 80, 80],
+          points: this.markers
+        })
+      })
+    },
+
+    /**
+     * 停止追踪
+     */
+    stopTracking() {
+      if (this.trackingTimer) {
+        clearInterval(this.trackingTimer)
+        this.trackingTimer = null
+        console.log('⏹️ 位置追踪已停止')
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+/* 地图区域 */
+.map-section {
+  width: 100%;
+  height: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.order-map {
+  width: 100%;
+  height: 100%;
+}
+
 .order-detail-container {
   min-height: 100vh;
   background-color: #f5f5f5;

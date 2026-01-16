@@ -42,8 +42,8 @@ export function getBaiduLocation() {
                             const locationData = res.wxMarkerData[0]
 
                             const result = {
-                                latitude: locationData.latitude,
-                                longitude: locationData.longitude,
+                                latitude: locRes.latitude,
+                                longitude: locRes.longitude,
                                 address: res.originalData.result.formatted_address,
                                 addressComponent: res.originalData.result.addressComponent,
                                 business: res.originalData.result.business,

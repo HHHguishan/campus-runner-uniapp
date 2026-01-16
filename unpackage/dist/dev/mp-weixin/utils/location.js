@@ -25,10 +25,10 @@ function getBaiduLocation() {
           success: (res) => {
             common_vendor.index.__f__("log", "at utils/location.js:39", "✅ 百度地图解析成功:", res);
             if (res.wxMarkerData && res.wxMarkerData.length > 0) {
-              const locationData = res.wxMarkerData[0];
+              res.wxMarkerData[0];
               const result = {
-                latitude: locationData.latitude,
-                longitude: locationData.longitude,
+                latitude: locRes.latitude,
+                longitude: locRes.longitude,
                 address: res.originalData.result.formatted_address,
                 addressComponent: res.originalData.result.addressComponent,
                 business: res.originalData.result.business,

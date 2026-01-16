@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const api_rider = require("../../api/rider.js");
+const utils_tracker = require("../../utils/tracker.js");
 const RiderNav = () => "../../components/rider-nav/rider-nav.js";
 const _sfc_main = {
   components: {
@@ -8,48 +9,51 @@ const _sfc_main = {
   },
   data() {
     return {
-      currentOrder: null,
-      // 当前配送订单
+      orderList: [],
+      // 配送中的订单列表
       todayStats: {
-        completedOrders: 8,
-        todayEarnings: "125.50",
-        rating: 4.9
+        completedOrders: 0,
+        todayEarnings: "0.00",
+        rating: 5
       }
     };
   },
   onLoad() {
-    this.loadCurrentOrder();
+    this.loadOrderList();
     this.loadTodayStats();
   },
   onShow() {
-    this.loadCurrentOrder();
+    this.loadOrderList();
   },
   methods: {
-    // 加载当前配送订单
-    async loadCurrentOrder() {
+    // 加载当前配送订单列表
+    async loadOrderList() {
       try {
         const result = await api_rider.getRiderOrders({
           page: 1,
-          size: 1,
+          size: 20,
+          // 获取更多订单
           status: 2
           // 配送中
         });
-        if (result.data && result.data.records && result.data.records.length > 0) {
-          const order = result.data.records[0];
-          this.currentOrder = {
+        if (result.data && result.data.records) {
+          this.orderList = result.data.records.map((order) => ({
             id: order.id,
             pickupAddr: order.pickupAddr,
             deliveryAddr: order.deliveryAddr,
             contactName: order.contactName,
             contactPhone: order.contactPhone,
             goodsDesc: order.goodsDesc
-          };
+          }));
+          if (this.orderList.length > 0) {
+            utils_tracker.riderTracker.checkAndStart();
+          }
         } else {
-          this.currentOrder = null;
+          this.orderList = [];
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/running/running.vue:159", "获取当前订单失败:", error);
-        this.currentOrder = null;
+        common_vendor.index.__f__("error", "at pages/running/running.vue:166", "获取订单列表失败:", error);
+        this.orderList = [];
       }
     },
     // 加载今日统计
@@ -64,61 +68,26 @@ const _sfc_main = {
           };
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/running/running.vue:179", "获取统计数据失败:", error);
+        common_vendor.index.__f__("error", "at pages/running/running.vue:186", "获取统计数据失败:", error);
       }
     },
     // 拨打电话
-    makeCall() {
-      if (!this.currentOrder)
+    makeCall(order) {
+      if (!order)
         return;
       common_vendor.index.makePhoneCall({
-        phoneNumber: this.currentOrder.contactPhone
+        phoneNumber: order.contactPhone
       });
-    },
-    // 完成配送
-    async handleFinish() {
-      if (!this.currentOrder)
-        return;
-      common_vendor.index.chooseImage({
-        count: 1,
-        success: (res) => {
-          const tempFilePath = res.tempFilePaths[0];
-          this.confirmFinish(tempFilePath);
-        }
-      });
-    },
-    // 确认完成
-    async confirmFinish(imagePath) {
-      try {
-        common_vendor.index.showLoading({ title: "上传中...", mask: true });
-        const finishImg = imagePath;
-        await api_rider.finishOrder({
-          orderId: this.currentOrder.id,
-          finishImg
-        });
-        common_vendor.index.hideLoading();
-        common_vendor.index.showToast({
-          title: "配送完成",
-          icon: "success"
-        });
-        setTimeout(() => {
-          this.loadCurrentOrder();
-          this.loadTodayStats();
-        }, 1500);
-      } catch (error) {
-        common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/running/running.vue:234", "完成配送失败:", error);
-      }
     },
     // 完成订单（跳转到上传图片页面）
-    finishOrder() {
-      if (!this.currentOrder)
+    finishOrder(order) {
+      if (!order)
         return;
       const orderInfo = encodeURIComponent(JSON.stringify({
-        deliveryAddr: this.currentOrder.deliveryAddr
+        deliveryAddr: order.deliveryAddr
       }));
       common_vendor.index.navigateTo({
-        url: `/pages/upload-finish/upload-finish?orderId=${this.currentOrder.id}&orderInfo=${orderInfo}`
+        url: `/pages/upload-finish/upload-finish?orderId=${order.id}&orderInfo=${orderInfo}`
       });
     },
     // 前往接单大厅
@@ -142,20 +111,26 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     a: common_vendor.p({
       ["current-page"]: "running"
     }),
-    b: $data.currentOrder
-  }, $data.currentOrder ? {
-    c: common_vendor.t($data.currentOrder.pickupAddr),
-    d: common_vendor.t($data.currentOrder.deliveryAddr),
-    e: common_vendor.t($data.currentOrder.contactName),
-    f: common_vendor.t($data.currentOrder.contactPhone),
-    g: common_vendor.o((...args) => $options.makeCall && $options.makeCall(...args)),
-    h: common_vendor.o((...args) => $options.finishOrder && $options.finishOrder(...args))
+    b: $data.orderList.length > 0
+  }, $data.orderList.length > 0 ? {
+    c: common_vendor.f($data.orderList, (order, k0, i0) => {
+      return {
+        a: common_vendor.t(order.id),
+        b: common_vendor.t(order.pickupAddr),
+        c: common_vendor.t(order.deliveryAddr),
+        d: common_vendor.t(order.contactName),
+        e: common_vendor.t(order.contactPhone),
+        f: common_vendor.o(($event) => $options.makeCall(order), order.id),
+        g: common_vendor.o(($event) => $options.finishOrder(order), order.id),
+        h: order.id
+      };
+    })
   } : {
-    i: common_vendor.o((...args) => $options.goToHall && $options.goToHall(...args))
+    d: common_vendor.o((...args) => $options.goToHall && $options.goToHall(...args))
   }, {
-    j: common_vendor.t($data.todayStats.completedOrders || 0),
-    k: common_vendor.t($data.todayStats.todayEarnings || 0),
-    l: common_vendor.t($data.todayStats.rating || 5)
+    e: common_vendor.t($data.todayStats.completedOrders || 0),
+    f: common_vendor.t($data.todayStats.todayEarnings || 0),
+    g: common_vendor.t($data.todayStats.rating || 5)
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-f47c4c53"]]);

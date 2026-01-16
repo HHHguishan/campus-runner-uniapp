@@ -2,6 +2,7 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const utils_token = require("./utils/token.js");
+const utils_tracker = require("./utils/tracker.js");
 if (!Math) {
   "./pages/index/index.js";
   "./pages/orders/orders.js";
@@ -38,19 +39,24 @@ if (!Math) {
 }
 const _sfc_main = {
   onLaunch: function() {
-    common_vendor.index.__f__("log", "at App.vue:6", "App Launch");
+    common_vendor.index.__f__("log", "at App.vue:7", "App Launch");
     const token = utils_token.getToken();
-    if (!token) {
+    if (token) {
+      utils_tracker.riderTracker.init();
+    } else {
       common_vendor.index.reLaunch({
         url: "/pages/login/login"
       });
     }
   },
   onShow: function() {
-    common_vendor.index.__f__("log", "at App.vue:18", "App Show");
+    common_vendor.index.__f__("log", "at App.vue:22", "App Show");
+    if (utils_token.getToken()) {
+      utils_tracker.riderTracker.checkAndStart();
+    }
   },
   onHide: function() {
-    common_vendor.index.__f__("log", "at App.vue:21", "App Hide");
+    common_vendor.index.__f__("log", "at App.vue:29", "App Hide");
   }
 };
 function createApp() {

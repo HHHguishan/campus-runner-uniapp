@@ -25,6 +25,24 @@ const _sfc_main = {
       }
     };
   },
+  computed: {
+    hasCoords() {
+      return this.formData.lat && this.formData.lng;
+    },
+    isBeijingCoord() {
+      if (!this.hasCoords)
+        return false;
+      return Math.abs(this.formData.lat - 39.9) < 0.1 && Math.abs(this.formData.lng - 116.4) < 0.1;
+    },
+    coordStatusText() {
+      if (!this.hasCoords)
+        return "未设置定位坐标，请点击地图选点";
+      if (this.isBeijingCoord && !this.formData.detail.includes("北京")) {
+        return "检测到定位可能在异常区域（北京），请重选";
+      }
+      return `位置已设定 (${this.formData.lat.toFixed(3)}, ${this.formData.lng.toFixed(3)})`;
+    }
+  },
   onLoad(options) {
     if (options.id) {
       this.isEdit = true;
@@ -52,7 +70,7 @@ const _sfc_main = {
             lat: data.lat,
             lng: data.lng
           };
-          common_vendor.index.__f__("log", "at pages/address/edit.vue:137", "✅ 地址详情加载成功:", this.formData);
+          common_vendor.index.__f__("log", "at pages/address/edit.vue:163", "✅ 地址详情加载成功:", this.formData);
         } else {
           common_vendor.index.showToast({
             title: "加载失败",
@@ -61,7 +79,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/address/edit.vue:146", "❌ 加载地址详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/edit.vue:172", "❌ 加载地址详情失败:", error);
         common_vendor.index.showToast({
           title: "加载失败，请稍后重试",
           icon: "none"
@@ -114,7 +132,61 @@ const _sfc_main = {
         });
         return false;
       }
+      if (this.formData.lat && Math.abs(this.formData.lat - 39.9) < 0.1 && !this.formData.detail.includes("北京")) {
+        common_vendor.index.showToast({
+          title: "检测到定位在异常区域（北京），请在地图选点重新选择",
+          icon: "none",
+          duration: 3e3
+        });
+        return false;
+      }
       return true;
+    },
+    /**
+     * 从地图选择位置
+     */
+    async chooseFromMap() {
+      let centerLat = 22.817;
+      let centerLng = 108.366;
+      try {
+        const loc = await new Promise((resolve) => {
+          common_vendor.index.getLocation({ type: "gcj02", success: resolve, fail: () => resolve(null) });
+        });
+        if (loc) {
+          centerLat = loc.latitude;
+          centerLng = loc.longitude;
+        }
+      } catch (e) {
+      }
+      common_vendor.index.chooseLocation({
+        latitude: centerLat,
+        longitude: centerLng,
+        success: (res) => {
+          common_vendor.index.__f__("log", "at pages/address/edit.vue:267", "📍 [EDIT] 地图选点结果 Raw:", JSON.stringify(res));
+          this.formData.addressName = res.name || "";
+          this.formData.detail = res.address || "";
+          this.formData.lat = res.latitude;
+          this.formData.lng = res.longitude;
+          common_vendor.index.showToast({
+            title: "位置已同步",
+            icon: "none"
+          });
+        },
+        fail: (err) => {
+          common_vendor.index.__f__("error", "at pages/address/edit.vue:280", "❌ 地图选点失败:", err);
+          if (err.errMsg.indexOf("auth deny") > -1) {
+            common_vendor.index.showModal({
+              title: "提示",
+              content: "请在设置中开启位置权限",
+              success: (modalRes) => {
+                if (modalRes.confirm) {
+                  common_vendor.index.openSetting();
+                }
+              }
+            });
+          }
+        }
+      });
     },
     /**
      * 保存地址
@@ -150,7 +222,7 @@ const _sfc_main = {
         }
       } catch (error) {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/address/edit.vue:255", "❌ 保存地址失败:", error);
+        common_vendor.index.__f__("error", "at pages/address/edit.vue:341", "❌ 保存地址失败:", error);
         common_vendor.index.showToast({
           title: "保存失败，请稍后重试",
           icon: "none"
@@ -172,15 +244,20 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     c: common_vendor.o((...args) => $options.saveAddress && $options.saveAddress(...args)),
     d: $data.formData.addressName,
     e: common_vendor.o(($event) => $data.formData.addressName = $event.detail.value),
-    f: $data.formData.contactName,
-    g: common_vendor.o(($event) => $data.formData.contactName = $event.detail.value),
-    h: $data.formData.contactPhone,
-    i: common_vendor.o(($event) => $data.formData.contactPhone = $event.detail.value),
-    j: $data.formData.detail,
-    k: common_vendor.o(($event) => $data.formData.detail = $event.detail.value),
-    l: $data.formData.isDefault === 1,
-    m: common_vendor.o((...args) => $options.onDefaultChange && $options.onDefaultChange(...args)),
-    n: common_vendor.o((...args) => $options.saveAddress && $options.saveAddress(...args))
+    f: common_vendor.o((...args) => $options.chooseFromMap && $options.chooseFromMap(...args)),
+    g: $data.formData.contactName,
+    h: common_vendor.o(($event) => $data.formData.contactName = $event.detail.value),
+    i: $data.formData.contactPhone,
+    j: common_vendor.o(($event) => $data.formData.contactPhone = $event.detail.value),
+    k: $data.formData.detail,
+    l: common_vendor.o(($event) => $data.formData.detail = $event.detail.value),
+    m: common_vendor.t($options.isBeijingCoord ? "⚠️" : $options.hasCoords ? "✅" : "❓"),
+    n: common_vendor.t($options.coordStatusText),
+    o: $options.isBeijingCoord ? 1 : "",
+    p: $options.hasCoords && !$options.isBeijingCoord ? 1 : "",
+    q: $data.formData.isDefault === 1,
+    r: common_vendor.o((...args) => $options.onDefaultChange && $options.onDefaultChange(...args)),
+    s: common_vendor.o((...args) => $options.saveAddress && $options.saveAddress(...args))
   };
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-dcb1f0d8"]]);
