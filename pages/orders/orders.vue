@@ -373,15 +373,14 @@ export default {
       })
     },
 
-    /**
-     * 联系骑手
-     */
     contactRider(order) {
-      // TODO: 实现联系骑手功能
-      uni.showToast({
-        title: '功能开发中',
-        icon: 'none'
-      })
+      if (!order || !order.runnerId) {
+        uni.showToast({ title: '暂无骑手信息', icon: 'none' });
+        return;
+      }
+      uni.navigateTo({
+        url: `/pages/chat/index?orderId=${order.id}&receiverId=${order.runnerId}&role=rider&avatar=${encodeURIComponent(order.runnerAvatar || '')}`
+      });
     },
 
     /**

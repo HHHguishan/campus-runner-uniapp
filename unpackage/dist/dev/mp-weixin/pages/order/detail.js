@@ -189,12 +189,45 @@ const _sfc_main = {
       if (!this.riderInfo)
         return;
       common_vendor.index.showActionSheet({
-        itemList: ["拨打电话"],
+        itemList: ["拨打电话", "在线聊天"],
         success: (res) => {
           if (res.tapIndex === 0) {
             this.callRider();
+          } else if (res.tapIndex === 1) {
+            this.goToChat();
           }
         }
+      });
+    },
+    /**
+     * 进入聊天页面
+     */
+    goToChat() {
+      if (!this.orderInfo)
+        return;
+      const user = utils_token.getUserInfo();
+      const currentUserId = user ? user.id : null;
+      let receiverId = null;
+      let role = "";
+      let nickname = "";
+      let avatar = "";
+      if (this.orderInfo.userId == currentUserId) {
+        receiverId = this.orderInfo.runnerId;
+        role = "rider";
+        nickname = this.orderInfo.runnerName || "骑手";
+        avatar = this.orderInfo.runnerAvatar || "";
+      } else {
+        receiverId = this.orderInfo.userId;
+        role = "user";
+        nickname = this.orderInfo.userName || "用户";
+        avatar = this.orderInfo.userAvatar || "";
+      }
+      if (!receiverId) {
+        common_vendor.index.showToast({ title: "无法获取对方信息", icon: "none" });
+        return;
+      }
+      common_vendor.index.navigateTo({
+        url: `/pages/chat/index?orderId=${this.orderId}&receiverId=${receiverId}&role=${role}&nickname=${encodeURIComponent(nickname)}&avatar=${encodeURIComponent(avatar || "")}`
       });
     },
     /**
@@ -242,7 +275,7 @@ const _sfc_main = {
               }
             } catch (error) {
               common_vendor.index.hideLoading();
-              common_vendor.index.__f__("error", "at pages/order/detail.vue:496", "❌ 取消订单失败:", error);
+              common_vendor.index.__f__("error", "at pages/order/detail.vue:537", "❌ 取消订单失败:", error);
               common_vendor.index.showToast({
                 title: "取消失败，请稍后重试",
                 icon: "none"
@@ -412,7 +445,7 @@ const _sfc_main = {
         latitude: (this.orderInfo.pickupLat + this.orderInfo.deliveryLat) / 2,
         longitude: (this.orderInfo.pickupLng + this.orderInfo.deliveryLng) / 2
       };
-      common_vendor.index.__f__("log", "at pages/order/detail.vue:684", "🗺️ [DETAIL] 地图标注初始化:", {
+      common_vendor.index.__f__("log", "at pages/order/detail.vue:725", "🗺️ [DETAIL] 地图标注初始化:", {
         markersCount: markers.length,
         pickup: [this.orderInfo.pickupLat, this.orderInfo.pickupLng],
         delivery: [this.orderInfo.deliveryLat, this.orderInfo.deliveryLng],
@@ -442,7 +475,7 @@ const _sfc_main = {
       this.stopTracking();
       const user = utils_token.getUserInfo();
       const currentUserId = user ? user.id : null;
-      common_vendor.index.__f__("log", "at pages/order/detail.vue:721", "🧐 [DETAIL] 追踪权限检查:", {
+      common_vendor.index.__f__("log", "at pages/order/detail.vue:762", "🧐 [DETAIL] 追踪权限检查:", {
         orderId: this.orderId,
         runnerId: this.orderInfo.runnerId,
         userId: this.orderInfo.userId,
@@ -450,36 +483,36 @@ const _sfc_main = {
         status: this.orderStatus
       });
       if (this.orderInfo.runnerId && this.orderInfo.runnerId == currentUserId) {
-        common_vendor.index.__f__("log", "at pages/order/detail.vue:730", "🏁 当前用户是骑手，开启追踪和拉取");
+        common_vendor.index.__f__("log", "at pages/order/detail.vue:771", "🏁 当前用户是骑手，开启追踪和拉取");
         utils_tracker.riderTracker.checkAndStart();
         this.startUserPolling();
       } else if (this.orderInfo.userId && this.orderInfo.userId == currentUserId) {
-        common_vendor.index.__f__("log", "at pages/order/detail.vue:736", "🏁 当前用户是客，开启拉取");
+        common_vendor.index.__f__("log", "at pages/order/detail.vue:777", "🏁 当前用户是客，开启拉取");
         if (this.orderStatus === 2 || this.orderStatus === 3) {
           this.startUserPolling();
         } else {
-          common_vendor.index.__f__("log", "at pages/order/detail.vue:741", "⏭️ 订单非配送中/已完成状态，跳过拉取");
+          common_vendor.index.__f__("log", "at pages/order/detail.vue:782", "⏭️ 订单非配送中/已完成状态，跳过拉取");
         }
       } else {
-        common_vendor.index.__f__("log", "at pages/order/detail.vue:744", "🚷 无权限开启位置追踪");
+        common_vendor.index.__f__("log", "at pages/order/detail.vue:785", "🚷 无权限开启位置追踪");
       }
     },
     /**
      * 用户端：拉取位置
      */
     startUserPolling() {
-      common_vendor.index.__f__("log", "at pages/order/detail.vue:751", "👀 用户端：开启轨迹拉取定时器");
+      common_vendor.index.__f__("log", "at pages/order/detail.vue:792", "👀 用户端：开启轨迹拉取定时器");
       const doPoll = async () => {
         try {
           const res = await api_order.getRiderLocation(this.orderId);
           if (res.code === 200 && res.data) {
-            common_vendor.index.__f__("log", "at pages/order/detail.vue:757", "🏎️ [POLL] 收到骑手位置数据:", JSON.stringify(res.data));
+            common_vendor.index.__f__("log", "at pages/order/detail.vue:798", "🏎️ [POLL] 收到骑手位置数据:", JSON.stringify(res.data));
             this.updateRiderMarker(res.data.latitude, res.data.longitude);
           } else {
-            common_vendor.index.__f__("log", "at pages/order/detail.vue:760", "🏎️ [POLL] 接口返回空或失败:", res);
+            common_vendor.index.__f__("log", "at pages/order/detail.vue:801", "🏎️ [POLL] 接口返回空或失败:", res);
           }
         } catch (err) {
-          common_vendor.index.__f__("error", "at pages/order/detail.vue:763", "❌ 拉取轨迹失败:", err);
+          common_vendor.index.__f__("error", "at pages/order/detail.vue:804", "❌ 拉取轨迹失败:", err);
         }
       };
       doPoll();
@@ -487,13 +520,13 @@ const _sfc_main = {
     },
     updateRiderMarker(lat, lng) {
       if (!lat || !lng) {
-        common_vendor.index.__f__("warn", "at pages/order/detail.vue:773", "⚠️ updateRiderMarker: 坐标无效", lat, lng);
+        common_vendor.index.__f__("warn", "at pages/order/detail.vue:814", "⚠️ updateRiderMarker: 坐标无效", lat, lng);
         return;
       }
       const riderMarkerId = 999;
       const latNum = Number(lat);
       const lngNum = Number(lng);
-      common_vendor.index.__f__("log", "at pages/order/detail.vue:781", "📍 [DETAIL] 更新骑手标点:", latNum, lngNum);
+      common_vendor.index.__f__("log", "at pages/order/detail.vue:822", "📍 [DETAIL] 更新骑手标点:", latNum, lngNum);
       const existingIndex = this.markers.findIndex((m) => m.id === riderMarkerId);
       const riderMarker = {
         id: riderMarkerId,
@@ -521,12 +554,12 @@ const _sfc_main = {
       this.calculateRiderETA(latNum, lngNum);
       if (existingIndex > -1) {
         this.$set(this.markers, existingIndex, riderMarker);
-        common_vendor.index.__f__("log", "at pages/order/detail.vue:814", "✅ 已使用 $set 更新现有骑手标点");
+        common_vendor.index.__f__("log", "at pages/order/detail.vue:855", "✅ 已使用 $set 更新现有骑手标点");
       } else {
         this.markers = [...this.markers, riderMarker];
-        common_vendor.index.__f__("log", "at pages/order/detail.vue:817", "✅ 已使用解构赋值新增骑手标点，当前总标点数:", this.markers.length);
+        common_vendor.index.__f__("log", "at pages/order/detail.vue:858", "✅ 已使用解构赋值新增骑手标点，当前总标点数:", this.markers.length);
       }
-      common_vendor.index.__f__("log", "at pages/order/detail.vue:820", "🔍 当前所有标记详情 (仅经纬度):", this.markers.map((m) => ({ id: m.id, lat: m.latitude, lng: m.longitude })));
+      common_vendor.index.__f__("log", "at pages/order/detail.vue:861", "🔍 当前所有标记详情 (仅经纬度):", this.markers.map((m) => ({ id: m.id, lat: m.latitude, lng: m.longitude })));
       this.$nextTick(() => {
         const mapCtx = common_vendor.index.createMapContext("orderMap", this);
         mapCtx.includePoints({
@@ -561,7 +594,7 @@ const _sfc_main = {
       } else {
         this.arrivalTimeText = `预计 ${minutes} 分钟内送达`;
       }
-      common_vendor.index.__f__("log", "at pages/order/detail.vue:870", "📏 [ETA] 距离计算结果:", {
+      common_vendor.index.__f__("log", "at pages/order/detail.vue:911", "📏 [ETA] 距离计算结果:", {
         distance,
         distanceText: this.distanceText,
         time: minutes,
@@ -575,7 +608,7 @@ const _sfc_main = {
       if (this.trackingTimer) {
         clearInterval(this.trackingTimer);
         this.trackingTimer = null;
-        common_vendor.index.__f__("log", "at pages/order/detail.vue:885", "⏹️ 位置追踪已停止");
+        common_vendor.index.__f__("log", "at pages/order/detail.vue:926", "⏹️ 位置追踪已停止");
       }
     }
   }
@@ -641,13 +674,13 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     O: common_vendor.t($data.orderInfo.deliveryPhone),
     P: common_vendor.t($data.orderInfo.deliveryAddress || "-")
   } : {}, {
-    Q: $data.riderInfo
-  }, $data.riderInfo ? common_vendor.e({
-    R: common_vendor.t($data.riderInfo.realName ? $data.riderInfo.realName.substring(0, 1) : "骑"),
-    S: common_vendor.t($data.riderInfo.realName || "骑手"),
-    T: $data.riderInfo.averageRating
-  }, $data.riderInfo.averageRating ? {
-    U: common_vendor.t($data.riderInfo.averageRating.toFixed(1))
+    Q: $data.orderInfo && ($data.orderStatus >= 2 || $data.orderInfo.runnerId)
+  }, $data.orderInfo && ($data.orderStatus >= 2 || $data.orderInfo.runnerId) ? common_vendor.e({
+    R: $data.orderInfo.runnerAvatar || "/static/default-avatar.png",
+    S: common_vendor.t($data.orderInfo.runnerName || "骑手"),
+    T: $data.orderInfo.averageRating
+  }, $data.orderInfo.averageRating ? {
+    U: common_vendor.t($data.orderInfo.averageRating.toFixed(1))
   } : {}, {
     V: common_vendor.o((...args) => $options.callRider && $options.callRider(...args))
   }) : {}, {
@@ -670,7 +703,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   } : {}, {
     ag: $data.orderStatus === 2
   }, $data.orderStatus === 2 ? {
-    ah: common_vendor.o((...args) => $options.contactRider && $options.contactRider(...args))
+    ah: common_vendor.o((...args) => $options.goToChat && $options.goToChat(...args))
   } : {}, {
     ai: $data.orderStatus === 3 && ($data.orderInfo.rating === null || $data.orderInfo.rating === void 0)
   }, $data.orderStatus === 3 && ($data.orderInfo.rating === null || $data.orderInfo.rating === void 0) ? {

@@ -39,6 +39,12 @@ const _sfc_main = {
         if (result.data && result.data.records) {
           this.orderList = result.data.records.map((order) => ({
             id: order.id,
+            userId: order.userId,
+            // 新增：用于聊天
+            userName: order.userName,
+            // 新增：用户名称
+            userAvatar: order.userAvatar,
+            // 新增：用于聊天
             pickupAddr: order.pickupAddr,
             deliveryAddr: order.deliveryAddr,
             contactName: order.contactName,
@@ -52,7 +58,7 @@ const _sfc_main = {
           this.orderList = [];
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/running/running.vue:166", "获取订单列表失败:", error);
+        common_vendor.index.__f__("error", "at pages/running/running.vue:173", "获取订单列表失败:", error);
         this.orderList = [];
       }
     },
@@ -68,7 +74,7 @@ const _sfc_main = {
           };
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/running/running.vue:186", "获取统计数据失败:", error);
+        common_vendor.index.__f__("error", "at pages/running/running.vue:193", "获取统计数据失败:", error);
       }
     },
     // 拨打电话
@@ -77,6 +83,16 @@ const _sfc_main = {
         return;
       common_vendor.index.makePhoneCall({
         phoneNumber: order.contactPhone
+      });
+    },
+    // 进入聊天页面
+    goToChat(order) {
+      if (!order || !order.userId) {
+        common_vendor.index.showToast({ title: "无法获取用户信息", icon: "none" });
+        return;
+      }
+      common_vendor.index.navigateTo({
+        url: `/pages/chat/index?orderId=${order.id}&receiverId=${order.userId}&role=user&nickname=${encodeURIComponent(order.userName || "用户")}&avatar=${encodeURIComponent(order.userAvatar || "")}`
       });
     },
     // 完成订单（跳转到上传图片页面）
@@ -121,8 +137,9 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         d: common_vendor.t(order.contactName),
         e: common_vendor.t(order.contactPhone),
         f: common_vendor.o(($event) => $options.makeCall(order), order.id),
-        g: common_vendor.o(($event) => $options.finishOrder(order), order.id),
-        h: order.id
+        g: common_vendor.o(($event) => $options.goToChat(order), order.id),
+        h: common_vendor.o(($event) => $options.finishOrder(order), order.id),
+        i: order.id
       };
     })
   } : {

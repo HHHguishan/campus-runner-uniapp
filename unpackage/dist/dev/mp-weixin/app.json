@@ -34,7 +34,8 @@
     "pages/forum/index",
     "pages/forum/detail",
     "pages/forum/create",
-    "pages/forum/my-posts"
+    "pages/forum/my-posts",
+    "pages/chat/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

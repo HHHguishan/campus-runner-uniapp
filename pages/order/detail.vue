@@ -149,16 +149,16 @@
         </view>
       </view>
 
-      <!-- 骑手信息 -->
-      <view class="rider-section" v-if="riderInfo">
+      <!-- 骑手信息 (仅在有骑手接单后显示) -->
+      <view class="rider-section" v-if="orderInfo && (orderStatus >= 2 || orderInfo.runnerId)">
         <view class="section-title">骑手信息</view>
         <view class="rider-card">
           <view class="rider-avatar">
-            <text>{{ riderInfo.realName ? riderInfo.realName.substring(0, 1) : '骑' }}</text>
+            <image :src="orderInfo.runnerAvatar || '/static/default-avatar.png'" mode="aspectFill" style="width: 100%; height: 100%; border-radius: 50%;"></image>
           </view>
           <view class="rider-info">
-            <text class="rider-name">{{ riderInfo.realName || '骑手' }}</text>
-            <text class="rider-rating" v-if="riderInfo.averageRating">⭐ {{ riderInfo.averageRating.toFixed(1) }}</text>
+            <text class="rider-name">{{ orderInfo.runnerName || '骑手' }}</text>
+            <text class="rider-rating" v-if="orderInfo.averageRating">⭐ {{ orderInfo.averageRating.toFixed(1) }}</text>
           </view>
           <view class="rider-actions">
             <button class="btn-call" @click="callRider">
@@ -204,7 +204,7 @@
 
       <!-- 配送中状态 -->
       <view class="action-buttons" v-if="orderStatus === 2">
-        <button class="btn-primary" @click="contactRider">联系骑手</button>
+        <button class="btn-primary" @click="goToChat">联系对方</button>
       </view>
 
       <!-- 已完成状态 - 未评价 -->
@@ -433,12 +433,53 @@ export default {
       if (!this.riderInfo) return
 
       uni.showActionSheet({
-        itemList: ['拨打电话'],
+        itemList: ['拨打电话', '在线聊天'],
         success: (res) => {
           if (res.tapIndex === 0) {
             this.callRider()
+          } else if (res.tapIndex === 1) {
+            this.goToChat()
           }
         }
+      })
+    },
+
+    /**
+     * 进入聊天页面
+     */
+    goToChat() {
+      if (!this.orderInfo) return
+      
+      const user = getUserInfo()
+      const currentUserId = user ? user.id : null
+      
+      // 判断当前用户身份（发单人还是骑手）
+      let receiverId = null
+      let role = ''
+      let nickname = ''
+      let avatar = ''
+      
+      if (this.orderInfo.userId == currentUserId) {
+        // 我是发单人，接收者是骑手
+        receiverId = this.orderInfo.runnerId
+        role = 'rider'
+        nickname = this.orderInfo.runnerName || '骑手'
+        avatar = this.orderInfo.runnerAvatar || ''
+      } else {
+        // 我是骑手，接收者是用户
+        receiverId = this.orderInfo.userId
+        role = 'user'
+        nickname = this.orderInfo.userName || '用户'
+        avatar = this.orderInfo.userAvatar || ''
+      }
+      
+      if (!receiverId) {
+        uni.showToast({ title: '无法获取对方信息', icon: 'none' })
+        return
+      }
+
+      uni.navigateTo({
+        url: `/pages/chat/index?orderId=${this.orderId}&receiverId=${receiverId}&role=${role}&nickname=${encodeURIComponent(nickname)}&avatar=${encodeURIComponent(avatar || '')}`
       })
     },
 

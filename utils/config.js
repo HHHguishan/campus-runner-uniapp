@@ -2,8 +2,8 @@
  * 后端API配置
  */
 
-// 后端API基础地址 (切换为 cpolar 地址以支持手机 4G/5G 访问)
-export const BASE_URL = 'https://62390432.r18.cpolar.top'
+// 后端API基础地址 (切换为局域网 IP 直连)
+export const BASE_URL = 'http://192.168.22.204:9090'
 
 // API版本
 export const API_VERSION = '/api'

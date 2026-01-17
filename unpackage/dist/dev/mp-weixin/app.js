@@ -40,6 +40,7 @@ if (!Math) {
   "./pages/forum/detail.js";
   "./pages/forum/create.js";
   "./pages/forum/my-posts.js";
+  "./pages/chat/index.js";
 }
 const _sfc_main = {
   onLaunch: function() {

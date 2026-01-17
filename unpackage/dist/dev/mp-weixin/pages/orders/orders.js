@@ -205,13 +205,13 @@ const _sfc_main = {
         }
       });
     },
-    /**
-     * 联系骑手
-     */
     contactRider(order) {
-      common_vendor.index.showToast({
-        title: "功能开发中",
-        icon: "none"
+      if (!order || !order.runnerId) {
+        common_vendor.index.showToast({ title: "暂无骑手信息", icon: "none" });
+        return;
+      }
+      common_vendor.index.navigateTo({
+        url: `/pages/chat/index?orderId=${order.id}&receiverId=${order.runnerId}&role=rider&avatar=${encodeURIComponent(order.runnerAvatar || "")}`
       });
     },
     /**

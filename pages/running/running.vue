@@ -62,6 +62,10 @@
             <text class="btn-icon">📞</text>
             <text>拨打电话</text>
           </button>
+          <button class="action-btn chat-btn" @tap="goToChat(order)">
+            <text class="btn-icon">💬</text>
+            <text>联系用户</text>
+          </button>
           <button class="action-btn finish-btn" @tap="finishOrder(order)">
             <text class="btn-icon">✅</text>
             <text>完成配送</text>
@@ -147,6 +151,9 @@ export default {
         if (result.data && result.data.records) {
           this.orderList = result.data.records.map(order => ({
             id: order.id,
+            userId: order.userId, // 新增：用于聊天
+            userName: order.userName, // 新增：用户名称
+            userAvatar: order.userAvatar, // 新增：用于聊天
             pickupAddr: order.pickupAddr,
             deliveryAddr: order.deliveryAddr,
             contactName: order.contactName,
@@ -193,6 +200,17 @@ export default {
 
       uni.makePhoneCall({
         phoneNumber: order.contactPhone
+      });
+    },
+
+    // 进入聊天页面
+    goToChat(order) {
+      if (!order || !order.userId) {
+        uni.showToast({ title: '无法获取用户信息', icon: 'none' });
+        return;
+      }
+      uni.navigateTo({
+        url: `/pages/chat/index?orderId=${order.id}&receiverId=${order.userId}&role=user&nickname=${encodeURIComponent(order.userName || '用户')}&avatar=${encodeURIComponent(order.userAvatar || '')}`
       });
     },
 
@@ -393,6 +411,11 @@ export default {
 .call-btn {
   background: #f5f5f5;
   color: #333;
+}
+
+.chat-btn {
+  background: #e1f5fe;
+  color: #039be5;
 }
 
 .finish-btn {
