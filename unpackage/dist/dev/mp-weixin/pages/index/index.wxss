@@ -62,7 +62,7 @@
   left: 0;
   right: 0;
   height: 640rpx;
-  background: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
   border-radius: 0 0 80rpx 80rpx;
   z-index: 0;
 }
@@ -201,7 +201,7 @@
 /* 发布卡片 */
 .publish-card.data-v-1cf27b2a {
   margin: 0 30rpx 40rpx;
-  background: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
   border-radius: 32rpx;
   padding: 40rpx;
   display: flex;
@@ -238,7 +238,7 @@
   background: #fff;
   padding: 18rpx 36rpx;
   border-radius: 40rpx;
-  color: #07c160;
+  color: #0081ff;
   font-size: 28rpx;
   font-weight: 700;
   display: flex;
@@ -396,10 +396,10 @@
 }
 .section-header-modern .more-btn.data-v-1cf27b2a {
   font-size: 26rpx;
-  color: #07c160;
+  color: #0081ff;
   font-weight: 700;
   padding: 12rpx 32rpx;
-  background: #e6f7ef;
+  background: #eef7ff;
   border-radius: 32rpx;
   transition: all 0.2s;
 }
@@ -433,7 +433,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(10rpx);
           backdrop-filter: blur(10rpx);
   display: flex;
@@ -449,7 +449,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8rpx 32rpx 0 rgba(7, 193, 96, 0.08);
+  box-shadow: 0 8rpx 32rpx 0 rgba(0, 129, 255, 0.08);
 }
 .modal-header.data-v-1cf27b2a {
   padding: 40rpx;
@@ -571,7 +571,7 @@ to {
 }
 .item-value.data-v-1cf27b2a {
   font-size: 32rpx;
-  color: #07c160;
+  color: #0081ff;
   font-weight: bold;
 }
 .modal-footer.data-v-1cf27b2a {
@@ -582,7 +582,7 @@ to {
   width: 100%;
   height: 90rpx;
   line-height: 90rpx;
-  background: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
   color: #fff;
   font-size: 32rpx;
   font-weight: bold;

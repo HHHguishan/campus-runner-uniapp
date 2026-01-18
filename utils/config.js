@@ -3,7 +3,7 @@
  */
 
 // 后端API基础地址 (切换为局域网 IP 直连)
-export const BASE_URL = 'http://192.168.22.204:9090'
+export const BASE_URL = 'http://192.168.1.6:9090'
 
 // API版本
 export const API_VERSION = '/api'

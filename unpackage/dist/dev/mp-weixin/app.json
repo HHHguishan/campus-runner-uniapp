@@ -35,7 +35,7 @@
     "pages/forum/detail",
     "pages/forum/create",
     "pages/forum/my-posts",
-    "pages/chat/index"
+    "pages/support/chat"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -45,7 +45,7 @@
   },
   "tabBar": {
     "color": "#999999",
-    "selectedColor": "#07c160",
+    "selectedColor": "#0081ff",
     "backgroundColor": "#f8fcf9",
     "borderStyle": "white",
     "list": [

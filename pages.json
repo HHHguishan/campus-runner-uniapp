@@ -240,11 +240,10 @@
 			}
 		},
 		{
-			"path": "pages/chat/index",
+			"path": "pages/support/chat",
 			"style": {
-				"navigationBarTitleText": "联系客服",
-				"navigationStyle": "custom",
-				"backgroundColor": "#F8F8F8"
+				"navigationBarTitleText": "AI 智能客服",
+				"navigationStyle": "custom"
 			}
 		}
 	],
@@ -262,7 +261,7 @@
 	},
 	"tabBar": {
 		"color": "#999999",
-		"selectedColor": "#07c160",
+		"selectedColor": "#0081ff",
 		"backgroundColor": "#f8fcf9",
 		"borderStyle": "white",
 		"list": [

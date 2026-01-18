@@ -94,8 +94,8 @@
 }
 .post-header .user-info .post-tag.data-v-83111fb1 {
   font-size: 20rpx;
-  color: #07c160;
-  background: #e6f7ef;
+  color: #0081ff;
+  background: #eef7ff;
   padding: 4rpx 14rpx;
   border-radius: 8rpx;
   font-weight: 600;

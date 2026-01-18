@@ -108,6 +108,17 @@
           <text class="item-arrow">›</text>
         </view>
 
+        <view class="function-item" @tap="navigateTo('/pages/support/chat')">
+          <view class="item-left">
+            <text class="item-icon">🤖</text>
+            <text class="item-label">AI 智能客服</text>
+          </view>
+          <view class="item-right">
+            <text class="item-status">流式响应</text>
+            <text class="item-arrow">›</text>
+          </view>
+        </view>
+
         <view class="function-item" @tap="navigateTo('/pages/settings/settings')">
           <view class="item-left">
             <text class="item-icon">⚙️</text>
@@ -381,33 +392,36 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .mine-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f8fafc;
 }
 
 /* 用户信息卡片 */
 .user-card {
-  background: linear-gradient(135deg, #07c160 0%, #06ad56 100%);
-  padding: 60rpx 40rpx 40rpx;
+  background: linear-gradient(135deg, #0081ff 0%, #1cbbff 100%);
+  padding: 80rpx 40rpx 40rpx;
   color: #fff;
+  border-radius: 0 0 60rpx 60rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 129, 255, 0.2);
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  margin-bottom: 40rpx;
+  margin-bottom: 50rpx;
   position: relative;
 }
 
 .avatar {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 60rpx;
-  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 64rpx;
+  border: 6rpx solid rgba(255, 255, 255, 0.4);
   margin-right: 24rpx;
   background-color: #fff;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
 }
 
 .info {
@@ -418,7 +432,10 @@ export default {
   display: flex;
   align-items: center;
   font-size: 26rpx;
-  opacity: 0.9;
+  background: rgba(255,255,255,0.2);
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  backdrop-filter: blur(5px);
 }
 
 .edit-btn .arrow {
@@ -428,10 +445,11 @@ export default {
 }
 
 .nickname {
-  font-size: 36rpx;
+  font-size: 40rpx;
   font-weight: bold;
   display: block;
   margin-bottom: 8rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.1);
 }
 
 .mobile {
@@ -442,9 +460,11 @@ export default {
 .stats-row {
   display: flex;
   justify-content: space-around;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 30rpx;
   padding: 30rpx 0;
+  border: 1rpx solid rgba(255,255,255,0.2);
 }
 
 .stat-item {
@@ -453,7 +473,7 @@ export default {
 }
 
 .stat-value {
-  font-size: 40rpx;
+  font-size: 44rpx;
   font-weight: bold;
   display: block;
   margin-bottom: 8rpx;
@@ -462,50 +482,56 @@ export default {
 .stat-label {
   font-size: 24rpx;
   opacity: 0.8;
+  letter-spacing: 2rpx;
 }
 
 .stat-divider {
-  width: 2rpx;
-  background: rgba(255, 255, 255, 0.3);
+  width: 1rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.2);
+  align-self: center;
 }
 
 /* 身份切换卡片 */
 .identity-card {
-  margin: 20rpx;
+  margin: -40rpx 30rpx 20rpx;
   background: #fff;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  border-radius: 30rpx;
+  padding: 40rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 2;
 }
 
 .identity-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 30rpx;
 }
 
 .identity-title {
   font-size: 28rpx;
-  color: #666;
+  color: #94a3b8;
 }
 
 .identity-status {
   font-size: 32rpx;
   font-weight: bold;
-  color: #07c160;
+  color: #0081ff;
 }
 
 .switch-btn {
   width: 100%;
-  height: 80rpx;
-  line-height: 80rpx;
-  border-radius: 40rpx;
-  background: #07c160;
+  height: 90rpx;
+  line-height: 90rpx;
+  border-radius: 45rpx;
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
   color: #fff;
   font-size: 30rpx;
   font-weight: bold;
   border: none;
+  box-shadow: 0 8rpx 20rpx rgba(0, 129, 255, 0.2);
 }
 
 .switch-btn::after {
@@ -514,30 +540,37 @@ export default {
 
 /* 功能列表 */
 .function-section {
-  margin: 20rpx;
+  margin: 30rpx;
   background: #fff;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  border-radius: 30rpx;
+  padding: 36rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.03);
 }
 
 .function-title {
   font-size: 32rpx;
   font-weight: bold;
-  color: #333;
-  margin-bottom: 20rpx;
+  color: #1e293b;
+  margin-bottom: 30rpx;
+  padding-left: 10rpx;
+  border-left: 8rpx solid #0081ff;
 }
 
 .function-list {
-  border-top: 2rpx solid #f5f5f5;
+  /* border-top: 2rpx solid #f8fafc; */
 }
 
 .function-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx 0;
-  border-bottom: 2rpx solid #f5f5f5;
+  padding: 36rpx 10rpx;
+  border-bottom: 1rpx solid #f1f5f9;
+  transition: all 0.2s;
+  
+  &:active {
+    background-color: #f8fafc;
+  }
 }
 
 .function-item:last-child {
@@ -551,13 +584,15 @@ export default {
 }
 
 .item-icon {
-  font-size: 40rpx;
-  margin-right: 20rpx;
+  font-size: 44rpx;
+  margin-right: 24rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0,0,0,0.05);
 }
 
 .item-label {
   font-size: 30rpx;
-  color: #333;
+  color: #334155;
+  font-weight: 500;
 }
 
 .item-right {
@@ -567,30 +602,34 @@ export default {
 
 .item-status {
   font-size: 26rpx;
-  color: #07c160;
-  margin-right: 10rpx;
+  color: #0081ff;
+  margin-right: 14rpx;
+  background: rgba(0,129,255,0.05);
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
 }
 
 .item-arrow {
   font-size: 40rpx;
-  color: #999;
+  color: #cbd5e1;
   font-weight: bold;
 }
 
 /* 退出登录 */
 .logout-section {
-  margin: 40rpx 20rpx;
+  margin: 60rpx 30rpx;
+  padding-bottom: 60rpx;
 }
 
 .logout-btn {
   width: 100%;
-  height: 88rpx;
-  line-height: 88rpx;
-  border-radius: 44rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  border-radius: 45rpx;
   background: #fff;
-  color: #ff4d4f;
-  font-size: 32rpx;
-  border: 2rpx solid #ff4d4f;
+  color: #94a3b8;
+  font-size: 30rpx;
+  border: 1rpx solid #e2e8f0;
 }
 
 .logout-btn::after {

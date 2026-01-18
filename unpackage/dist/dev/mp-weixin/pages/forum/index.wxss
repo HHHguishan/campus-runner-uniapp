@@ -58,11 +58,11 @@
 }
 .status-bar.data-v-0e21892e {
   height: var(--status-bar-height);
-  background: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
 }
 .nav-bar.data-v-0e21892e {
   height: 44px;
-  background: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -87,11 +87,11 @@
   width: 60rpx;
 }
 .filter-bar.data-v-0e21892e {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20rpx);
   -webkit-backdrop-filter: blur(20rpx);
   padding: 24rpx 0;
-  border-bottom: 2rpx solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2rpx solid rgba(255, 255, 255, 0.4);
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -113,7 +113,7 @@
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .filter-bar .tag-scroll .tag-pill.active.data-v-0e21892e {
-  background: #07c160;
+  background: #0081ff;
   color: #fff;
   font-weight: 600;
   box-shadow: 0 8rpx 16rpx rgba(7, 193, 96, 0.25);
@@ -139,7 +139,7 @@
   width: 44rpx;
   height: 44rpx;
   border: 4rpx solid #f3f3f3;
-  border-top: 4rpx solid #07c160;
+  border-top: 4rpx solid #0081ff;
   border-radius: 50%;
   animation: spin-0e21892e 1s linear infinite;
   margin-bottom: 20rpx;
@@ -185,8 +185,8 @@
 }
 .post-card-inline .post-header .user-info .post-tag.data-v-0e21892e {
   font-size: 20rpx;
-  color: #07c160;
-  background: #e6f7ef;
+  color: #0081ff;
+  background: #eef7ff;
   padding: 4rpx 14rpx;
   border-radius: 8rpx;
   font-weight: 600;
@@ -292,7 +292,7 @@
   bottom: 80rpx;
   width: 116rpx;
   height: 116rpx;
-  background: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;

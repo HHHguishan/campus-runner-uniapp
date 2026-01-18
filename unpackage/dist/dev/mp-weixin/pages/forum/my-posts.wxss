@@ -58,11 +58,11 @@
 }
 .status-bar.data-v-b7e93a41 {
   height: var(--status-bar-height);
-  background: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
 }
 .nav-bar.data-v-b7e93a41 {
   height: 44px;
-  background: linear-gradient(135deg, #07c160 0%, #0dbb5f 100%);
+  background: linear-gradient(135deg, #0081ff 0%, #00bcff 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -105,7 +105,7 @@
   width: 44rpx;
   height: 44rpx;
   border: 4rpx solid #f3f3f3;
-  border-top: 4rpx solid #07c160;
+  border-top: 4rpx solid #0081ff;
   border-radius: 50%;
   animation: spin-b7e93a41 1s linear infinite;
   margin-bottom: 20rpx;
